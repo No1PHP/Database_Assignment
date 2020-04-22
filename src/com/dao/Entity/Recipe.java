@@ -7,14 +7,14 @@ package com.dao.Entity;
  */
 public class Recipe {
 
-    //recipe index
+    //recipe index, primary key
     public int recipeID;
 
     // @description recipe name, length<30
-    public char recipeName;
+    public String  recipeName;
 
     //set type in mysql
-    public char releventIngredient;
+    public String releventIngredient;
 
     //recipe price
     public float price;
@@ -23,11 +23,11 @@ public class Recipe {
         return recipeID;
     }
 
-    public char getRecipeName() {
+    public String getRecipeName() {
         return recipeName;
     }
 
-    public char getReleventIngredient() {
+    public String getReleventIngredient() {
         return releventIngredient;
     }
 
@@ -39,15 +39,22 @@ public class Recipe {
         this.recipeID = recipeID;
     }
 
-    public void setRecipeName(char recipeName) {
+    public void setRecipeName(String recipeName) {
         this.recipeName = recipeName;
     }
 
-    public void setReleventIngredient(char releventIngredient) {
+    public void setReleventIngredient(String releventIngredient) {
         this.releventIngredient = releventIngredient;
     }
 
     public void setPrice(float price) {
+        this.price = price;
+    }
+
+    public Recipe(int recipeID, String recipeName, String releventIngredient, float price) {
+        this.recipeID = recipeID;
+        this.recipeName = recipeName;
+        this.releventIngredient = releventIngredient;
         this.price = price;
     }
 }

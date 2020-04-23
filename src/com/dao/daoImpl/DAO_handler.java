@@ -2,22 +2,36 @@ package com.dao.daoImpl;
 
 import com.dao.inters.iDAO_handler;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 
+/**
+ * DAO handler
+ * @param <T> entity type
+ */
 public abstract class DAO_handler<T> implements iDAO_handler<T> {
-    protected static final Connection getConnection(String url, String dbname, String username) {
-        return getConnection("jdbc:mysql://"+url+"/"+dbname+"?serverTimezone=GMT%2B8", username, null);
+    private final String url;
+    private final String dbname;
+    private final String username;
+    private final String password;
+
+    public DAO_handler(String url, String dbname, String username, String password) {
+        this.url = url;
+        this.dbname = dbname;
+        this.username = username;
+        this.password = password;
     }
 
-    protected static final Connection getConnection(String url, String dbname, String username, String password) {
-        Connection conn = null;
-        try {
-            conn = DriverManager.getConnection("jdbc:mysql://"+url+"/"+dbname+"?serverTimezone=GMT%2B8", username, password);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return conn;
+    private Connection getConnection() throws SQLException {
+        return DriverManager.getConnection("jdbc:mysql://"+url+"/"+dbname+"?serverTimezone=GMT%2B8", username, password);
+    }
+
+    protected final PreparedStatement getPreparedStatement(String statement) throws SQLException {
+        Connection conn = getConnection();
+        return conn.prepareStatement(statement);
+    }
+
+    protected final Statement getStatement(String statement) throws SQLException {
+        Connection conn = getConnection();
+        return conn.createStatement();
     }
 }

@@ -115,5 +115,5 @@ CREATE TABLE `AccountInfo`(
     `accountName`           VARCHAR(20) NOT NULL,
     `password`              VARCHAR(20),
 
-    FOREIGN KEY (`position`) REFERENCES`restaurant`.`ACCESS`(`position`)
+    FOREIGN KEY (`position`) REFERENCES `ACCESS`(`position`)
 );

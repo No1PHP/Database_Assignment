@@ -3,7 +3,6 @@ package server.dao.inters;
 import java.util.Collection;
 
 /**
- * @author xiaos
  * @param <T> entity type
  */
 public interface iDAO_handler<T> {

@@ -1,31 +1,63 @@
 package Utils;
 
 import java.io.*;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 
 public abstract class SerializeTool {
+    /**
+     *
+     * @param obj object to be serialized
+     * @param <T> object type that implements Serializable interface
+     * @return the serialized byte stream
+     * @throws IOException failed to serialize
+     */
     public static <T extends Serializable> byte[] serialize(T obj) throws IOException {
-        byte[] result = null;
-        try {
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            ObjectOutputStream out = new ObjectOutputStream(byteArrayOutputStream);
+        Collection<T> objs = new LinkedList<T>();
+        objs.add(obj);
+        return serialize(objs)[0];
+    }
+
+    /**
+     *
+     * @param objs collection of objects to be serialized
+     * @param <T> object type that implements Serializable interface
+     * @return the serialized byte stream
+     * @throws IOException failed to serialize
+     */
+    public static <T extends Serializable> byte[][] serialize(Collection<T> objs) throws IOException {
+        byte[][] result = new byte[objs.size()][];
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        ObjectOutputStream out = new ObjectOutputStream(byteArrayOutputStream);
+        int count = 0;
+        for (T obj : objs) {
             out.writeObject(obj);
-            result = byteArrayOutputStream.toByteArray();
-            out.close();
-            byteArrayOutputStream.close();
-        } catch (IOException e) {
-            throw e;
+            result[count++] = byteArrayOutputStream.toByteArray();
+            byteArrayOutputStream.flush();
         }
+        out.close();
+        byteArrayOutputStream.close();
         return result;
     }
 
-    public static <T extends Serializable> T deserialize(byte[] data) throws IOException, ClassNotFoundException {
-        T result = null;
-        try (ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(data)) {
-            ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
-            result = (T) objectInputStream.readObject();
-        } catch (IOException | ClassNotFoundException e) {
-            throw e;
+    /**
+     *
+     * @param data byte stream to be deserialize
+     * @param <T> object type that implements Serializable interface
+     * @return the list of objects
+     * @throws IOException failed to deserialize
+     * @throws ClassNotFoundException cannot find the corresponding class
+     */
+    public static <T extends Serializable> List<T> deserialize(byte[] data) throws IOException, ClassNotFoundException {
+        List<T> list = new LinkedList<T>();
+        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(data);
+        ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
+        while (objectInputStream.available() != 0) {
+            list.add((T) objectInputStream.readObject());
         }
-        return result;
+        objectInputStream.close();
+        byteArrayInputStream.close();
+        return list;
     }
 }

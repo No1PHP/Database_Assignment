@@ -1,22 +1,25 @@
-package com.dao.Entity;
+package Entity;
+
+import java.io.Serializable;
 
 /**
  * @author Zhining
  * @description Table access query object
  * @create 2020-04-23-03-20
  **/
-public class AccessInfo {
+public class AccessInfo implements Serializable {
+    private static final long serialVersionUID = 1L;
     //primary key
-    public String position;
+    private String position;
 
     //access authority to the order related tables
-    public boolean AccessToOrder;
+    private boolean AccessToOrder;
 
     //access authority to the Staff related tables
-    public boolean AccessToStaff;
+    private boolean AccessToStaff;
 
     //access authority to the stock(materials?) related tables
-    public boolean AccessToStock;
+    private boolean AccessToStock;
 
     public String getPosition() {
         return position;

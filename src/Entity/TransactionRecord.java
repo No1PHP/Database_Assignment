@@ -1,5 +1,6 @@
-package com.dao.Entity;
+package Entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -7,24 +8,25 @@ import java.util.Date;
  * @description recipe selling, 销售记录
  * @create 2020-04-23-01-03
  **/
-public class TransactionRecord {
+public class TransactionRecord implements Serializable {
+    private static final long serialVersionUID = 10L;
     //id, auto primary key
-    public int transactionID;
+    private int transactionID;
 
     //stall id
-    public int stallID;
+    private int stallID;
 
     //recipe's id that have been ordered, a foreign key of recipe table
-    public int recipeID;
+    private int recipeID;
 
     //date being sold
-    public Date transactionTime;
+    private Date transactionTime;
 
     //amount of the dish sold, default to be 1
-    public int numbers = 1;
+    private int numbers = 1;
 
     //price of dish
-    public float transactionPrice;
+    private float transactionPrice;
 
     public int getTransactionID() {
         return transactionID;

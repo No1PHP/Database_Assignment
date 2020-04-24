@@ -1,4 +1,4 @@
-package com.dao.inters;
+package server.dao.inters;
 
 import java.util.Collection;
 

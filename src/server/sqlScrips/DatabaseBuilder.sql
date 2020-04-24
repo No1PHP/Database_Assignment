@@ -10,7 +10,7 @@ CREATE TABLE `Recipes` (
     PRIMARY KEY (`recipeID`)
 );
 
-DROP TABLE IF EXISTS `Recipes`;
+DROP TABLE IF EXISTS `TransactionRecords`;
 CREATE TABLE `TransactionRecords`  (
     `TransactionID`         INT UNSIGNED NOT NULL AUTO_INCREMENT,
     `stall_id`              INT UNSIGNED NOT NULL,
@@ -20,11 +20,11 @@ CREATE TABLE `TransactionRecords`  (
     `TransactionPrice`      FLOAT NOT NULL,
 
     PRIMARY KEY (`TransactionID`),
-    FOREIGN KEY (`recipeID`) REFERENCES `restaurant`.`Recipes` (`recipeID`) ,
-    FOREIGN KEY (`stall_id`) REFERENCES `restaurant`.`stall` (`stall_id`) ON DELETE SET NULL ON UPDATE CASCADE
+    FOREIGN KEY (`recipeID`) REFERENCES `Recipes` (`recipeID`) ,
+    FOREIGN KEY (`stall_id`) REFERENCES `stall` (`stall_id`) ON DELETE SET NULL ON UPDATE CASCADE
 );
 
-DROP TABLE IF EXISTS `Recipes`;
+DROP TABLE IF EXISTS `material`;
 CREATE TABLE `material` (
     `id`                    INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
     `name`                  CHAR(30) UNIQUE,
@@ -33,7 +33,7 @@ CREATE TABLE `material` (
     `availableTime`         INT NOT NULL
 ) ENGINE = InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `Recipes`;
+DROP TABLE IF EXISTS `materialOrder`;
 CREATE TABLE `materialOrder` (
     `order_ID`              INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
     `op_OrderID`            INT UNSIGNED NOT NULL,
@@ -46,7 +46,7 @@ CREATE TABLE `materialOrder` (
     FOREIGN KEY(`op_StorageID`) REFERENCES OperationRecord(operationId) ON UPDATE CASCADE ON DELETE SET NULL
 ) ENGINE = InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `Recipes`;
+DROP TABLE IF EXISTS `stall`;
 CREATE TABLE `stall`(
     `stall_id`              INT UNSIGNED AUTO_INCREMENT,
     `stall_name`            CHAR(40) NOT NULL UNIQUE,
@@ -60,7 +60,7 @@ CREATE TABLE `stall`(
      PRIMARY KEY ( `stall_id` )
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `Recipes`;
+DROP TABLE IF EXISTS `staff`;
 CREATE TABLE `staff`(
     `staff_id`              INT UNSIGNED AUTO_INCREMENT,
     `staff_name`            CHAR(30) NOT NULL,
@@ -72,9 +72,9 @@ CREATE TABLE `staff`(
     PRIMARY KEY ( `staff_id` )
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `Recipes`;
-CREATE TABLE `Schedul_record`(
-    `Schedul_id`            INT UNSIGNED AUTO_INCREMENT,
+DROP TABLE IF EXISTS `Schedule_record`;
+CREATE TABLE `Schedule_record`(
+    `Schedule_id`            INT UNSIGNED AUTO_INCREMENT,
     `op_OrderID`            INT UNSIGNED NOT NULL,
     `staff_id`              INT UNSIGNED NOT NULL,
     `work_time_start`       DATETIME NOT NULL,
@@ -82,7 +82,7 @@ CREATE TABLE `Schedul_record`(
 
     FOREIGN KEY(`op_OrderID`) REFERENCES OperationRecord(operationId) ON UPDATE CASCADE ON DELETE SET NULL,
     FOREIGN KEY(`staff_id`) REFERENCES staff(`staff_id`) ON UPDATE CASCADE ON DELETE SET NULL,
-    PRIMARY KEY (`Schedul_id`)
+    PRIMARY KEY (`Schedule_id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `Recipes`;
@@ -93,14 +93,14 @@ CREATE TABLE `ACCESS`(
     `AccesstoStock`         TINYINT(1)
 );
 
-DROP TABLE IF EXISTS `Recipes`;
+DROP TABLE IF EXISTS `OperationRecord`;
 CREATE TABLE `OperationRecord`(
     `operationId`           INT UNSIGNED PRIMARY KEY,
     `staffId`               INT UNSIGNED NOT NULL,
     `operationType`         ENUM( 'Pull', 'Order', 'DayShift', 'StallChange'),
     -- Pull 对应？？
     -- Order 对应 materialOrder.op_OrderID
-    -- DayShift 对应 Schedul_record.op_OrderID
+    -- DayShift 对应 Schedule_record.op_OrderID
     `note`                  CHAR(255),-- 备注
     `operationTime`         DATETIME,
     `willSendUpdateMessage` TINYINT(1),-- checkbit Of 推送通知
@@ -108,7 +108,7 @@ CREATE TABLE `OperationRecord`(
     FOREIGN KEY(`staffId`) REFERENCES AccountInfo(`staffId`) ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
-DROP TABLE IF EXISTS `Recipes`;
+DROP TABLE IF EXISTS `AccountInfo`;
 CREATE TABLE `AccountInfo`(
     `staffId`               INT UNSIGNED PRIMARY KEY,
     `position`              VARCHAR(20) NOT NULL,

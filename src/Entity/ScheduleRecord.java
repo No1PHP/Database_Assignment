@@ -1,7 +1,8 @@
-package com.dao.Entity;
+package Entity;
 
 import Utils.UtilsImpl;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -9,18 +10,19 @@ import java.util.Date;
  * @description working time arrangement info table object
  * @create 2020-04-23-02-53
  **/
-public class ScheduleRecord {
+public class ScheduleRecord implements Serializable {
+    private static final long serialVersionUID = 7L;
     //primary key, auto
-    public int ScheduleID;
+    private int ScheduleID;
 
     //corresponds to operationRecords table
-    public int operationID;
+    private int operationID;
 
-    public int staffID;
+    private int staffID;
 
-    public String timeScheduledToStartWorking;
+    private String timeScheduledToStartWorking;
 
-    public String timeScheduledToEndWorking;
+    private String timeScheduledToEndWorking;
 
     public int getScheduleID() {
         return ScheduleID;

@@ -1,23 +1,26 @@
-package com.dao.Entity;
+package Entity;
+
+import java.io.Serializable;
 
 /**
  * @author Zhining
  * @description raw material of recipes  object
  * @create 2020-04-23-01-13
  **/
-public class material {
+public class Material implements Serializable {
+    private static final long serialVersionUID = 3L;
     //material id
-    public int id;
+    private int id;
 
-    public int name;
+    private int name;
 
-    public String type;
+    private String type;
 
     //单价
-    public float unitPrice;
+    private float unitPrice;
 
     //fresh period
-    public int availablePeriod;
+    private int availablePeriod;
 
     public int getId() {
         return id;
@@ -59,7 +62,7 @@ public class material {
         this.availablePeriod = availablePeriod;
     }
 
-    public material(int id, int name, String type, float unitPrice, int availablePeriod) {
+    public Material(int id, int name, String type, float unitPrice, int availablePeriod) {
         this.id = id;
         this.name = name;
         this.type = type;

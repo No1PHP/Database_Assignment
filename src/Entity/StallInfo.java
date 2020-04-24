@@ -1,26 +1,29 @@
-package com.dao.Entity;
+package Entity;
+
+import java.io.Serializable;
 
 /**
  * @author Zhining
  * @description information of stalls
  * @create 2020-04-23-02-17
  **/
-public class stallInfo {
-    public int stallID;
+public class StallInfo implements Serializable {
+    private static final long serialVersionUID = 9L;
+    private int stallID;
 
-    public String stallName;
+    private String stallName;
 
-    public String stallLocation;
+    private String stallLocation;
 
-    public float stallRent;
+    private float stallRent;
 
-    public float costLastMonth;
+    private float costLastMonth;
 
-    public int manageTimeSoFar;
+    private int manageTimeSoFar;
 
-    public float aveMonthlySalesAmount;
+    private float aveMonthlySalesAmount;
 
-    public float aveSalesIncome;
+    private float aveSalesIncome;
 
     public int getStallID() {
         return stallID;
@@ -86,7 +89,7 @@ public class stallInfo {
         this.aveSalesIncome = aveSalesIncome;
     }
 
-    public stallInfo(int stallID, String stallName, String stallLocation, float stallRent, float costLastMonth, int manageTimeSoFar, float aveMonthlySalesAmount, float aveSalesIncome) {
+    public StallInfo(int stallID, String stallName, String stallLocation, float stallRent, float costLastMonth, int manageTimeSoFar, float aveMonthlySalesAmount, float aveSalesIncome) {
         this.stallID = stallID;
         this.stallName = stallName;
         this.stallLocation = stallLocation;

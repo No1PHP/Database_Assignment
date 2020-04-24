@@ -1,23 +1,26 @@
-package com.dao.Entity;
+package Entity;
+
+import java.io.Serializable;
 
 /*
 * @author zhining
 * @create 2020-4-22-11:12
 * @description recipe object
  */
-public class Recipe {
+public class Recipe implements Serializable {
+    private static final long serialVersionUID = 6L;
 
     //recipe index, primary key
-    public int recipeID;
+    private int recipeID;
 
     // @description recipe name, length<30
-    public String  recipeName;
+    private String  recipeName;
 
     //set type in mysql
-    public String releventIngredient;
+    private String releventIngredient;
 
     //recipe price
-    public float price;
+    private float price;
 
     public int getRecipeID() {
         return recipeID;

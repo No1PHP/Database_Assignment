@@ -1,4 +1,4 @@
-package com.dao.Entity;
+package Entity;
 
 import Utils.UtilsImpl;
 
@@ -11,19 +11,20 @@ import java.util.Date;
  * @description staff information table object
  * @create 2020-04-23-02-25
  **/
-public class staff {
+public class Staff implements Serializable {
+    private static final long serialVersionUID = 8L;
     //primary key, auto_incr
-    public int staffID;
+    private int staffID;
 
-    public String staffName;
+    private String staffName;
 
-    public String staffCategory;
+    private String staffCategory;
 
     //different from mysql datetime type, need considering the parsing!!!
-    public String timeStartWorking;
+    private String timeStartWorking;
 
     //different from mysql datetime!!!
-    public String timeEndWorking;
+    private String timeEndWorking;
 
     //date parsing method
     private String dateParsingToString(Date date){
@@ -78,7 +79,7 @@ public class staff {
         this.timeEndWorking = timeEndWorking;
     }
 
-    public staff(int staffID, String staffName, String staffCategory, Date timeStartWorking, Date timeEndWorking) {
+    public Staff(int staffID, String staffName, String staffCategory, Date timeStartWorking, Date timeEndWorking) {
 
         this.staffID = staffID;
         this.staffName = staffName;

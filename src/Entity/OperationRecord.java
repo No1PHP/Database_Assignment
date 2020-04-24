@@ -1,7 +1,8 @@
-package com.dao.Entity;
+package Entity;
 
 import Utils.UtilsImpl;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -9,22 +10,23 @@ import java.util.Date;
  * @description Operation including pull, push, update of table contents object
  * @create 2020-04-23-03-24
  **/
-public class OperationRecord {
+public class OperationRecord implements Serializable {
+    private static final long serialVersionUID = 5L;
     //primary key
-    public int operationID;
+    private int operationID;
 
-    public int staffID;
+    private int staffID;
 
     //pull, order, dayshift(schedule), stallChange
-    public String oprationType;
+    private String oprationType;
 
     //operation details
-    public String note;
+    private String note;
 
     //need parsing from sql datetime type
-    public String operationTime;
+    private String operationTime;
 
-    public boolean willSendUpdateMessage;
+    private boolean willSendUpdateMessage;
 
     public void setOperationID(int operationID) {
         this.operationID = operationID;

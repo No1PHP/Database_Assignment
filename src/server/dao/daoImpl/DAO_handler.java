@@ -1,6 +1,6 @@
-package com.dao.daoImpl;
+package server.dao.daoImpl;
 
-import com.dao.inters.iDAO_handler;
+import server.dao.inters.iDAO_handler;
 
 import java.sql.*;
 

@@ -1,20 +1,23 @@
-package com.dao.Entity;
+package Entity;
+
+import java.io.Serializable;
 
 /**
  * @author Zhining
  * @description Account details
  * @create 2020-04-23-03-36
  **/
-public class Account {
+public class Account implements Serializable {//这个类是否实现接口还需商议
+    private static final long serialVersionUID = 2L;
     //primary key
-    public int staffID;
+    private int staffID;
 
     //foreign key
-    public String position;
+    private String position;
 
-    public String accountName;
+    private String accountName;
 
-    public String passwordHashValue;
+    private String passwordHashValue;
 
     public int getStaffID() {
         return staffID;

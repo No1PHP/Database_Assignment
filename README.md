@@ -1,33 +1,35 @@
 # Database_Assignment
-
-##develop environment
-
-###dependencies
+## develop environment
+### dependencies
 <dependencies>
     <dependency>
         <groupId>com.alibaba</groupId>
         <artifactId>fastjson</artifactId>
         <version>1.2.68</version>
+    </dependency><br>
+    <dependency>
+        <groupId>javax.persistence</groupId>
+        <artifactId>javax.persistence-api</artifactId>
+        <version>2.2</version>
+    </dependency><br>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-data-jpa</artifactId>
+        <version>2.2.6.RELEASE</version>
     </dependency>
 </dependencies>
 
-## system requirements
-###1. login
-####1.1 correct
-Inter corresponding control panel.<br>
-####1.2 incorrect
-Ask to enter the username and password again.<br>
-###2. personal information query
-####2.1 managers
-manager list display<br>
-manager operation history display<br>
-manager operation request display<br>
-####2.2 staffs
-working period<br>
-###3. stall
-stall list display<br>
-stall sale situation<br>
-###4. material
-material list<br>
-###5. dishes
-dishes list<br>
+## interfaces
+### DAO interface（待定）
+json:<br>
+> {<br>
+>> **"type"**: "insert/delete/update/select",<br>
+> **"tables"**: \["tableName"...], `only one for insert/delete/update`<br>
+> **"attributes"**: \[{<br>
+>>> "attributeName": "name",<br>
+> "aggregate": "COUNT/SUM/MAX/MIN/AVE   ", `only for select`<br>
+> "value": "attValue"}, `only for insert/update` ...],<br>
+>
+>
+>
+>}

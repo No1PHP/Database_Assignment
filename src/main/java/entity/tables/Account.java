@@ -10,7 +10,6 @@ public class Account implements Serializable {//这个类是否实现接口还�
     //primary key
     @Id
     @Column(name = "staffId")
-    //@GeneratedValue(strategy = GenerationType.AUTO)
     private Integer staffID;
 
     //foreign key

@@ -1,5 +1,7 @@
 package entity.tables;
 
+import org.springframework.data.annotation.CreatedDate;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Date;
@@ -23,7 +25,7 @@ public class TransactionRecord implements Serializable {
     private Integer recipeID;
 
     //date being sold
-    //@CreatedDate
+    @CreatedDate
     @Column(name = "TransactionTime", nullable = false, updatable = false)
     private Date transactionTime;
 

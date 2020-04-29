@@ -1,5 +1,7 @@
 package entity.tables;
 
+import org.springframework.data.annotation.CreatedDate;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Date;
@@ -26,7 +28,7 @@ public class OperationRecord implements Serializable {
     private String note;
 
     //need parsing from sql datetime type
-    //@CreatedDate
+    @CreatedDate
     @Column(name = "operationTime", nullable = false, updatable = false)
     private Date operationTime;
 

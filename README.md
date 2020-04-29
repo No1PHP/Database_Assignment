@@ -1,5 +1,8 @@
 # Database_Assignment
 ## develop environment
+### recommand tools
+1. Intellij IDEA utimate edition<br>
+2. maven plugin<br>
 ### dependencies
 <dependencies>
         <dependency>

@@ -12,37 +12,35 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @description Set of controller of staff information handling request
- * @create 2020-05-01-01-11
+ * @description Set of controller of recipe info handling related request
+ * @operation
+ * @create 2020-05-01-01-12
  **/
-@RequestMapping(value = "/Staff") //此类url前缀
+@RequestMapping(value = "/Recipe")
 @Controller
-public class StaffInfoController implements PageTurningFunction {
-
+public class RecipeInfoController implements PageTurningFunction {
 
     /**
-    * @author Zhining
-    * @description 处理增删改职工先关信息的请求
-    * @param request
-    * @RequestJson
-    * {stallID:'',stallName:'',
-    * stallLocation:'',stallRent:'[Float]',
-    * costLastMonth:'[Float]',manageTimeSoFar:'[Float]',
-    * aveMonthlySalesAmount:'[Float]',OperationName:'',
-    * operationName:''}
+     * @author Zhining
+     * @description 处理增删改菜谱信息的请求
+     * @param request
+     * @RequestJson
+     * {recipeID:'',recipeName:'',
+     * relevantIngredient:'',price:'[Float]',
+     * operationName:''}
      *
-    * @return Map
-    * @create 2020/5/2 11:25 下午
-    **/
-    @RequestMapping(value = "/staff",method = RequestMethod.POST)
+     * @return Map
+     * @create 2020/5/2 11:25 下午
+     **/
+    @RequestMapping(value = "/",method = RequestMethod.POST)
     @ResponseBody
     public Map<String, Object> StaffInfoOperation(HttpServletRequest request){
         Map<String, Object> map = new HashMap<String, Object>();
-        String staffRequestString = HttpServletRequestUtils.getString(request, "staffRequestString");
+        String recipeRequestString = HttpServletRequestUtils.getString(request, "recipeRequestString");
         ObjectMapper mapper = new ObjectMapper();
-        Staff staffReq;
+        Recipe recipeReq;
         try{
-            staffReq = mapper.readValue(staffRequestString, Staff.class);
+            recipeReq = mapper.readValue(recipeRequestString, Recipe.class);
         }catch (Exception e){
             map.put("succeed", false);
             map.put("message: ", e.getMessage());
@@ -50,18 +48,19 @@ public class StaffInfoController implements PageTurningFunction {
         }
 
         // 请求含条件，打包给不同方法
-        //TO-DO: 外部接口 空值判断
-        if(staffReq.operationName.equals("AddStaff"))
+        //TO-DO: 最好写个外部接口 空值判断
+        if(recipeReq.operationName.equals("AddRecipe"))
             ; //调用daoImpl，map接受返回参数
-        if(staffReq.operationName.equals("ModifyStaff"))
+        if(recipeReq.operationName.equals("ModifyRecipe"))
             ;
-        if(staffReq.operationName.equals("DeleteStaff"))
+        if(recipeReq.operationName.equals("DeleteRecipe"))
             ;
 
         //return
         return map;
 
     }
+
 
 
     /**
@@ -90,7 +89,5 @@ public class StaffInfoController implements PageTurningFunction {
 
         return map;
     }
-
-
 
 }

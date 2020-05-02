@@ -30,8 +30,8 @@ CREATE TABLE Material (
     `availableTime`         INT
 ) ENGINE = InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS StallInfo;
-CREATE TABLE StallInfo(
+DROP TABLE IF EXISTS Stall;
+CREATE TABLE Stall(
     `stall_id`              INT UNSIGNED AUTO_INCREMENT,
     `stall_name`            CHAR(40) NOT NULL UNIQUE,
     `stall_location`        SMALLINT NOT NULL UNIQUE,
@@ -69,7 +69,7 @@ CREATE TABLE TransactionRecord (
 
     PRIMARY KEY (`TransactionID`),
     FOREIGN KEY (`recipeID`) REFERENCES Recipe (`recipeID`)  ON UPDATE CASCADE ON DELETE NO ACTION,
-    FOREIGN KEY (`stall_id`) REFERENCES StallInfo (`stall_id`) ON UPDATE CASCADE ON DELETE CASCADE
+    FOREIGN KEY (`stall_id`) REFERENCES Stall (`stall_id`) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 DROP TABLE IF EXISTS Account;
@@ -79,6 +79,7 @@ CREATE TABLE Account(
     `accountName`           VARCHAR(20) NOT NULL,
     `password`              VARCHAR(20) NOT NULL DEFAULT '123456',
 
+    FOREIGN KEY (`staffId`) REFERENCES Staff(`staff_id`) ON UPDATE CASCADE ON DELETE CASCADE ,
     FOREIGN KEY (`position`) REFERENCES AccessInfo(`position`) ON UPDATE CASCADE ON DELETE SET NULL
 );
 

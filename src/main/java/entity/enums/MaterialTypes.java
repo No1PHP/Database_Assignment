@@ -1,4 +1,4 @@
-package main.entity.enums;
+package entity.enums;
 
 public abstract class MaterialTypes {
     public static final byte STAPLE = 0;

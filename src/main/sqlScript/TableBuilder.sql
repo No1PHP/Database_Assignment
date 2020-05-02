@@ -98,28 +98,26 @@ CREATE TABLE `OperationRecord`(
 
 DROP TABLE IF EXISTS MaterialOrder;
 CREATE TABLE MaterialOrder (
-    `order_ID`              INT UNSIGNED NOT NULL AUTO_INCREMENT,
     `op_OrderID`            INT UNSIGNED NOT NULL,
     `op_storageID`          INT UNSIGNED DEFAULT NULL,
     `materialID`            INT UNSIGNED NOT NULL,
     `amount`                FLOAT NOT NULL,
 
-    PRIMARY KEY (`order_ID`),
+    PRIMARY KEY (`op_OrderID`),
     FOREIGN KEY(`materialID`) REFERENCES Material(`id`) ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY(`op_OrderID`) REFERENCES OperationRecord(operationId) ON UPDATE CASCADE ON DELETE RESTRICT ,
-    FOREIGN KEY(`op_StorageID`) REFERENCES OperationRecord(operationId) ON UPDATE CASCADE ON DELETE SET NULL
+    FOREIGN KEY(`op_StorageID`) REFERENCES OperationRecord(operationId) ON UPDATE CASCADE ON DELETE RESTRICT
 ) ENGINE = InnoDB DEFAULT CHARSET=utf8;
 
 -- 有时间
 DROP TABLE IF EXISTS `Schedule_record`;
 CREATE TABLE `Schedule_record`(
-    `Schedule_id`           INT UNSIGNED AUTO_INCREMENT,
-    `op_OrderID`            INT UNSIGNED NOT NULL,
+    `op_ID`                 INT UNSIGNED NOT NULL,
     `staff_id`              INT UNSIGNED NOT NULL,
     `work_time_start`       DATETIME NOT NULL,
     `work_time_end`         DATETIME NOT NULL,
 
-    PRIMARY KEY (`Schedule_id`),
-    FOREIGN KEY (`op_OrderID`) REFERENCES OperationRecord(operationId) ON UPDATE CASCADE ON DELETE RESTRICT ,
+    PRIMARY KEY (`op_ID`),
+    FOREIGN KEY (`op_ID`) REFERENCES OperationRecord(operationId) ON UPDATE CASCADE ON DELETE RESTRICT ,
     FOREIGN KEY (`staff_id`) REFERENCES Staff(`staff_id`) ON UPDATE CASCADE ON DELETE CASCADE
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;

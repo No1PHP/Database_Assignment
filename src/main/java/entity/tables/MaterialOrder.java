@@ -8,12 +8,8 @@ import java.io.Serializable;
 public class MaterialOrder implements Serializable {
     private static final long serialVersionUID = 4L;
      //primary key
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "order_ID", updatable = false)
-     private Integer orderID;
-
      //corresponds to the operationRecord table, foreign key
+    @Id
     @Column(name = "op_OrderID", nullable = false)
      private Integer operationOrderID;
 
@@ -29,14 +25,6 @@ public class MaterialOrder implements Serializable {
     private Float materialAmount;
 
     /********************************************************/
-    public Integer getOrderID() {
-        return orderID;
-    }
-
-    public void setOrderID(Integer orderID) {
-        this.orderID = orderID;
-    }
-
     public Integer getOperationOrderID() {
         return operationOrderID;
     }

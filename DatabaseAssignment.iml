@@ -28,11 +28,11 @@
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/com/model" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/com/service" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/com/VO" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/main/java/com/model" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/main/java/com/service" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/main/java/com/VO" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/client" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/com/controller" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/main/java/com/controller" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />
@@ -333,6 +333,7 @@
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.8.3" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.8.0" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-core:2.8.3" level="project" />
+    <orderEntry type="library" name="Java EE 6-Java EE 6" level="project" />
     <orderEntry type="library" name="Java EE 6-Java EE 6" level="project" />
   </component>
 </module>

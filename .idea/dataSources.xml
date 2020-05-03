@@ -1,15 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="restaurant@localhost" uuid="2e380cc2-3bde-4d3a-88ef-86f0c08a1a3b">
-      <driver-ref>mysql.8</driver-ref>
-      <synchronize>true</synchronize>
-      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
-      <jdbc-url>jdbc:mysql://localhost:3306/restaurant</jdbc-url>
-      <driver-properties>
-        <property name="serverTimezone" value="Asia/Shanghai" />
-      </driver-properties>
-    </data-source>
     <data-source source="LOCAL" name="myJPA/Hibernate" uuid="b6cbcf57-171a-4b20-9531-52f361b668e9">
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>

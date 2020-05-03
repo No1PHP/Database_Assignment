@@ -58,4 +58,14 @@ public class Recipe implements Serializable {
     public void setPrice(Float price) {
         this.price = price;
     }
+
+    @Override
+    public String toString() {
+        return "Recipe{" +
+                "recipeID=" + recipeID +
+                ", recipeName='" + recipeName + '\'' +
+                ", relevantIngredient='" + relevantIngredient + '\'' +
+                ", price=" + price +
+                '}';
+    }
 }

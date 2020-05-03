@@ -97,4 +97,18 @@ public class Stall implements Serializable {
     public void setAveSalesIncome(Float aveSalesIncome) {
         this.aveSalesIncome = aveSalesIncome;
     }
+
+    @Override
+    public String toString() {
+        return "Stall{" +
+                "stallID=" + stallID +
+                ", stallName='" + stallName + '\'' +
+                ", stallLocation='" + stallLocation + '\'' +
+                ", stallRent=" + stallRent +
+                ", costLastMonth=" + costLastMonth +
+                ", manageTimeSoFar=" + manageTimeSoFar +
+                ", aveMonthlySalesAmount=" + aveMonthlySalesAmount +
+                ", aveSalesIncome=" + aveSalesIncome +
+                '}';
+    }
 }

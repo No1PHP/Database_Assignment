@@ -85,4 +85,16 @@ public class TransactionRecord implements Serializable {
     public void setTransactionPrice(Float transactionPrice) {
         this.transactionPrice = transactionPrice;
     }
+
+    @Override
+    public String toString() {
+        return "TransactionRecord{" +
+                "transactionID=" + transactionID +
+                ", stallID=" + stallID +
+                ", recipeID=" + recipeID +
+                ", transactionTime=" + transactionTime +
+                ", numbers=" + numbers +
+                ", transactionPrice=" + transactionPrice +
+                '}';
+    }
 }

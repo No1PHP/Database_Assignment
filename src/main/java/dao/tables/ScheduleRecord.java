@@ -55,4 +55,14 @@ public class ScheduleRecord implements Serializable {
     public void setTimeScheduledToEndWorking(Date timeScheduledToEndWorking) {
         this.timeScheduledToEndWorking = timeScheduledToEndWorking;
     }
+
+    @Override
+    public String toString() {
+        return "ScheduleRecord{" +
+                "operationID=" + operationID +
+                ", staffID=" + staffID +
+                ", timeScheduledToStartWorking=" + timeScheduledToStartWorking +
+                ", timeScheduledToEndWorking=" + timeScheduledToEndWorking +
+                '}';
+    }
 }

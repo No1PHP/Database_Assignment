@@ -83,4 +83,16 @@ public class OperationRecord implements Serializable {
     public void setWillSendUpdateMessage(Boolean willSendUpdateMessage) {
         this.willSendUpdateMessage = willSendUpdateMessage;
     }
+
+    @Override
+    public String toString() {
+        return "OperationRecord{" +
+                "operationID=" + operationID +
+                ", staffID=" + staffID +
+                ", operationType=" + operationType +
+                ", note='" + note + '\'' +
+                ", operationTime=" + operationTime +
+                ", willSendUpdateMessage=" + willSendUpdateMessage +
+                '}';
+    }
 }

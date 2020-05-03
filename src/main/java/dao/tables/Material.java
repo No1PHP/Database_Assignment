@@ -78,4 +78,16 @@ public class Material implements Serializable {
     public void setAvailablePeriod(Integer availablePeriod) {
         this.availablePeriod = availablePeriod;
     }
+
+    @Override
+    public String toString() {
+        return "Material{" +
+                "id=" + id +
+                ", name=" + name +
+                ", type=" + type +
+                ", unitPrice=" + unitPrice +
+                ", availableAmount=" + availableAmount +
+                ", availablePeriod=" + availablePeriod +
+                '}';
+    }
 }

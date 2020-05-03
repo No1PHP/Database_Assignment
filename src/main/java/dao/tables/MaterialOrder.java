@@ -56,4 +56,14 @@ public class MaterialOrder implements Serializable {
     public void setMaterialAmount(Float materialAmount) {
         this.materialAmount = materialAmount;
     }
+
+    @Override
+    public String toString() {
+        return "MaterialOrder{" +
+                "operationOrderID=" + operationOrderID +
+                ", operationStorageID=" + operationStorageID +
+                ", materialID=" + materialID +
+                ", materialAmount=" + materialAmount +
+                '}';
+    }
 }

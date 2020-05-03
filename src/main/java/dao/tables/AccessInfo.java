@@ -57,4 +57,14 @@ public class AccessInfo implements Serializable {
     public void setAccessToStock(Byte accessToStock) {
         AccessToStock = accessToStock;
     }
+
+    @Override
+    public String toString() {
+        return "AccessInfo{" +
+                "position='" + position + '\'' +
+                ", AccessToOrder=" + AccessToOrder +
+                ", AccessToStaff=" + AccessToStaff +
+                ", AccessToStock=" + AccessToStock +
+                '}';
+    }
 }

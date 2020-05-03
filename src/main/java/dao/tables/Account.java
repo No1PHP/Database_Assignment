@@ -54,4 +54,14 @@ public class Account implements Serializable {//这个类是否实现接口还�
     public void setPasswordHashValue(String passwordHashValue) {
         this.passwordHashValue = passwordHashValue;
     }
+
+    @Override
+    public String toString() {
+        return "Account{" +
+                "staffID=" + staffID +
+                ", position='" + position + '\'' +
+                ", accountName='" + accountName + '\'' +
+                ", passwordHashValue='" + passwordHashValue + '\'' +
+                '}';
+    }
 }

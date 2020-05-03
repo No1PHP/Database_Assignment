@@ -67,4 +67,15 @@ public class Staff implements Serializable {
     public void setTimeEndWorking(Time timeEndWorking) {
         this.timeEndWorking = timeEndWorking;
     }
+
+    @Override
+    public String toString() {
+        return "Staff{" +
+                "staffID=" + staffID +
+                ", staffName='" + staffName + '\'' +
+                ", staffCategory=" + staffCategory +
+                ", timeStartWorking=" + timeStartWorking +
+                ", timeEndWorking=" + timeEndWorking +
+                '}';
+    }
 }

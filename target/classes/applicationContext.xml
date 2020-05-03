@@ -19,7 +19,7 @@
     <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
         <property name="dataSource" ref="dataSource"/>
         <!--扫描实体类-->
-        <property name="packagesToScan" value="entity.tables"/>
+        <property name="packagesToScan" value="dao.tables"/>
         <!--jpa实现-->
         <property name="persistenceProvider">
             <bean class="org.hibernate.jpa.HibernatePersistenceProvider"/>
@@ -49,7 +49,7 @@
     <!--数据库连接池-->
     <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
         <property name="user" value="root"/>
-        <property name="password" value="password"/>
+        <property name="password" value="ShibangX5599"/>
         <property name="jdbcUrl" value="jdbc:mysql://127.0.0.1:3306/restaurant?
             characterEncoding=utf8&amp;
             useUnicode=true&amp;
@@ -60,7 +60,7 @@
     </bean>
 
     <!--spring data jpa-->
-    <jpa:repositories base-package="entity.DAOInterfaces" transaction-manager-ref="transactionManager"
+    <jpa:repositories base-package="dao.DAOInterfaces" transaction-manager-ref="transactionManager"
                       entity-manager-factory-ref="entityManagerFactory"/>
     <!--事务管理器-->
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
@@ -68,5 +68,5 @@
     </bean>
 
     <!--包扫描-->
-    <context:component-scan base-package="entity"/>
+    <context:component-scan base-package="dao"/>
 </beans>

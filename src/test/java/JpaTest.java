@@ -1,6 +1,6 @@
-import entity.DAOInterfaces.StaffRepository;
-import entity.TableType;
-import entity.tables.Staff;
+import dao.DAOInterfaces.StaffRepository;
+import dao.DAO_Type;
+import dao.tables.Staff;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -20,6 +20,6 @@ public class JpaTest {
         staff.setTimeStartWorking(new Time(0,0,0));
         staff.setTimeEndWorking(new Time(0,0,0));
 
-        ((StaffRepository) TableType.STAFF.getTableRepository()).save(staff);
+        ((StaffRepository) DAO_Type.STAFF.getTableRepository()).save(staff);
     }
 }

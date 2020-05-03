@@ -130,7 +130,7 @@ Change properties in `src/main/resources/applicationContext.xml` to connect your
 database source.
 
 ## interfaces
-### DAO interface（待定）
+### dao interface（待定）
 json:<br>
 > {<br>
 >> **"type"**: "insert/delete/update/select",<br>

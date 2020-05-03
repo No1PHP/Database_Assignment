@@ -8,14 +8,10 @@ import java.sql.Date;
 @Table(name = "Schedule_record")
 public class ScheduleRecord implements Serializable {
     private static final long serialVersionUID = 7L;
-    //primary key, auto
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "Schedule_id", updatable = false)
-    private Integer ScheduleID;
-
+    //primary key
     //corresponds to operationRecords table
-    @Column(name = "op_OrderID", nullable = false)
+    @Id
+    @Column(name = "op_ID", nullable = false)
     private Integer operationID;
 
     @Column(name = "staff_id", nullable = false)
@@ -28,14 +24,6 @@ public class ScheduleRecord implements Serializable {
     private Date timeScheduledToEndWorking;
 
     /********************************************************/
-    public Integer getScheduleID() {
-        return ScheduleID;
-    }
-
-    public void setScheduleID(Integer scheduleID) {
-        ScheduleID = scheduleID;
-    }
-
     public Integer getOperationID() {
         return operationID;
     }

@@ -12,7 +12,7 @@ public enum TableType {
     RECIPE("recipe"),
     SCHEDULE_RECORD("scheduleRecord"),
     STAFF("staff"),
-    STALL_INFO("stallInfo"),
+    STALL("stall"),
     TRANSACTION_RECORD(" transactionRecord");
 
     private static final ApplicationContext applicationContext = new ClassPathXmlApplicationContext("applicationContext.xml");

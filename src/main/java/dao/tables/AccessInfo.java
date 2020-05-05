@@ -10,20 +10,20 @@ public class AccessInfo implements Serializable {
     //primary key
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "position", updatable = false)
+    @Column(name = "position")
     private String position;
 
     //access authority to the order related tables
     @Column(name = "AccessToOrder", nullable = false)
-    private Byte AccessToOrder;
+    private Boolean accessToOrder;
 
     //access authority to the Staff related tables
     @Column(name = "AccessToStaff", nullable = false)
-    private Byte AccessToStaff;
+    private Boolean accessToStaff;
 
     //access authority to the stock(materials?) related tables
     @Column(name = "AccessToStock", nullable = false)
-    private Byte AccessToStock;
+    private Boolean accessToStock;
 
     /********************************************************/
     public String getPosition() {
@@ -34,37 +34,37 @@ public class AccessInfo implements Serializable {
         this.position = position;
     }
 
-    public Byte getAccessToOrder() {
-        return AccessToOrder;
+    public Boolean getAccessToOrder() {
+        return accessToOrder;
     }
 
-    public void setAccessToOrder(Byte accessToOrder) {
-        AccessToOrder = accessToOrder;
+    public void setAccessToOrder(Boolean accessToOrder) {
+        this.accessToOrder = accessToOrder;
     }
 
-    public Byte getAccessToStaff() {
-        return AccessToStaff;
+    public Boolean getAccessToStaff() {
+        return accessToStaff;
     }
 
-    public void setAccessToStaff(Byte accessToStaff) {
-        AccessToStaff = accessToStaff;
+    public void setAccessToStaff(Boolean accessToStaff) {
+        this.accessToStaff = accessToStaff;
     }
 
-    public Byte getAccessToStock() {
-        return AccessToStock;
+    public Boolean getAccessToStock() {
+        return accessToStock;
     }
 
-    public void setAccessToStock(Byte accessToStock) {
-        AccessToStock = accessToStock;
+    public void setAccessToStock(Boolean accessToStock) {
+        this.accessToStock = accessToStock;
     }
 
     @Override
     public String toString() {
         return "AccessInfo{" +
                 "position='" + position + '\'' +
-                ", AccessToOrder=" + AccessToOrder +
-                ", AccessToStaff=" + AccessToStaff +
-                ", AccessToStock=" + AccessToStock +
+                ", AccessToOrder=" + accessToOrder +
+                ", AccessToStaff=" + accessToStaff +
+                ", AccessToStock=" + accessToStock +
                 '}';
     }
 }

@@ -11,11 +11,11 @@ public class Material implements Serializable {
     //material id
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", updatable = false)
+    @Column(name = "id")
     private Integer id;
 
     @Column(name = "name", unique = true, nullable = false)
-    private Integer name;
+    private String name;
 
     @Column(name = "type", nullable = false)
     private Byte type;
@@ -39,11 +39,11 @@ public class Material implements Serializable {
         this.id = id;
     }
 
-    public Integer getName() {
+    public String getName() {
         return name;
     }
 
-    public void setName(Integer name) {
+    public void setName(String name) {
         this.name = name;
     }
 

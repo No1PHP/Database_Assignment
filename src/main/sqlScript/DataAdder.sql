@@ -16,9 +16,9 @@ INSERT INTO `staff`(`staff_name`, `staff_category`, `Effe_work_time_starts`, `Ef
                                                                                                           ('张三', 0, '09:00:00', '18:00:00'),
                                                                                                           ('李四', 0, '12:00:00', '21:00:00'),
                                                                                                           ('王五', 0, '16:00:00', '23:59:59');
-INSERT INTO `accessinfo`(`position`, `AccessToOrder`, `AccessToStaff`, `AccessToStock`) VALUES ('admin', 1, 1, 1),
-                                                                                               ('leader', 1, 1, 1),
-                                                                                               ('buyer', 1, 0, 1);
+INSERT INTO `accessinfo`(`position`, `AccessToOrder`, `AccessToStaff`, `AccessToStock`) VALUES ('admin', true, 1, 1),
+                                                                                               ('leader', true, 1, 1),
+                                                                                               ('buyer', true, 0, 1);
 INSERT INTO `account`(`staffId`, `position`, `accountName`, `password`) VALUES (1, 'admin', 'admin', 'admin'),
                                                                                (2, 'leader', 'zhang3', '333333'),
                                                                                (3, 'buyer', 'li4', '444444'),

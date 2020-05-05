@@ -13,7 +13,7 @@ public class OperationRecord implements Serializable {
     //primary key
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "operationId", updatable = false)
+    @Column(name = "operationId")
     private Integer operationID;
 
     @Column(name = "staffId", nullable = false)
@@ -24,7 +24,7 @@ public class OperationRecord implements Serializable {
     private Byte operationType;
 
     //operation details
-    @Column(name = "note", nullable = false)
+    @Column(name = "note")
     private String note;
 
     //need parsing from sql datetime type

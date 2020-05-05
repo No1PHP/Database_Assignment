@@ -5,7 +5,7 @@ USE `restaurant`;
 DROP TABLE IF EXISTS Recipe;
 CREATE TABLE Recipe (
     `recipeID`              INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `recipeName`            CHAR(30) NOT NULL,
+    `recipeName`            CHAR(30) NOT NULL UNIQUE ,
     `relevantIngredient`    JSON NOT NULL,
     `price`                 FLOAT NOT NULL,
 
@@ -15,7 +15,7 @@ CREATE TABLE Recipe (
 DROP TABLE IF EXISTS AccessInfo;
 CREATE TABLE AccessInfo(
     `position`              VARCHAR(20) PRIMARY KEY,
-    `AccessToOrder`         TINYINT(1),
+    `AccessToOrder`         BOOLEAN,
     `AccessToStaff`         TINYINT(1),
     `AccessToStock`         TINYINT(1)
 );
@@ -76,7 +76,7 @@ DROP TABLE IF EXISTS Account;
 CREATE TABLE Account(
     `staffId`               INT UNSIGNED PRIMARY KEY,
     `position`              VARCHAR(20),
-    `accountName`           VARCHAR(20) NOT NULL,
+    `accountName`           VARCHAR(20) NOT NULL UNIQUE ,
     `password`              VARCHAR(20) NOT NULL DEFAULT '123456',
 
     FOREIGN KEY (`staffId`) REFERENCES Staff(`staff_id`) ON UPDATE CASCADE ON DELETE CASCADE ,

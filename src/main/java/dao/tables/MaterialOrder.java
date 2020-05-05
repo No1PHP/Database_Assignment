@@ -10,11 +10,11 @@ public class MaterialOrder implements Serializable {
      //primary key
      //corresponds to the operationRecord table, foreign key
     @Id
-    @Column(name = "op_OrderID", nullable = false)
+    @Column(name = "op_OrderID")
      private Integer operationOrderID;
 
      //??
-     @Column(name = "op_storageID", nullable = false)
+     @Column(name = "op_storageID")
      private Integer operationStorageID;
 
      //dictation index

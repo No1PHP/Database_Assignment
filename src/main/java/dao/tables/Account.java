@@ -16,10 +16,10 @@ public class Account implements Serializable {//这个类是否实现接口还�
     @Column(name = "position", length = 20)
     private String position;
 
-    @Column(name = "accountName", length = 20)
+    @Column(name = "accountName", length = 20, nullable = false, unique = true)
     private String accountName;
 
-    @Column(name = "password", length = 20)
+    @Column(name = "password", length = 20, nullable = false)
     private String passwordHashValue;
 
     /********************************************************/

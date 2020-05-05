@@ -79,6 +79,11 @@
             <artifactId>hibernate-validator</artifactId>
             <version>6.1.4.Final</version>
         </dependency>
+        <dependency>
+            <groupId>com.vladmihalcea</groupId>
+            <artifactId>hibernate-types-5</artifactId>
+            <version>2.9.9</version>
+        </dependency>
 
         <!--c3p0-->
         <dependency>

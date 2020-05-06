@@ -64,7 +64,7 @@ CREATE TABLE TransactionRecord (
     `stall_id`              INT UNSIGNED NOT NULL,
     `recipeID`              INT UNSIGNED NOT NULL,
     `TransactionTime`       DATETIME NOT NULL,
-    `numbers`               TINYINT NULL DEFAULT 1,
+    `numbers`               TINYINT DEFAULT 1,
     `TransactionPrice`      FLOAT NOT NULL,
 
     PRIMARY KEY (`TransactionID`),

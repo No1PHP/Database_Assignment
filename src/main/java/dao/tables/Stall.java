@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "StallInfo")
+@Table(name = "Stall")
 public class Stall implements Serializable {
     private static final long serialVersionUID = 9L;
     @Id
@@ -16,7 +16,7 @@ public class Stall implements Serializable {
     private String stallName;
 
     @Column(name = "stall_location", nullable = false, unique = true)
-    private String stallLocation;
+    private Integer stallLocation;
 
     @Column(name = "stall_rent", nullable = false)
     private Float stallRent;
@@ -50,11 +50,11 @@ public class Stall implements Serializable {
         this.stallName = stallName;
     }
 
-    public String getStallLocation() {
+    public Integer getStallLocation() {
         return stallLocation;
     }
 
-    public void setStallLocation(String stallLocation) {
+    public void setStallLocation(Integer stallLocation) {
         this.stallLocation = stallLocation;
     }
 

@@ -10,7 +10,7 @@ public class Staff implements Serializable {
     private static final long serialVersionUID = 8L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "staff_id", updatable = false)
+    @Column(name = "staff_id")
     private Integer staffID;
 
     @Column(name = "staff_name", length = 30, nullable = false)

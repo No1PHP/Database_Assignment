@@ -1,15 +1,10 @@
 package dao.DAOInterfaces;
 
 import dao.tables.OperationRecord;
-import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import java.sql.Date;
 import java.util.List;
 

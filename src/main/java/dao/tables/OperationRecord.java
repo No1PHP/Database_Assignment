@@ -5,6 +5,8 @@ import org.springframework.data.annotation.CreatedDate;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "OperationRecord")
@@ -34,6 +36,21 @@ public class OperationRecord implements Serializable {
 
     @Column(name = "willSendUpdateMessage", nullable = false)
     private Boolean willSendUpdateMessage;
+    /********************************************************/
+    //material order foreign key
+    @OneToMany(targetEntity = MaterialOrder.class, cascade = CascadeType.ALL)
+    @JoinColumn(name = "op_OrderID", referencedColumnName = "operationId")
+    private Set<MaterialOrder> materialOrders = new HashSet<>();
+
+    //material order foreign key
+    @OneToMany(targetEntity = MaterialOrder.class, cascade = CascadeType.ALL)
+    @JoinColumn(name = "op_StorageID", referencedColumnName = "operationId")
+    private Set<MaterialOrder> materialStorage = new HashSet<>();
+
+    //schedule record foreign key
+    @OneToMany(targetEntity = ScheduleRecord.class, cascade = CascadeType.ALL)
+    @JoinColumn(name = "op_ID", referencedColumnName = "operationId")
+    private Set<ScheduleRecord> scheduleRecords = new HashSet<>();
 
     /********************************************************/
     public Integer getOperationID() {
@@ -82,6 +99,30 @@ public class OperationRecord implements Serializable {
 
     public void setWillSendUpdateMessage(Boolean willSendUpdateMessage) {
         this.willSendUpdateMessage = willSendUpdateMessage;
+    }
+
+    public Set<MaterialOrder> getMaterialOrders() {
+        return materialOrders;
+    }
+
+    public void setMaterialOrders(Set<MaterialOrder> materialOrders) {
+        this.materialOrders = materialOrders;
+    }
+
+    public Set<MaterialOrder> getMaterialStorage() {
+        return materialStorage;
+    }
+
+    public void setMaterialStorage(Set<MaterialOrder> materialStorage) {
+        this.materialStorage = materialStorage;
+    }
+
+    public Set<ScheduleRecord> getScheduleRecords() {
+        return scheduleRecords;
+    }
+
+    public void setScheduleRecords(Set<ScheduleRecord> scheduleRecords) {
+        this.scheduleRecords = scheduleRecords;
     }
 
     @Override

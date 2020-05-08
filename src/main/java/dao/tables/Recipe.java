@@ -5,7 +5,9 @@ import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import javax.persistence.*;
 
 @Entity
@@ -31,6 +33,11 @@ public class Recipe implements Serializable {
     //recipe price
     @Column(name = "price", nullable = false)
     private Float price;
+    /********************************************************/
+    //transaction record foreign key
+    @OneToMany(targetEntity = TransactionRecord.class, cascade = CascadeType.ALL)
+    @JoinColumn(name = "recipeID", referencedColumnName = "recipeID")
+    private Set<TransactionRecord> transactionRecords = new HashSet<>();
 
     /********************************************************/
 
@@ -64,6 +71,14 @@ public class Recipe implements Serializable {
 
     public void setPrice(Float price) {
         this.price = price;
+    }
+
+    public Set<TransactionRecord> getTransactionRecords() {
+        return transactionRecords;
+    }
+
+    public void setTransactionRecords(Set<TransactionRecord> transactionRecords) {
+        this.transactionRecords = transactionRecords;
     }
 
     @Override

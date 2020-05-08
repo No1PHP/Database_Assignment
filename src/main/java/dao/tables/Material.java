@@ -2,6 +2,8 @@ package dao.tables;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 
 @Entity
@@ -29,6 +31,11 @@ public class Material implements Serializable {
     //fresh period
     @Column(name = "availableTime", nullable = false)
     private Integer availablePeriod;
+    /********************************************************/
+    //material order foreign key
+    @OneToMany(targetEntity = MaterialOrder.class, cascade = CascadeType.ALL)
+    @JoinColumn(name = "materialID", referencedColumnName = "id")
+    private Set<MaterialOrder> materialOrders = new HashSet<>();
 
     /********************************************************/
     public Integer getId() {
@@ -77,6 +84,14 @@ public class Material implements Serializable {
 
     public void setAvailablePeriod(Integer availablePeriod) {
         this.availablePeriod = availablePeriod;
+    }
+
+    public Set<MaterialOrder> getMaterialOrders() {
+        return materialOrders;
+    }
+
+    public void setMaterialOrders(Set<MaterialOrder> materialOrders) {
+        this.materialOrders = materialOrders;
     }
 
     @Override

@@ -10,8 +10,8 @@ INSERT INTO `material`(`name`, `type`, `unit_price`, `availableTime`) VALUES ('f
                                                                              ('rape', 1, 8.8, 8);
 INSERT INTO `recipe`(`recipeName`, `relevantIngredient`, `price`) VALUES ('小笼包', JSON_ARRAY('flour', 'pork'), 5.0),
                                                                          ('羊肉烧饼', JSON_ARRAY('mutton', 'flour', 'cooking oil'), 7.5);
-INSERT INTO `stall`(`stall_name`, `stall_location`, `stall_rent`) VALUES ('广东风味1', 6, 5000),
-                                                                         ('广东风味2', 10, 5000);
+INSERT INTO `stall`(`stall_name`, `stall_location`, `stall_rent`, `availableRecipe`) VALUES ('广东风味1', 6, 5000, JSON_ARRAY('小笼包')),
+                                                                                            ('广东风味2', 10, 5000, JSON_ARRAY('小笼包', '羊肉烧饼'));
 INSERT INTO `staff`(`staff_name`, `staff_category`, `Effe_work_time_starts`, `Effe_work_time_end`) VALUES ('admin', 0, '00:00:00', '00:00:00'),
                                                                                                           ('张三', 0, '09:00:00', '18:00:00'),
                                                                                                           ('李四', 0, '12:00:00', '21:00:00'),

@@ -2,6 +2,8 @@ package dao.tables;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "Account")
@@ -21,6 +23,11 @@ public class Account implements Serializable {//这个类是否实现接口还�
 
     @Column(name = "password", length = 20, nullable = false)
     private String passwordHashValue;
+    /********************************************************/
+    //operation record foreign key
+    @OneToMany(targetEntity = OperationRecord.class, cascade = CascadeType.ALL)
+    @JoinColumn(name = "staffId", referencedColumnName = "staffId")
+    private Set<OperationRecord> operationRecords = new HashSet<>();
 
     /********************************************************/
     public Integer getStaffID() {
@@ -53,6 +60,14 @@ public class Account implements Serializable {//这个类是否实现接口还�
 
     public void setPasswordHashValue(String passwordHashValue) {
         this.passwordHashValue = passwordHashValue;
+    }
+
+    public Set<OperationRecord> getOperationRecords() {
+        return operationRecords;
+    }
+
+    public void setOperationRecords(Set<OperationRecord> operationRecords) {
+        this.operationRecords = operationRecords;
     }
 
     @Override

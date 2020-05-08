@@ -3,6 +3,8 @@ package dao.tables;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Time;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "Staff")
@@ -26,6 +28,16 @@ public class Staff implements Serializable {
     //different from mysql datetime!!!
     @Column(name = "Effe_work_time_end")
     private Time timeEndWorking;
+    /********************************************************/
+    //account foreign key
+    @OneToMany(targetEntity = Account.class, cascade = CascadeType.ALL)
+    @JoinColumn(name = "staffId", referencedColumnName = "staff_id")
+    private Set<Account> accounts = new HashSet<>();
+
+    //schedule record foreign key
+    @OneToMany(targetEntity = ScheduleRecord.class, cascade = CascadeType.ALL)
+    @JoinColumn(name = "staff_id", referencedColumnName = "staff_id")
+    private Set<ScheduleRecord> scheduleRecords = new HashSet<>();
 
     /********************************************************/
     public Integer getStaffID() {
@@ -66,6 +78,22 @@ public class Staff implements Serializable {
 
     public void setTimeEndWorking(Time timeEndWorking) {
         this.timeEndWorking = timeEndWorking;
+    }
+
+    public Set<Account> getAccounts() {
+        return accounts;
+    }
+
+    public void setAccounts(Set<Account> accounts) {
+        this.accounts = accounts;
+    }
+
+    public Set<ScheduleRecord> getScheduleRecords() {
+        return scheduleRecords;
+    }
+
+    public void setScheduleRecords(Set<ScheduleRecord> scheduleRecords) {
+        this.scheduleRecords = scheduleRecords;
     }
 
     @Override

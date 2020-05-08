@@ -36,6 +36,7 @@ CREATE TABLE Stall(
     `stall_name`            CHAR(40) NOT NULL UNIQUE,
     `stall_location`        SMALLINT NOT NULL UNIQUE,
     `stall_rent`            FLOAT NOT NULL,
+    `availableRecipe`       JSON NOT NULL,
     `oper_cost_last_month`  FLOAT DEFAULT 0.0,
     `oper_time`             INT UNSIGNED NOT NULL DEFAULT 0,
     `Aver_mon_sales`        FLOAT DEFAULT 0.0,
@@ -68,7 +69,7 @@ CREATE TABLE TransactionRecord (
     `TransactionPrice`      FLOAT NOT NULL,
 
     PRIMARY KEY (`TransactionID`),
-    FOREIGN KEY (`recipeID`) REFERENCES Recipe (`recipeID`)  ON UPDATE CASCADE ON DELETE NO ACTION,
+    FOREIGN KEY (`recipeID`) REFERENCES Recipe (`recipeID`)  ON UPDATE CASCADE ON DELETE RESTRICT ,
     FOREIGN KEY (`stall_id`) REFERENCES Stall (`stall_id`) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
@@ -80,7 +81,7 @@ CREATE TABLE Account(
     `password`              VARCHAR(20) NOT NULL DEFAULT '123456',
 
     FOREIGN KEY (`staffId`) REFERENCES Staff(`staff_id`) ON UPDATE CASCADE ON DELETE CASCADE ,
-    FOREIGN KEY (`position`) REFERENCES AccessInfo(`position`) ON UPDATE CASCADE ON DELETE SET NULL
+    FOREIGN KEY (`position`) REFERENCES AccessInfo(`position`) ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
 -- 有时间
@@ -93,7 +94,7 @@ CREATE TABLE `OperationRecord`(
     `operationTime`         DATETIME NOT NULL,
     `willSendUpdateMessage` TINYINT(1),-- checkbit Of 推送通知
 
-    FOREIGN KEY(`staffId`) REFERENCES Account(`staffId`) ON UPDATE CASCADE ON DELETE NO ACTION
+    FOREIGN KEY(`staffId`) REFERENCES Account(`staffId`) ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
 DROP TABLE IF EXISTS MaterialOrder;
@@ -105,8 +106,8 @@ CREATE TABLE MaterialOrder (
 
     PRIMARY KEY (`op_OrderID`),
     FOREIGN KEY(`materialID`) REFERENCES Material(`id`) ON UPDATE CASCADE ON DELETE CASCADE,
-    FOREIGN KEY(`op_OrderID`) REFERENCES OperationRecord(operationId) ON UPDATE CASCADE ON DELETE RESTRICT ,
-    FOREIGN KEY(`op_StorageID`) REFERENCES OperationRecord(operationId) ON UPDATE CASCADE ON DELETE RESTRICT
+    FOREIGN KEY(`op_OrderID`) REFERENCES OperationRecord(`operationId`) ON UPDATE CASCADE ON DELETE CASCADE ,
+    FOREIGN KEY(`op_StorageID`) REFERENCES OperationRecord(`operationId`) ON UPDATE CASCADE ON DELETE RESTRICT
 ) ENGINE = InnoDB DEFAULT CHARSET=utf8;
 
 -- 有时间
@@ -118,6 +119,6 @@ CREATE TABLE `Schedule_record`(
     `work_time_end`         DATETIME NOT NULL,
 
     PRIMARY KEY (`op_ID`),
-    FOREIGN KEY (`op_ID`) REFERENCES OperationRecord(operationId) ON UPDATE CASCADE ON DELETE RESTRICT ,
+    FOREIGN KEY (`op_ID`) REFERENCES OperationRecord(operationId) ON UPDATE CASCADE ON DELETE CASCADE ,
     FOREIGN KEY (`staff_id`) REFERENCES Staff(`staff_id`) ON UPDATE CASCADE ON DELETE CASCADE
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;

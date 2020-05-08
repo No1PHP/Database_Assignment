@@ -2,6 +2,8 @@ package dao.tables;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "AccessInfo")
@@ -24,6 +26,11 @@ public class AccessInfo implements Serializable {
     //access authority to the stock(materials?) related tables
     @Column(name = "AccessToStock", nullable = false)
     private Boolean accessToStock;
+    /********************************************************/
+    //account foreign key
+    @OneToMany(targetEntity = Account.class, cascade = CascadeType.ALL)
+    @JoinColumn(name = "position", referencedColumnName = "position")
+    private Set<Account> accounts = new HashSet<>();
 
     /********************************************************/
     public String getPosition() {
@@ -56,6 +63,14 @@ public class AccessInfo implements Serializable {
 
     public void setAccessToStock(Boolean accessToStock) {
         this.accessToStock = accessToStock;
+    }
+
+    public Set<Account> getAccounts() {
+        return accounts;
+    }
+
+    public void setAccounts(Set<Account> accounts) {
+        this.accounts = accounts;
     }
 
     @Override

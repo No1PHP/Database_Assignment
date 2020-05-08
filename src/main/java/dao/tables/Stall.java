@@ -1,7 +1,12 @@
 package dao.tables;
 
+import org.hibernate.annotations.Type;
+
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "Stall")
@@ -21,6 +26,10 @@ public class Stall implements Serializable {
     @Column(name = "stall_rent", nullable = false)
     private Float stallRent;
 
+    @Type(type = "json")
+    @Column(name = "availableRecipe", nullable = false, columnDefinition = "json")
+    private List<String> availableRecipe;
+
     @Column(name = "oper_cost_last_month")
     private Float costLastMonth = 0.0F;
 
@@ -32,6 +41,11 @@ public class Stall implements Serializable {
 
     @Column(name = "Aver_mon_sales")
     private Float aveSalesIncome = 0.0F;
+    /********************************************************/
+    //transaction record foreign key
+    @OneToMany(targetEntity = TransactionRecord.class, cascade = CascadeType.ALL)
+    @JoinColumn(name = "stall_id", referencedColumnName = "stall_id")
+    private Set<TransactionRecord> transactionRecords = new HashSet<>();
 
     /********************************************************/
     public Integer getStallID() {
@@ -66,6 +80,14 @@ public class Stall implements Serializable {
         this.stallRent = stallRent;
     }
 
+    public List<String> getAvailableRecipe() {
+        return availableRecipe;
+    }
+
+    public void setAvailableRecipe(List<String> availableRecipe) {
+        this.availableRecipe = availableRecipe;
+    }
+
     public Float getCostLastMonth() {
         return costLastMonth;
     }
@@ -96,6 +118,14 @@ public class Stall implements Serializable {
 
     public void setAveSalesIncome(Float aveSalesIncome) {
         this.aveSalesIncome = aveSalesIncome;
+    }
+
+    public Set<TransactionRecord> getTransactionRecords() {
+        return transactionRecords;
+    }
+
+    public void setTransactionRecords(Set<TransactionRecord> transactionRecords) {
+        this.transactionRecords = transactionRecords;
     }
 
     @Override

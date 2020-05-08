@@ -18,7 +18,7 @@ public interface OperationRecordRepository extends JpaRepository<OperationRecord
 
     List<OperationRecord> findByOperationType(byte type);
 
-    List<OperationRecord> findByOperationTypeOrderByOperationTime(byte type);
+    List<OperationRecord> findByOperationTypeAndOperationTimeBetween(byte type, Date time1, Date time2);
 
     List<OperationRecord> findByNoteLike(String value);
 

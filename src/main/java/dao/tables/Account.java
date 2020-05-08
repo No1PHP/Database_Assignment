@@ -25,7 +25,8 @@ public class Account implements Serializable {//这个类是否实现接口还�
     private String passwordHashValue;
     /********************************************************/
     //account foreign key
-    @OneToOne(mappedBy = "account", optional = false, cascade = {CascadeType.MERGE, CascadeType.REFRESH})
+    @OneToOne(targetEntity = Staff.class, optional = false, cascade = {CascadeType.MERGE, CascadeType.REFRESH})
+    @JoinColumn(name = "staffId", referencedColumnName = "staff_id")
     private Staff staff;
 
     //account foreign key

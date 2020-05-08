@@ -5,8 +5,6 @@ import org.springframework.data.annotation.CreatedDate;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Table(name = "OperationRecord")
@@ -43,19 +41,16 @@ public class OperationRecord implements Serializable {
     private Staff staff;
 
     //material order foreign key
-    @OneToMany(targetEntity = MaterialOrder.class, cascade = CascadeType.ALL)
-    @JoinColumn(name = "op_OrderID", referencedColumnName = "operationId")
-    private Set<MaterialOrder> materialOrders = new HashSet<>();
+    @OneToOne(mappedBy = "orderRecord", cascade = CascadeType.ALL)
+    private MaterialOrder orderedMaterialRecord;
 
     //material order foreign key
-    @OneToMany(targetEntity = MaterialOrder.class, cascade = CascadeType.ALL)
-    @JoinColumn(name = "op_StorageID", referencedColumnName = "operationId")
-    private Set<MaterialOrder> materialStorage = new HashSet<>();
+    @OneToOne(mappedBy = "storageRecord", cascade = {CascadeType.MERGE, CascadeType.REFRESH})
+    private MaterialOrder storageMaterialRecord;
 
     //schedule record foreign key
-    @OneToMany(targetEntity = ScheduleRecord.class, cascade = CascadeType.ALL)
-    @JoinColumn(name = "op_ID", referencedColumnName = "operationId")
-    private Set<ScheduleRecord> scheduleRecords = new HashSet<>();
+    @OneToOne(mappedBy = "operationRecord", cascade = CascadeType.ALL)
+    private ScheduleRecord scheduleRecord;
 
     /********************************************************/
     public Integer getOperationID() {
@@ -114,28 +109,28 @@ public class OperationRecord implements Serializable {
         this.staff = staff;
     }
 
-    public Set<MaterialOrder> getMaterialOrders() {
-        return materialOrders;
+    public MaterialOrder getOrderedMaterialRecord() {
+        return orderedMaterialRecord;
     }
 
-    public void setMaterialOrders(Set<MaterialOrder> materialOrders) {
-        this.materialOrders = materialOrders;
+    public void setOrderedMaterialRecord(MaterialOrder orderedMaterialRecord) {
+        this.orderedMaterialRecord = orderedMaterialRecord;
     }
 
-    public Set<MaterialOrder> getMaterialStorage() {
-        return materialStorage;
+    public MaterialOrder getStorageMaterialRecord() {
+        return storageMaterialRecord;
     }
 
-    public void setMaterialStorage(Set<MaterialOrder> materialStorage) {
-        this.materialStorage = materialStorage;
+    public void setStorageMaterialRecord(MaterialOrder storageMaterialRecord) {
+        this.storageMaterialRecord = storageMaterialRecord;
     }
 
-    public Set<ScheduleRecord> getScheduleRecords() {
-        return scheduleRecords;
+    public ScheduleRecord getScheduleRecord() {
+        return scheduleRecord;
     }
 
-    public void setScheduleRecords(Set<ScheduleRecord> scheduleRecords) {
-        this.scheduleRecords = scheduleRecords;
+    public void setScheduleRecord(ScheduleRecord scheduleRecord) {
+        this.scheduleRecord = scheduleRecord;
     }
 
     @Override

@@ -33,8 +33,7 @@ public class Material implements Serializable {
     private Integer availablePeriod;
     /********************************************************/
     //material order foreign key
-    @OneToMany(targetEntity = MaterialOrder.class, cascade = CascadeType.ALL)
-    @JoinColumn(name = "materialID", referencedColumnName = "id")
+    @OneToMany(mappedBy = "material", cascade = CascadeType.ALL)
     private Set<MaterialOrder> materialOrders = new HashSet<>();
 
     /********************************************************/

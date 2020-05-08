@@ -3,6 +3,8 @@ package dao.tables;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "Schedule_record")
@@ -22,6 +24,16 @@ public class ScheduleRecord implements Serializable {
 
     @Column(name = "work_time_end", nullable = false)
     private Date timeScheduledToEndWorking;
+    /********************************************************/
+    //schedule record foreign key
+    @ManyToOne(targetEntity = Staff.class, optional = false, cascade = {CascadeType.MERGE, CascadeType.REFRESH})
+    @JoinColumn(name = "staff_id", referencedColumnName = "staff_id")
+    private Staff staff;
+
+    //schedule record foreign key
+    @OneToOne(targetEntity = OperationRecord.class, optional = false, cascade = CascadeType.ALL)
+    @JoinColumn(name = "op_ID", referencedColumnName = "operationId")
+    private OperationRecord operationRecord;
 
     /********************************************************/
     public Integer getOperationID() {
@@ -54,6 +66,22 @@ public class ScheduleRecord implements Serializable {
 
     public void setTimeScheduledToEndWorking(Date timeScheduledToEndWorking) {
         this.timeScheduledToEndWorking = timeScheduledToEndWorking;
+    }
+
+    public Staff getStaff() {
+        return staff;
+    }
+
+    public void setStaff(Staff staff) {
+        this.staff = staff;
+    }
+
+    public OperationRecord getOperationRecord() {
+        return operationRecord;
+    }
+
+    public void setOperationRecord(OperationRecord operationRecord) {
+        this.operationRecord = operationRecord;
     }
 
     @Override

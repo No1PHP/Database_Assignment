@@ -2,6 +2,8 @@ package dao.tables;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "MaterialOrder")
@@ -23,7 +25,22 @@ public class MaterialOrder implements Serializable {
 
     @Column(name = "amount", nullable = false)
     private Float materialAmount;
+    /********************************************************/
+    //material order foreign key
+    @ManyToOne(targetEntity = Material.class, optional = false, cascade = {CascadeType.MERGE, CascadeType.REFRESH})
+    @JoinColumn(name = "materialID", referencedColumnName = "id")
+    private Material material;
 
+
+    //material order foreign key
+    @OneToOne(targetEntity = OperationRecord.class, optional = false, cascade = CascadeType.ALL)
+    @JoinColumn(name = "op_OrderID", referencedColumnName = "operationId")
+    private OperationRecord orderRecord;
+
+    //material order foreign key
+    @OneToOne(targetEntity = OperationRecord.class, cascade = CascadeType.ALL)
+    @JoinColumn(name = "op_StorageID", referencedColumnName = "operationId")
+    private OperationRecord storageRecord;
     /********************************************************/
     public Integer getOperationOrderID() {
         return operationOrderID;
@@ -55,6 +72,30 @@ public class MaterialOrder implements Serializable {
 
     public void setMaterialAmount(Float materialAmount) {
         this.materialAmount = materialAmount;
+    }
+
+    public Material getMaterial() {
+        return material;
+    }
+
+    public void setMaterial(Material material) {
+        this.material = material;
+    }
+
+    public OperationRecord getOrderRecord() {
+        return orderRecord;
+    }
+
+    public void setOrderRecord(OperationRecord orderRecord) {
+        this.orderRecord = orderRecord;
+    }
+
+    public OperationRecord getStorageRecord() {
+        return storageRecord;
+    }
+
+    public void setStorageRecord(OperationRecord storageRecord) {
+        this.storageRecord = storageRecord;
     }
 
     @Override

@@ -58,7 +58,6 @@ CREATE TABLE Staff(
     PRIMARY KEY ( `staff_id` )
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- 由stall维护
 DROP TABLE IF EXISTS TransactionRecord;
 CREATE TABLE TransactionRecord (
     `TransactionID`         INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -73,7 +72,6 @@ CREATE TABLE TransactionRecord (
     FOREIGN KEY (`stall_id`) REFERENCES Stall (`stall_id`) ON UPDATE CASCADE ON DELETE SET NULL
 );
 
--- 由staff维护
 DROP TABLE IF EXISTS Account;
 CREATE TABLE Account(
     `staffId`               INT UNSIGNED PRIMARY KEY,
@@ -85,7 +83,6 @@ CREATE TABLE Account(
     FOREIGN KEY (`position`) REFERENCES AccessInfo(`position`) ON UPDATE CASCADE ON DELETE SET NULL
 );
 
--- 有时间
 DROP TABLE IF EXISTS `OperationRecord`;
 CREATE TABLE `OperationRecord`(
     `operationId`           INT UNSIGNED PRIMARY KEY,

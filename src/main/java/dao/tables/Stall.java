@@ -26,10 +26,6 @@ public class Stall implements Serializable {
     @Column(name = "stall_rent", nullable = false)
     private Float stallRent;
 
-    @Type(type = "json")
-    @Column(name = "availableRecipe", nullable = false, columnDefinition = "json")
-    private List<String> availableRecipe;
-
     @Column(name = "oper_cost_last_month")
     private Float costLastMonth = 0.0F;
 
@@ -45,6 +41,14 @@ public class Stall implements Serializable {
     //transaction record foreign key
     @OneToMany(mappedBy = "stall", cascade = CascadeType.ALL)
     private Set<TransactionRecord> transactionRecords = new HashSet<>();
+
+    @ManyToMany(targetEntity = Recipe.class, cascade = {CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST})
+    @JoinTable(
+            name = "Recipe_Stall_Association",
+            joinColumns = {@JoinColumn(name = "stall_id", referencedColumnName = "stall_id")},
+            inverseJoinColumns = {@JoinColumn(name = "recipe_id", referencedColumnName = "recipeID")}
+    )
+    private Set<Recipe> recipes = new HashSet<>();
 
     /********************************************************/
     public Integer getStallID() {
@@ -77,14 +81,6 @@ public class Stall implements Serializable {
 
     public void setStallRent(Float stallRent) {
         this.stallRent = stallRent;
-    }
-
-    public List<String> getAvailableRecipe() {
-        return availableRecipe;
-    }
-
-    public void setAvailableRecipe(List<String> availableRecipe) {
-        this.availableRecipe = availableRecipe;
     }
 
     public Float getCostLastMonth() {
@@ -127,17 +123,26 @@ public class Stall implements Serializable {
         this.transactionRecords = transactionRecords;
     }
 
+    public Set<Recipe> getRecipes() {
+        return recipes;
+    }
+
+    public void setRecipes(Set<Recipe> recipes) {
+        this.recipes = recipes;
+    }
+
     @Override
     public String toString() {
         return "Stall{" +
                 "stallID=" + stallID +
                 ", stallName='" + stallName + '\'' +
-                ", stallLocation='" + stallLocation + '\'' +
+                ", stallLocation=" + stallLocation +
                 ", stallRent=" + stallRent +
                 ", costLastMonth=" + costLastMonth +
                 ", manageTimeSoFar=" + manageTimeSoFar +
                 ", aveMonthlySalesAmount=" + aveMonthlySalesAmount +
                 ", aveSalesIncome=" + aveSalesIncome +
+                ", transactionRecords=" + transactionRecords +
                 '}';
     }
 }

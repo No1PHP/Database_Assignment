@@ -36,6 +36,8 @@ public class Material implements Serializable {
     @OneToMany(mappedBy = "material", cascade = CascadeType.ALL)
     private Set<MaterialOrder> materialOrders = new HashSet<>();
 
+    @ManyToMany(mappedBy = "materials", cascade = {CascadeType.MERGE, CascadeType.REFRESH})
+    private Set<Recipe> recipes = new HashSet<>();
     /********************************************************/
     public Integer getId() {
         return id;
@@ -91,6 +93,14 @@ public class Material implements Serializable {
 
     public void setMaterialOrders(Set<MaterialOrder> materialOrders) {
         this.materialOrders = materialOrders;
+    }
+
+    public Set<Recipe> getRecipes() {
+        return recipes;
+    }
+
+    public void setRecipes(Set<Recipe> recipes) {
+        this.recipes = recipes;
     }
 
     @Override

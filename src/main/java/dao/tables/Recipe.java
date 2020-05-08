@@ -25,11 +25,6 @@ public class Recipe implements Serializable {
     @Column(name = "recipeName", length = 30, nullable = false, unique = true)
     private String recipeName;
 
-    //set type in mysql
-    @Type(type = "json")
-    @Column(name = "relevantIngredient", nullable = false, columnDefinition = "json")
-    private List<String> relevantIngredient;
-
     //recipe price
     @Column(name = "price", nullable = false)
     private Float price;
@@ -37,6 +32,17 @@ public class Recipe implements Serializable {
     //transaction record foreign key
     @OneToMany(mappedBy = "recipe", cascade = {CascadeType.REFRESH, CascadeType.MERGE})
     private Set<TransactionRecord> transactionRecords = new HashSet<>();
+
+    @ManyToMany(mappedBy = "recipes", cascade = {CascadeType.MERGE, CascadeType.REFRESH})
+    private Set<Stall> stalls = new HashSet<>();
+
+    @ManyToMany(targetEntity = Material.class, cascade = {CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST})
+    @JoinTable(
+            name = "Recipe_Material_Association",
+            joinColumns = {@JoinColumn(name = "recipe_id", referencedColumnName = "recipeID")},
+            inverseJoinColumns = {@JoinColumn(name = "material_id", referencedColumnName = "id")}
+    )
+    private Set<Material> materials = new HashSet<>();
 
     /********************************************************/
 
@@ -56,14 +62,6 @@ public class Recipe implements Serializable {
         this.recipeName = recipeName;
     }
 
-    public List<String> getRelevantIngredient() {
-        return relevantIngredient;
-    }
-
-    public void setRelevantIngredient(List<String> relevantIngredient) {
-        this.relevantIngredient = relevantIngredient;
-    }
-
     public Float getPrice() {
         return price;
     }
@@ -80,12 +78,27 @@ public class Recipe implements Serializable {
         this.transactionRecords = transactionRecords;
     }
 
+    public Set<Stall> getStalls() {
+        return stalls;
+    }
+
+    public void setStalls(Set<Stall> stalls) {
+        this.stalls = stalls;
+    }
+
+    public Set<Material> getMaterials() {
+        return materials;
+    }
+
+    public void setMaterials(Set<Material> materials) {
+        this.materials = materials;
+    }
+
     @Override
     public String toString() {
         return "Recipe{" +
                 "recipeID=" + recipeID +
                 ", recipeName='" + recipeName + '\'' +
-                ", relevantIngredient='" + relevantIngredient + '\'' +
                 ", price=" + price +
                 '}';
     }

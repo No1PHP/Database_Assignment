@@ -6,7 +6,6 @@ DROP TABLE IF EXISTS Recipe;
 CREATE TABLE Recipe (
     `recipeID`              INT UNSIGNED NOT NULL AUTO_INCREMENT,
     `recipeName`            CHAR(30) NOT NULL UNIQUE ,
-    `relevantIngredient`    JSON NOT NULL,
     `price`                 FLOAT NOT NULL,
 
     PRIMARY KEY (`recipeID`)
@@ -36,7 +35,6 @@ CREATE TABLE Stall(
     `stall_name`            CHAR(40) NOT NULL UNIQUE,
     `stall_location`        SMALLINT NOT NULL UNIQUE,
     `stall_rent`            FLOAT NOT NULL,
-    `availableRecipe`       JSON NOT NULL,
     `oper_cost_last_month`  FLOAT DEFAULT 0.0,
     `oper_time`             INT UNSIGNED NOT NULL DEFAULT 0,
     `Aver_mon_sales`        FLOAT DEFAULT 0.0,
@@ -69,7 +67,7 @@ CREATE TABLE TransactionRecord (
 
     PRIMARY KEY (`TransactionID`),
     FOREIGN KEY (`recipeID`) REFERENCES Recipe (`recipeID`)  ON UPDATE CASCADE ON DELETE RESTRICT,
-    FOREIGN KEY (`stall_id`) REFERENCES Stall (`stall_id`) ON UPDATE CASCADE ON DELETE SET NULL
+    FOREIGN KEY (`stall_id`) REFERENCES Stall (`stall_id`) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 DROP TABLE IF EXISTS Account;
@@ -119,4 +117,24 @@ CREATE TABLE `Schedule_record`(
     PRIMARY KEY (`op_ID`),
     FOREIGN KEY (`op_ID`) REFERENCES OperationRecord(operationId) ON UPDATE CASCADE ON DELETE CASCADE ,
     FOREIGN KEY (`staff_id`) REFERENCES Staff(`staff_id`) ON UPDATE CASCADE ON DELETE CASCADE
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `Recipe_Material_Association`;
+CREATE TABLE `Recipe_Material_Association`(
+    `recipe_id`             INT UNSIGNED NOT NULL,
+    `material_id`           INT UNSIGNED NOT NULL,
+
+    PRIMARY KEY (`recipe_id`, `material_id`),
+    FOREIGN KEY (`recipe_id`) REFERENCES Recipe(`recipeID`) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (`material_id`) REFERENCES Material(`id`) ON UPDATE CASCADE ON DELETE CASCADE
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `Recipe_Stall_Association`;
+CREATE TABLE `Recipe_Stall_Association`(
+    `recipe_id`             INT UNSIGNED NOT NULL,
+    `stall_id`              INT UNSIGNED NOT NULL,
+
+    PRIMARY KEY (`recipe_id`, `stall_id`),
+    FOREIGN KEY (`recipe_id`) REFERENCES Recipe(`recipeID`) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (`stall_id`) REFERENCES Stall(`stall_id`) ON UPDATE CASCADE ON DELETE CASCADE
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;

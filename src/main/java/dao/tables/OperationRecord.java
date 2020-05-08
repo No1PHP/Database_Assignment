@@ -37,6 +37,11 @@ public class OperationRecord implements Serializable {
     @Column(name = "willSendUpdateMessage", nullable = false)
     private Boolean willSendUpdateMessage;
     /********************************************************/
+    //operation record foreign key
+    @ManyToOne(targetEntity = Staff.class, optional = false, cascade = {CascadeType.REFRESH, CascadeType.MERGE})
+    @JoinColumn(name = "staffId", referencedColumnName = "staff_Id")
+    private Staff staff;
+
     //material order foreign key
     @OneToMany(targetEntity = MaterialOrder.class, cascade = CascadeType.ALL)
     @JoinColumn(name = "op_OrderID", referencedColumnName = "operationId")
@@ -99,6 +104,14 @@ public class OperationRecord implements Serializable {
 
     public void setWillSendUpdateMessage(Boolean willSendUpdateMessage) {
         this.willSendUpdateMessage = willSendUpdateMessage;
+    }
+
+    public Staff getStaff() {
+        return staff;
+    }
+
+    public void setStaff(Staff staff) {
+        this.staff = staff;
     }
 
     public Set<MaterialOrder> getMaterialOrders() {

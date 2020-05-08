@@ -28,8 +28,7 @@ public class AccessInfo implements Serializable {
     private Boolean accessToStock;
     /********************************************************/
     //account foreign key
-    @OneToMany(targetEntity = Account.class, cascade = CascadeType.ALL)
-    @JoinColumn(name = "position", referencedColumnName = "position")
+    @OneToMany(mappedBy = "accessInfo", cascade = {CascadeType.MERGE, CascadeType.REFRESH})
     private Set<Account> accounts = new HashSet<>();
 
     /********************************************************/

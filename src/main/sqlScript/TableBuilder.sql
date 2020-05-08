@@ -58,21 +58,22 @@ CREATE TABLE Staff(
     PRIMARY KEY ( `staff_id` )
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- 有时间
+-- 由stall维护
 DROP TABLE IF EXISTS TransactionRecord;
 CREATE TABLE TransactionRecord (
     `TransactionID`         INT UNSIGNED NOT NULL AUTO_INCREMENT,
     `stall_id`              INT UNSIGNED NOT NULL,
-    `recipeID`              INT UNSIGNED NOT NULL,
+    `recipeID`              INT UNSIGNED,
     `TransactionTime`       DATETIME NOT NULL,
     `numbers`               TINYINT DEFAULT 1,
     `TransactionPrice`      FLOAT NOT NULL,
 
     PRIMARY KEY (`TransactionID`),
-    FOREIGN KEY (`recipeID`) REFERENCES Recipe (`recipeID`)  ON UPDATE CASCADE ON DELETE RESTRICT ,
-    FOREIGN KEY (`stall_id`) REFERENCES Stall (`stall_id`) ON UPDATE CASCADE ON DELETE CASCADE
+    FOREIGN KEY (`recipeID`) REFERENCES Recipe (`recipeID`)  ON UPDATE CASCADE ON DELETE RESTRICT,
+    FOREIGN KEY (`stall_id`) REFERENCES Stall (`stall_id`) ON UPDATE CASCADE ON DELETE SET NULL
 );
 
+-- 由staff维护
 DROP TABLE IF EXISTS Account;
 CREATE TABLE Account(
     `staffId`               INT UNSIGNED PRIMARY KEY,
@@ -81,7 +82,7 @@ CREATE TABLE Account(
     `password`              VARCHAR(20) NOT NULL DEFAULT '123456',
 
     FOREIGN KEY (`staffId`) REFERENCES Staff(`staff_id`) ON UPDATE CASCADE ON DELETE CASCADE ,
-    FOREIGN KEY (`position`) REFERENCES AccessInfo(`position`) ON UPDATE CASCADE ON DELETE RESTRICT
+    FOREIGN KEY (`position`) REFERENCES AccessInfo(`position`) ON UPDATE CASCADE ON DELETE SET NULL
 );
 
 -- 有时间
@@ -92,9 +93,9 @@ CREATE TABLE `OperationRecord`(
     `operationType`         TINYINT NOT NULL,
     `note`                  TEXT,
     `operationTime`         DATETIME NOT NULL,
-    `willSendUpdateMessage` TINYINT(1),-- checkbit Of 推送通知
+    `willSendUpdateMessage` TINYINT(1),-- check bit Of 推送通知
 
-    FOREIGN KEY(`staffId`) REFERENCES Account(`staffId`) ON UPDATE CASCADE ON DELETE RESTRICT
+    FOREIGN KEY(`staffId`) REFERENCES Staff(`staff_id`) ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
 DROP TABLE IF EXISTS MaterialOrder;

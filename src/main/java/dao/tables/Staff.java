@@ -30,14 +30,19 @@ public class Staff implements Serializable {
     private Time timeEndWorking;
     /********************************************************/
     //account foreign key
-    @OneToMany(targetEntity = Account.class, cascade = CascadeType.ALL)
-    @JoinColumn(name = "staffId", referencedColumnName = "staff_id")
-    private Set<Account> accounts = new HashSet<>();
+    @OneToOne(targetEntity = Account.class, cascade = CascadeType.ALL)
+    @JoinColumn(name = "staff_Id", referencedColumnName = "staffId")
+    private Account account;
 
     //schedule record foreign key
     @OneToMany(targetEntity = ScheduleRecord.class, cascade = CascadeType.ALL)
     @JoinColumn(name = "staff_id", referencedColumnName = "staff_id")
     private Set<ScheduleRecord> scheduleRecords = new HashSet<>();
+
+    //operation record foreign key
+    @OneToMany(mappedBy = "staff", cascade = {CascadeType.REFRESH, CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinColumn(name = "staffId", referencedColumnName = "staff_Id")
+    private Set<OperationRecord> operationRecords = new HashSet<>();
 
     /********************************************************/
     public Integer getStaffID() {
@@ -80,12 +85,12 @@ public class Staff implements Serializable {
         this.timeEndWorking = timeEndWorking;
     }
 
-    public Set<Account> getAccounts() {
-        return accounts;
+    public Account getAccount() {
+        return account;
     }
 
-    public void setAccounts(Set<Account> accounts) {
-        this.accounts = accounts;
+    public void setAccount(Account account) {
+        this.account = account;
     }
 
     public Set<ScheduleRecord> getScheduleRecords() {
@@ -94,6 +99,14 @@ public class Staff implements Serializable {
 
     public void setScheduleRecords(Set<ScheduleRecord> scheduleRecords) {
         this.scheduleRecords = scheduleRecords;
+    }
+
+    public Set<OperationRecord> getOperationRecords() {
+        return operationRecords;
+    }
+
+    public void setOperationRecords(Set<OperationRecord> operationRecords) {
+        this.operationRecords = operationRecords;
     }
 
     @Override

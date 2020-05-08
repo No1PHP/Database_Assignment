@@ -43,8 +43,7 @@ public class Stall implements Serializable {
     private Float aveSalesIncome = 0.0F;
     /********************************************************/
     //transaction record foreign key
-    @OneToMany(targetEntity = TransactionRecord.class, cascade = CascadeType.ALL)
-    @JoinColumn(name = "stall_id", referencedColumnName = "stall_id")
+    @OneToMany(mappedBy = "stall", cascade = CascadeType.ALL)
     private Set<TransactionRecord> transactionRecords = new HashSet<>();
 
     /********************************************************/

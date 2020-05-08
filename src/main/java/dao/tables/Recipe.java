@@ -35,8 +35,7 @@ public class Recipe implements Serializable {
     private Float price;
     /********************************************************/
     //transaction record foreign key
-    @OneToMany(targetEntity = TransactionRecord.class, cascade = CascadeType.ALL)
-    @JoinColumn(name = "recipeID", referencedColumnName = "recipeID")
+    @OneToMany(mappedBy = "recipe", cascade = {CascadeType.REFRESH, CascadeType.MERGE})
     private Set<TransactionRecord> transactionRecords = new HashSet<>();
 
     /********************************************************/

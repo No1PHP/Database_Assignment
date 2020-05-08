@@ -5,6 +5,8 @@ import org.springframework.data.annotation.CreatedDate;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "TransactionRecord")
@@ -21,7 +23,7 @@ public class TransactionRecord implements Serializable {
     private Integer stallID;
 
     //recipe's id that have been ordered, a foreign key of recipe table
-    @Column(name = "recipeID", nullable = false)
+    @Column(name = "recipeID")
     private Integer recipeID;
 
     //date being sold
@@ -36,6 +38,16 @@ public class TransactionRecord implements Serializable {
     //price of dish
     @Column(name = "TransactionPrice", nullable = false, updatable = false)
     private Float transactionPrice;
+    /********************************************************/
+    //transaction record foreign key
+    @ManyToOne(targetEntity = Recipe.class, cascade = {CascadeType.REFRESH, CascadeType.MERGE})
+    @JoinColumn(name = "recipeID", referencedColumnName = "recipeID")
+    private Recipe recipe;
+
+    //transaction record foreign key
+    @ManyToOne(targetEntity = Stall.class, optional = false, cascade = {CascadeType.REFRESH, CascadeType.MERGE})
+    @JoinColumn(name = "stall_id", referencedColumnName = "stall_id")
+    private Stall stall;
 
     /********************************************************/
     public Integer getTransactionID() {
@@ -84,6 +96,22 @@ public class TransactionRecord implements Serializable {
 
     public void setTransactionPrice(Float transactionPrice) {
         this.transactionPrice = transactionPrice;
+    }
+
+    public Recipe getRecipe() {
+        return recipe;
+    }
+
+    public void setRecipe(Recipe recipe) {
+        this.recipe = recipe;
+    }
+
+    public Stall getStall() {
+        return stall;
+    }
+
+    public void setStall(Stall stall) {
+        this.stall = stall;
     }
 
     @Override

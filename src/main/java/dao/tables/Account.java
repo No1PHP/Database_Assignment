@@ -24,10 +24,14 @@ public class Account implements Serializable {//这个类是否实现接口还�
     @Column(name = "password", length = 20, nullable = false)
     private String passwordHashValue;
     /********************************************************/
-    //operation record foreign key
-    @OneToMany(targetEntity = OperationRecord.class, cascade = CascadeType.ALL)
-    @JoinColumn(name = "staffId", referencedColumnName = "staffId")
-    private Set<OperationRecord> operationRecords = new HashSet<>();
+    //account foreign key
+    @OneToOne(mappedBy = "account", optional = false, cascade = {CascadeType.MERGE, CascadeType.REFRESH})
+    private Staff staff;
+
+    //account foreign key
+    @ManyToOne(targetEntity = AccessInfo.class, cascade = {CascadeType.MERGE, CascadeType.REFRESH})
+    @JoinColumn(name = "position", referencedColumnName = "position")
+    private AccessInfo accessInfo;
 
     /********************************************************/
     public Integer getStaffID() {
@@ -62,12 +66,20 @@ public class Account implements Serializable {//这个类是否实现接口还�
         this.passwordHashValue = passwordHashValue;
     }
 
-    public Set<OperationRecord> getOperationRecords() {
-        return operationRecords;
+    public Staff getStaff() {
+        return staff;
     }
 
-    public void setOperationRecords(Set<OperationRecord> operationRecords) {
-        this.operationRecords = operationRecords;
+    public void setStaff(Staff staff) {
+        this.staff = staff;
+    }
+
+    public AccessInfo getAccessInfo() {
+        return accessInfo;
+    }
+
+    public void setAccessInfo(AccessInfo accessInfo) {
+        this.accessInfo = accessInfo;
     }
 
     @Override

@@ -30,8 +30,9 @@ public abstract class DataAdder {
         AccessInfoRepository accessInfoRepository = (AccessInfoRepository) DAO_Type.ACCESS_INFO.getTableRepository();
         accessInfoMap.put("none", EntityFactor.getAccessInfo("none", false, false, false));
         accessInfoMap.put("admin", EntityFactor.getAccessInfo("admin", true, true, true));
-        accessInfoMap.put("clerk", EntityFactor.getAccessInfo("clerk", true, false, true));
+        accessInfoMap.put("clerk", EntityFactor.getAccessInfo("clerk", true, false, false));
         accessInfoMap.put("staffManager", EntityFactor.getAccessInfo("staffManager", false, true, false));
+        accessInfoMap.put("stallManager", EntityFactor.getAccessInfo("stallManager", false, false, true));
         accessInfoRepository.saveAll(accessInfoMap.values());
         accessInfoRepository.flush();
     }
@@ -64,7 +65,7 @@ public abstract class DataAdder {
         accountMap.put("none", EntityFactor.getAccount(staffMap.get("none"), accessInfoMap.get("none"), "none", "123456"));
         accountMap.put("admin", EntityFactor.getAccount(staffMap.get("admin"), accessInfoMap.get("admin"), "admin", "admin"));
         accountMap.put("manager1", EntityFactor.getAccount(staffMap.get("manager1"), accessInfoMap.get("staffManager"), "manager1", "aaa"));
-        accountMap.put("manager2", EntityFactor.getAccount(staffMap.get("manager2"), accessInfoMap.get("staffManager"), "manager2", "bbb"));
+        accountMap.put("manager2", EntityFactor.getAccount(staffMap.get("manager2"), accessInfoMap.get("stallManager"), "manager2", "bbb"));
         accountMap.put("storeroomClerk1", EntityFactor.getAccount(staffMap.get("storeroomClerk1"), accessInfoMap.get("clerk"), "storeroomClerk1", "ccc"));
         accountMap.put("storeroomClerk2", EntityFactor.getAccount(staffMap.get("storeroomClerk2"), accessInfoMap.get("clerk"), "storeroomClerk2", "ddd"));
         accountMap.put("storeroomClerk3", EntityFactor.getAccount(staffMap.get("storeroomClerk3"), accessInfoMap.get("clerk"), "storeroomClerk3", "eee"));

@@ -15,16 +15,16 @@ public class AccessInfo implements Serializable {
     private String position;
 
     //access authority to the order related tables
-    @Column(name = "AccessToOrder", nullable = false)
-    private Boolean accessToOrder;
+    @Column(name = "AccessToMaterial", nullable = false)
+    private Boolean accessToMaterial;
 
     //access authority to the Staff related tables
     @Column(name = "AccessToStaff", nullable = false)
     private Boolean accessToStaff;
 
     //access authority to the stock(materials?) related tables
-    @Column(name = "AccessToStock", nullable = false)
-    private Boolean accessToStock;
+    @Column(name = "AccessToStall", nullable = false)
+    private Boolean accessToStall;
     /********************************************************/
     //account foreign key
     @OneToMany(mappedBy = "accessInfo", cascade = {CascadeType.MERGE, CascadeType.REFRESH})
@@ -39,12 +39,12 @@ public class AccessInfo implements Serializable {
         this.position = position;
     }
 
-    public Boolean getAccessToOrder() {
-        return accessToOrder;
+    public Boolean getAccessToMaterial() {
+        return accessToMaterial;
     }
 
-    public void setAccessToOrder(Boolean accessToOrder) {
-        this.accessToOrder = accessToOrder;
+    public void setAccessToMaterial(Boolean accessToMaterial) {
+        this.accessToMaterial = accessToMaterial;
     }
 
     public Boolean getAccessToStaff() {
@@ -55,12 +55,12 @@ public class AccessInfo implements Serializable {
         this.accessToStaff = accessToStaff;
     }
 
-    public Boolean getAccessToStock() {
-        return accessToStock;
+    public Boolean getAccessToStall() {
+        return accessToStall;
     }
 
-    public void setAccessToStock(Boolean accessToStock) {
-        this.accessToStock = accessToStock;
+    public void setAccessToStall(Boolean accessToStall) {
+        this.accessToStall = accessToStall;
     }
 
     public Set<Account> getAccounts() {
@@ -75,9 +75,9 @@ public class AccessInfo implements Serializable {
     public String toString() {
         return "AccessInfo{" +
                 "position='" + position + '\'' +
-                ", AccessToOrder=" + accessToOrder +
+                ", AccessToOrder=" + accessToMaterial +
                 ", AccessToStaff=" + accessToStaff +
-                ", AccessToStock=" + accessToStock +
+                ", AccessToStock=" + accessToStall +
                 '}';
     }
 }

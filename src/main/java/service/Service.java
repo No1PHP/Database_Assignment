@@ -10,7 +10,6 @@ import dao.tables.Material;
 
 import java.sql.Date;
 import java.util.*;
-import java.util.function.Predicate;
 
 public class Service {
     private final Account account;
@@ -45,7 +44,7 @@ public class Service {
      * @throws IllegalRequestException
      */
     public Map<String, Float> getALLMaterialUsageBetween(Date from, Date until) throws IllegalRequestException {
-        if (!account.getAccessInfo().getAccessToStock() || !account.getAccessInfo().getAccessToOrder()) throw new IllegalRequestException();
+        if (!account.getAccessInfo().getAccessToMaterial()) throw new IllegalRequestException();
 
         MaterialRepository materialRepository = (MaterialRepository) DAO_Type.MATERIAL.getTableRepository();
         MaterialUsageRepository materialUsageRepository = (MaterialUsageRepository) DAO_Type.MATERIAL_USAGE.getTableRepository();
@@ -67,7 +66,7 @@ public class Service {
      * @throws IllegalRequestException
      */
     public float getMaterialUsageBetween(String materialName, Date from, Date until) throws IllegalRequestException {
-        if (!account.getAccessInfo().getAccessToStock() || !account.getAccessInfo().getAccessToOrder()) throw new IllegalRequestException();
+        if (!account.getAccessInfo().getAccessToMaterial()) throw new IllegalRequestException();
 
         MaterialRepository materialRepository = (MaterialRepository) DAO_Type.MATERIAL.getTableRepository();
         MaterialUsageRepository materialUsageRepository = (MaterialUsageRepository) DAO_Type.MATERIAL_USAGE.getTableRepository();
@@ -84,7 +83,7 @@ public class Service {
      * @throws IllegalRequestException
      */
     public int getTotalSalesFromTo(Date from, Date until) throws IllegalRequestException {
-        if (!account.getAccessInfo().getAccessToOrder()) throw new IllegalRequestException();
+        if (!account.getAccessInfo().getAccessToStall()) throw new IllegalRequestException();
 
         TransactionRecordRepository transactionRecordRepository = (TransactionRecordRepository) DAO_Type.TRANSACTION_RECORD.getTableRepository();
         return transactionRecordRepository.findALLTotalSalesByTransactionTimeBetween(from, until);

@@ -20,17 +20,17 @@ public abstract class EntityFactor {
      *
      * generate AccessInfo entity
      * @param position position name
-     * @param accessToOrder permission to order
+     * @param accessToMaterial permission to material
      * @param accessToStaff permission to staff
-     * @param accessToStock permission to stock
+     * @param accessToStall permission to stall
      * @return AccessInfo entity
      */
-    public static AccessInfo getAccessInfo(String position, boolean accessToOrder, boolean accessToStaff, boolean accessToStock) {
+    public static AccessInfo getAccessInfo(String position, boolean accessToMaterial, boolean accessToStaff, boolean accessToStall) {
         AccessInfo accessInfo = new AccessInfo();
         accessInfo.setPosition(position);
-        accessInfo.setAccessToOrder(accessToOrder);
+        accessInfo.setAccessToMaterial(accessToMaterial);
         accessInfo.setAccessToStaff(accessToStaff);
-        accessInfo.setAccessToStock(accessToStock);
+        accessInfo.setAccessToStall(accessToStall);
         return accessInfo;
     }
 

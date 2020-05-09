@@ -11,10 +11,10 @@ import java.sql.Date;
 import java.util.List;
 
 public class Service {
-    public float getMaterialUsageDuring(String materialName, Date from, Date until) {
-        MaterialRepository materialRepository = (MaterialRepository) DAO_Type.MATERIAL.getTableRepository();
-        Material material = materialRepository.findByName(materialName);
-
-        OperationRecordRepository operationRecordRepository = (OperationRecordRepository) DAO_Type.OPERATION_RECORD.getTableRepository();
-    }
+//    public float getMaterialUsageDuring(String materialName, Date from, Date until) {
+//        MaterialRepository materialRepository = (MaterialRepository) DAO_Type.MATERIAL.getTableRepository();
+//        Material material = materialRepository.findByName(materialName);
+//
+//        OperationRecordRepository operationRecordRepository = (OperationRecordRepository) DAO_Type.OPERATION_RECORD.getTableRepository();
+//    }
 }

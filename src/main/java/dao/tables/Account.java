@@ -30,7 +30,7 @@ public class Account implements Serializable {//这个类是否实现接口还�
     private Staff staff;
 
     //account foreign key
-    @ManyToOne(targetEntity = AccessInfo.class, cascade = {CascadeType.MERGE, CascadeType.REFRESH})
+    @ManyToOne(targetEntity = AccessInfo.class, optional = false, cascade = {CascadeType.MERGE, CascadeType.REFRESH})
     @JoinColumn(name = "position", referencedColumnName = "position")
     private AccessInfo accessInfo;
 

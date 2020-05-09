@@ -73,12 +73,12 @@ CREATE TABLE TransactionRecord (
 DROP TABLE IF EXISTS Account;
 CREATE TABLE Account(
     `staffId`               INT UNSIGNED PRIMARY KEY,
-    `position`              VARCHAR(20),
+    `position`              VARCHAR(20) NOT NULL,
     `accountName`           VARCHAR(20) NOT NULL UNIQUE ,
     `password`              VARCHAR(20) NOT NULL DEFAULT '123456',
 
     FOREIGN KEY (`staffId`) REFERENCES Staff(`staff_id`) ON UPDATE CASCADE ON DELETE CASCADE ,
-    FOREIGN KEY (`position`) REFERENCES AccessInfo(`position`) ON UPDATE CASCADE ON DELETE SET NULL
+    FOREIGN KEY (`position`) REFERENCES AccessInfo(`position`) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 DROP TABLE IF EXISTS `OperationRecord`;

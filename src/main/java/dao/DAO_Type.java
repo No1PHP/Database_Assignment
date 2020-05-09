@@ -8,6 +8,7 @@ public enum DAO_Type {
     ACCOUNT("account"),
     MATERIAL("material"),
     MATERIAL_ORDER("materialOrder"),
+    MATERIAL_USAGE("materialUsage"),
     OPERATION_RECORD("operationRecord"),
     RECIPE("recipe"),
     SCHEDULE_RECORD("scheduleRecord"),

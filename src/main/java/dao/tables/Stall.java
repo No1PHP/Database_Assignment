@@ -1,11 +1,8 @@
 package dao.tables;
 
-import org.hibernate.annotations.Type;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -52,7 +49,7 @@ public class Stall implements Serializable {
 
     //recipeUsage foreign key
     @OneToMany(mappedBy = "stall", cascade = CascadeType.ALL)
-    private Set<RecipeUsage> recipeUsages = new HashSet<>();
+    private Set<MaterialUsage> materialUsages = new HashSet<>();
 
     /********************************************************/
     public Integer getStallID() {
@@ -135,12 +132,12 @@ public class Stall implements Serializable {
         this.recipes = recipes;
     }
 
-    public Set<RecipeUsage> getRecipeUsages() {
-        return recipeUsages;
+    public Set<MaterialUsage> getMaterialUsages() {
+        return materialUsages;
     }
 
-    public void setRecipeUsages(Set<RecipeUsage> recipeUsages) {
-        this.recipeUsages = recipeUsages;
+    public void setMaterialUsages(Set<MaterialUsage> materialUsages) {
+        this.materialUsages = materialUsages;
     }
 
     @Override

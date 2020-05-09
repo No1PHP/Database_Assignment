@@ -1,11 +1,14 @@
 package dao.tables;
 
+import org.springframework.data.annotation.CreatedDate;
+
 import javax.persistence.*;
 import java.io.Serializable;
+import java.sql.Date;
 
 @Entity
-@Table(name = "RecipeUsage")
-public class RecipeUsage implements Serializable {
+@Table(name = "MaterialUsage")
+public class MaterialUsage implements Serializable {
     private static final long serialVersionUID = 11L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,6 +20,10 @@ public class RecipeUsage implements Serializable {
 
     @Column(name = "materialID", nullable = false)
     private Integer materialID;
+
+    @CreatedDate
+    @Column(name = "time", nullable = false, updatable = false)
+    private Date time;
 
     @Column(name = "amount", nullable = false)
     private Float amount;
@@ -54,6 +61,14 @@ public class RecipeUsage implements Serializable {
 
     public void setMaterialID(Integer materialID) {
         this.materialID = materialID;
+    }
+
+    public Date getTime() {
+        return time;
+    }
+
+    public void setTime(Date time) {
+        this.time = time;
     }
 
     public Float getAmount() {

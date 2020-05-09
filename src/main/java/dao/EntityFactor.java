@@ -3,7 +3,9 @@ package dao;
 import dao.enums.MaterialTypes;
 import dao.enums.OperationType;
 import dao.tables.*;
+import org.springframework.data.annotation.CreatedDate;
 
+import javax.persistence.*;
 import java.sql.Date;
 import java.util.Collection;
 
@@ -272,5 +274,22 @@ public abstract class EntityFactor {
         transactionRecord.setStall(stall);
         stall.getTransactionRecords().add(transactionRecord);
         return transactionRecord;
+    }
+
+    /**
+     * generate MaterialUsage entity
+     * @param stall stall that uses the material
+     * @param material the material been used
+     * @param amount the amount been used
+     * @return MaterialUsage entity
+     */
+    public static MaterialUsage getMaterialUsage(Stall stall, Material material, float amount) {
+        MaterialUsage materialUsage = new MaterialUsage();
+        materialUsage.setAmount(amount);
+        materialUsage.setStall(stall);
+        stall.getMaterialUsages().add(materialUsage);
+        materialUsage.setMaterial(material);
+        material.getMaterialUsages().add(materialUsage);
+        return materialUsage;
     }
 }

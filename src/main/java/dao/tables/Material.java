@@ -41,7 +41,7 @@ public class Material implements Serializable {
 
     //recipeUsage foreign key
     @OneToMany(mappedBy = "material", cascade = CascadeType.ALL)
-    private Set<RecipeUsage> recipeUsages = new HashSet<>();
+    private Set<MaterialUsage> materialUsages = new HashSet<>();
     /********************************************************/
     public Integer getId() {
         return id;
@@ -107,12 +107,12 @@ public class Material implements Serializable {
         this.recipes = recipes;
     }
 
-    public Set<RecipeUsage> getRecipeUsages() {
-        return recipeUsages;
+    public Set<MaterialUsage> getMaterialUsages() {
+        return materialUsages;
     }
 
-    public void setRecipeUsages(Set<RecipeUsage> recipeUsages) {
-        this.recipeUsages = recipeUsages;
+    public void setMaterialUsages(Set<MaterialUsage> materialUsages) {
+        this.materialUsages = materialUsages;
     }
 
     @Override

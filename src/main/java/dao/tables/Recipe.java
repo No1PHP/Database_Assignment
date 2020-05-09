@@ -35,7 +35,7 @@ public class Recipe implements Serializable {
     @ManyToMany(mappedBy = "recipes", cascade = {CascadeType.MERGE, CascadeType.REFRESH})
     private Set<Stall> stalls = new HashSet<>();
 
-    @ManyToMany(targetEntity = Material.class, cascade = {CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST})
+    @ManyToMany(targetEntity = Material.class, cascade = {CascadeType.MERGE, CascadeType.REFRESH})
     @JoinTable(
             name = "Recipe_Material_Association",
             joinColumns = {@JoinColumn(name = "recipe_id", referencedColumnName = "recipeID")},

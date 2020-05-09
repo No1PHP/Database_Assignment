@@ -1,12 +1,14 @@
 package dao;
 
+import dao.DAOInterfaces.OperationRecordRepository;
 import dao.enums.MaterialTypes;
 import dao.enums.OperationType;
+import dao.enums.StaffCategoryTypes;
 import dao.tables.*;
-import org.springframework.data.annotation.CreatedDate;
 
-import javax.persistence.*;
 import java.sql.Date;
+import java.sql.Time;
+import java.util.Arrays;
 import java.util.Collection;
 
 /**
@@ -90,6 +92,9 @@ public abstract class EntityFactor {
      */
     public static MaterialOrder getMaterialOrder(Staff staff, String note, Material material, float materialAmount) {
         OperationRecord operationRecord = getOperationRecord(OperationType.ORDER, staff, false, note);
+        OperationRecordRepository operationRecordRepository = (OperationRecordRepository) DAO_Type.OPERATION_RECORD.getTableRepository();
+        operationRecordRepository.saveAndFlush(operationRecord);
+
         MaterialOrder materialOrder = new MaterialOrder();
         materialOrder.setMaterial(material);
         material.getMaterialOrders().add(materialOrder);
@@ -112,6 +117,9 @@ public abstract class EntityFactor {
      */
     public static MaterialOrder confirmMaterialOrder(Staff staff, String note, MaterialOrder materialOrder) {
         OperationRecord operationRecord = getOperationRecord(OperationType.PULL, staff, false, note);
+        OperationRecordRepository operationRecordRepository = (OperationRecordRepository) DAO_Type.OPERATION_RECORD.getTableRepository();
+        operationRecordRepository.saveAndFlush(operationRecord);
+
         materialOrder.setStorageRecord(operationRecord);
         operationRecord.setStorageMaterialRecord(materialOrder);
         return materialOrder;
@@ -160,6 +168,10 @@ public abstract class EntityFactor {
         return recipe;
     }
 
+    public static Recipe getRecipe(String recipeName, float price, Material... materials) {
+        return getRecipe(recipeName, price, Arrays.asList(materials));
+    }
+
     /**
      * @see ScheduleRecord
      * @see Staff
@@ -175,6 +187,9 @@ public abstract class EntityFactor {
      */
     public static ScheduleRecord getScheduleRecord(Date start, Date end, Staff targetStaff, Staff manager, String note) {
         OperationRecord operationRecord = getOperationRecord(OperationType.DAY_SHIFT, manager, true, note);
+        OperationRecordRepository operationRecordRepository = (OperationRecordRepository) DAO_Type.OPERATION_RECORD.getTableRepository();
+        operationRecordRepository.saveAndFlush(operationRecord);
+
         ScheduleRecord scheduleRecord = new ScheduleRecord();
         scheduleRecord.setTimeScheduledToStartWorking(start);
         scheduleRecord.setTimeScheduledToEndWorking(end);
@@ -200,19 +215,32 @@ public abstract class EntityFactor {
 
     /**
      * @see Staff
-     * @see Account
-     * @see AccessInfo
      *
-     * generate Staff entity with corresponding account
-     * @param staffName staff name
-     * @param accessInfo account level
-     * @param accountName account username
-     * @param passwordHashValue account password
+     * generate Staff entity
+     * @param staffName name of the staff
+     * @param types type of the staff category
      * @return Staff entity
      */
-    public static Staff getStaffWithAccount(String staffName, AccessInfo accessInfo, String accountName, String passwordHashValue) {
+    public static Staff getStaff(String staffName, StaffCategoryTypes types) {
         Staff staff = getStaff(staffName);
-        getAccount(staff, accessInfo, accountName, passwordHashValue);
+        staff.setStaffCategory((byte) types.ordinal());
+        return staff;
+    }
+
+    /**
+     * @see Staff
+     *
+     * generate Staff entity
+     * @param staffName name of the staff
+     * @param types type of the staff category
+     * @param start time start to work
+     * @param end time end to work
+     * @return Staff entity
+     */
+    public static Staff getStaff(String staffName, StaffCategoryTypes types, Time start, Time end) {
+        Staff staff = getStaff(staffName, types);
+        staff.setTimeStartWorking(start);
+        staff.setTimeEndWorking(end);
         return staff;
     }
 

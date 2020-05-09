@@ -44,6 +44,12 @@
             <bean class="org.springframework.orm.jpa.vendor.HibernateJpaDialect"/>
         </property>
 
+        <property name="jpaProperties">
+            <props>
+                <prop key="hibernate.hbm2ddl.auto">update</prop>
+            </props>
+        </property>
+
     </bean>
 
     <!--数据库连接池-->

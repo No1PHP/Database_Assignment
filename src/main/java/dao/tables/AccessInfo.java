@@ -11,7 +11,6 @@ public class AccessInfo implements Serializable {
     private static final long serialVersionUID = 1L;
     //primary key
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "position")
     private String position;
 

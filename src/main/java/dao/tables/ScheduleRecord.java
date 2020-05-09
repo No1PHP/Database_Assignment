@@ -16,7 +16,7 @@ public class ScheduleRecord implements Serializable {
     @Column(name = "op_ID")
     private Integer operationID;
 
-    @Column(name = "staff_id", nullable = false)
+    @Column(name = "staff_id", nullable = false, insertable = false, updatable = false)
     private Integer staffID;
 
     @Column(name = "work_time_start", nullable = false)

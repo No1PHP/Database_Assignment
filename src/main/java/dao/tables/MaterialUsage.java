@@ -15,10 +15,10 @@ public class MaterialUsage implements Serializable {
     @Column(name = "usage_id")
     private Integer usageId;
 
-    @Column(name = "stallID", nullable = false)
+    @Column(name = "stallID", nullable = false, insertable = false, updatable = false)
     private Integer stallID;
 
-    @Column(name = "materialID", nullable = false)
+    @Column(name = "materialID", nullable = false, insertable = false, updatable = false)
     private Integer materialID;
 
     @CreatedDate

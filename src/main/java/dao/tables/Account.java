@@ -7,7 +7,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "Account")
-public class Account implements Serializable {//这个类是否实现接口还需商议
+public class Account implements Serializable {
     private static final long serialVersionUID = 2L;
     //primary key
     @Id
@@ -15,7 +15,7 @@ public class Account implements Serializable {//这个类是否实现接口还�
     private Integer staffID;
 
     //foreign key
-    @Column(name = "position", length = 20)
+    @Column(name = "position", length = 20, insertable = false, updatable = false)
     private String position;
 
     @Column(name = "accountName", length = 20, nullable = false, unique = true)
@@ -73,6 +73,7 @@ public class Account implements Serializable {//这个类是否实现接口还�
 
     public void setStaff(Staff staff) {
         this.staff = staff;
+        this.staffID = staff.getStaffID();
     }
 
     public AccessInfo getAccessInfo() {

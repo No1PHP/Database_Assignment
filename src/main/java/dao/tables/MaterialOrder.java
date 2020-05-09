@@ -20,7 +20,7 @@ public class MaterialOrder implements Serializable {
      private Integer operationStorageID;
 
      //dictation index
-     @Column(name = "materialID", nullable = false)
+     @Column(name = "materialID", nullable = false, insertable = false, updatable = false)
      private Integer materialID;
 
     @Column(name = "amount", nullable = false)

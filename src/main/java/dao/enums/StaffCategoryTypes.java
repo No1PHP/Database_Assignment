@@ -1,5 +1,5 @@
 package dao.enums;
 
 public enum StaffCategoryTypes {
-    ADMIN
+    NONE, ADMIN, CLEANER, STOREROOM_CLERK, MANAGER
 }

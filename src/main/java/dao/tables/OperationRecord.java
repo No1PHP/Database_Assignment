@@ -16,7 +16,7 @@ public class OperationRecord implements Serializable {
     @Column(name = "operationId")
     private Integer operationID;
 
-    @Column(name = "staffId", nullable = false)
+    @Column(name = "staffId", nullable = false, insertable = false, updatable = false)
     private Integer staffID;
 
     //pull, order, day shift(schedule), stallChange

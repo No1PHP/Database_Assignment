@@ -19,11 +19,11 @@ public class TransactionRecord implements Serializable {
     private Integer transactionID;
 
     //stall id
-    @Column(name = "stall_id", nullable = false)
+    @Column(name = "stall_id", nullable = false, insertable = false, updatable = false)
     private Integer stallID;
 
     //recipe's id that have been ordered, a foreign key of recipe table
-    @Column(name = "recipeID")
+    @Column(name = "recipeID", insertable = false, updatable = false)
     private Integer recipeID;
 
     //date being sold

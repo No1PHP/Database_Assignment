@@ -14,7 +14,7 @@ public enum DAO_Type {
     SCHEDULE_RECORD("scheduleRecord"),
     STAFF("staff"),
     STALL("stall"),
-    TRANSACTION_RECORD(" transactionRecord");
+    TRANSACTION_RECORD("transactionRecord");
 
     private static final ApplicationContext applicationContext = new ClassPathXmlApplicationContext("applicationContext.xml");
 

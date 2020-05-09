@@ -11,5 +11,7 @@ import java.util.List;
 public interface AccountRepository extends JpaRepository<Account, Integer>, JpaSpecificationExecutor<Account> {
     Account findByStaffID(int id);
 
+    Account findByAccountName(String name);
+
     List<Account> findByPosition(String position);
 }

@@ -13,5 +13,5 @@ public interface AccountRepository extends JpaRepository<Account, Integer>, JpaS
 
     Account findByAccountName(String name);
 
-    List<Account> findByPosition(String position);
+    List<Account> findALLByPosition(String position);
 }

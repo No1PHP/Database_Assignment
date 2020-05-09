@@ -32,7 +32,7 @@ public class JpaTest {
         AccessInfo accessInfo = accessInfoRepository.findByPosition("admin");
         System.out.println(accessInfo);
         System.out.println();
-        List<AccessInfo> list = accessInfoRepository.findByAccessToOrder(true);
+        List<AccessInfo> list = accessInfoRepository.findALLByAccessToOrder(true);
         for (AccessInfo e : list) {
             System.out.println(e);
         }

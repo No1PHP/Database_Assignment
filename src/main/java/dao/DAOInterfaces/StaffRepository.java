@@ -12,13 +12,13 @@ import java.util.List;
 public interface StaffRepository extends JpaRepository<Staff, Integer>, JpaSpecificationExecutor<Staff> {
     Staff findByStaffID(int id);
 
-    List<Staff> findByStaffName(String name);
+    List<Staff> findALLByStaffName(String name);
 
-    List<Staff> findByStaffNameLike(String name);
+    List<Staff> findALLByStaffNameLike(String name);
 
-    List<Staff> findByStaffCategory(byte type);
+    List<Staff> findALLByStaffCategory(byte type);
 
-    List<Staff> findByTimeStartWorkingBetween(Time min, Time max);
+    List<Staff> findALLByTimeStartWorkingBetween(Time min, Time max);
 
-    List<Staff> findByTimeEndWorkingBetween(Time min, Time max);
+    List<Staff> findALLByTimeEndWorkingBetween(Time min, Time max);
 }

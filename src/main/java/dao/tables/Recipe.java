@@ -12,7 +12,6 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "Recipe")
-@TypeDef(name = "json", typeClass = JsonStringType.class)
 public class Recipe implements Serializable {
     private static final long serialVersionUID = 6L;
     //recipe index, primary key

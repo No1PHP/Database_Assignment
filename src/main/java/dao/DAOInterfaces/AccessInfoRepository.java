@@ -13,11 +13,11 @@ public interface AccessInfoRepository extends JpaRepository<AccessInfo, String>,
     AccessInfo findByPosition(String position);
 
     //find all access by accessToOrder attribute
-    List<AccessInfo> findByAccessToOrder(boolean accessToOrder);
+    List<AccessInfo> findALLByAccessToOrder(boolean accessToOrder);
 
     //find all access by accessToStaff attribute
-    List<AccessInfo> findByAccessToStaff(boolean accessToStaff);
+    List<AccessInfo> findALLByAccessToStaff(boolean accessToStaff);
 
     //find all access by accessToStock attribute
-    List<AccessInfo> findByAccessToStock(boolean accessToStock);
+    List<AccessInfo> findALLByAccessToStock(boolean accessToStock);
 }

@@ -13,9 +13,9 @@ public interface MaterialRepository extends JpaRepository<Material, Integer>, Jp
 
     Material findByName(String name);
 
-    List<Material> findByType(byte type);
+    List<Material> findALLByType(byte type);
 
-    List<Material> findByUnitPriceBetween(float min, float max);
+    List<Material> findALLByUnitPriceBetween(float min, float max);
 
-    List<Material> findByAvailableAmountBetween(float min, float max);
+    List<Material> findALLByAvailableAmountBetween(float min, float max);
 }

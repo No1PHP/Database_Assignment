@@ -16,7 +16,7 @@ public interface ScheduleRecordRepository extends JpaRepository<ScheduleRecord, 
 
     List<ScheduleRecord> findFirst20ByStaffIDOrderByTimeScheduledToEndWorkingDesc(int id);
 
-    List<ScheduleRecord> findByTimeScheduledToStartWorkingBetween(Date min, Date max);
+    List<ScheduleRecord> findALLByTimeScheduledToStartWorkingBetween(Date min, Date max);
 
-    List<ScheduleRecord> findByTimeScheduledToEndWorkingBetween(Date min, Date max);
+    List<ScheduleRecord> findALLByTimeScheduledToEndWorkingBetween(Date min, Date max);
 }

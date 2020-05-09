@@ -12,15 +12,15 @@ import java.util.List;
 public interface OperationRecordRepository extends JpaRepository<OperationRecord, Integer>, JpaSpecificationExecutor<OperationRecord> {
     OperationRecord findByOperationID(int id);
 
-    List<OperationRecord> findByStaffID(int id);
+    List<OperationRecord> findALLByStaffID(int id);
 
-    List<OperationRecord> findByStaffIDOrderByOperationTime(int id);
+    List<OperationRecord> findALLByStaffIDOrderByOperationTime(int id);
 
-    List<OperationRecord> findByOperationType(byte type);
+    List<OperationRecord> findALLByOperationType(byte type);
 
-    List<OperationRecord> findByOperationTypeAndOperationTimeBetween(byte type, Date time1, Date time2);
+    List<OperationRecord> findALLByOperationTypeAndOperationTimeBetween(byte type, Date time1, Date time2);
 
-    List<OperationRecord> findByNoteLike(String value);
+    List<OperationRecord> findALLByNoteLike(String value);
 
-    List<OperationRecord> findByOperationTimeBetween(Date time1, Date time2);
+    List<OperationRecord> findALLByOperationTimeBetween(Date time1, Date time2);
 }

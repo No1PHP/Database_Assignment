@@ -13,7 +13,5 @@ public interface RecipeRepository extends JpaRepository<Recipe, Integer>, JpaSpe
 
     Recipe findByRecipeName(String name);
 
-    List<Recipe> findByRelevantIngredientContains(String material);
-
-    List<Recipe> findByPriceBetween(float min, float max);
+    List<Recipe> findALLByPriceBetween(float min, float max);
 }

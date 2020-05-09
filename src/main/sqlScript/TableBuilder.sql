@@ -138,3 +138,15 @@ CREATE TABLE `Recipe_Stall_Association`(
     FOREIGN KEY (`recipe_id`) REFERENCES Recipe(`recipeID`) ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY (`stall_id`) REFERENCES Stall(`stall_id`) ON UPDATE CASCADE ON DELETE CASCADE
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `RecipeUsage`;
+CREATE TABLE `RecipeUsage`(
+    `usage_id`              INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `stallID`               INT UNSIGNED NOT NULL,
+    `materialID`            INT UNSIGNED NOT NULL,
+    `amount`                FLOAT NOT NULL,
+
+    PRIMARY KEY (`usage_id`),
+    FOREIGN KEY (`stallID`) REFERENCES Stall(`stall_id`) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (`materialID`) REFERENCES Material(`id`) ON UPDATE CASCADE ON DELETE CASCADE
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;

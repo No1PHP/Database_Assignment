@@ -12,9 +12,9 @@ import java.util.List;
 public interface TransactionRecordRepository extends JpaRepository<TransactionRecord, Integer>, JpaSpecificationExecutor<TransactionRecord> {
     TransactionRecord findByTransactionID(int id);
 
-    List<TransactionRecord> findByStallID(int id);
+    List<TransactionRecord> findALLByStallID(int id);
 
-    List<TransactionRecord> findByRecipeID(int id);
+    List<TransactionRecord> findALLByRecipeID(int id);
 
-    List<TransactionRecord> findByTransactionTimeBetween(Date min, Date max);
+    List<TransactionRecord> findALLByTransactionTimeBetween(Date min, Date max);
 }

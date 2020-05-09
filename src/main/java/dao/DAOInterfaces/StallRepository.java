@@ -13,17 +13,17 @@ public interface StallRepository extends JpaRepository<Stall, Integer>, JpaSpeci
 
     Stall findByStallName(String name);
 
-    List<Stall> findByStallNameLike(String name);
+    List<Stall> findALLByStallNameLike(String name);
 
     Stall findByStallLocation(int location);
 
-    List<Stall> findByStallRentBetween(float min, float max);
+    List<Stall> findALLByStallRentBetween(float min, float max);
 
-    List<Stall> findByCostLastMonthBetween(float min, float max);
+    List<Stall> findALLByCostLastMonthBetween(float min, float max);
 
-    List<Stall> findByManageTimeSoFarBetween(int min, int max);
+    List<Stall> findALLByManageTimeSoFarBetween(int min, int max);
 
-    List<Stall> findByAveMonthlySalesAmountBetween(float min, float max);
+    List<Stall> findALLByAveMonthlySalesAmountBetween(float min, float max);
 
-    List<Stall> findByAveSalesIncomeBetween(float min, float max);
+    List<Stall> findALLByAveSalesIncomeBetween(float min, float max);
 }

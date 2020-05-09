@@ -20,5 +20,5 @@ public interface MaterialUsageRepository extends JpaRepository<MaterialUsage, In
     List<MaterialUsage> findAllByTimeBetween(Date from, Date to);
 
     @Query(value = "select SUM(amount) from MaterialUsage where materialID = ?1 and time >= ?2 and time <= ?3")
-    float getTotalUsageByTimeBetween(int materialID, Date from, Date to);
+    Float getTotalUsageByTimeBetween(int materialID, Date from, Date to);
 }

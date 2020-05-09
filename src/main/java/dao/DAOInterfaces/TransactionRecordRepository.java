@@ -3,6 +3,7 @@ package dao.DAOInterfaces;
 import dao.tables.TransactionRecord;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Date;
@@ -16,5 +17,8 @@ public interface TransactionRecordRepository extends JpaRepository<TransactionRe
 
     List<TransactionRecord> findALLByRecipeID(int id);
 
-    List<TransactionRecord> findALLByTransactionTimeBetween(Date min, Date max);
+    List<TransactionRecord> findALLByTransactionTimeBetween(Date from, Date to);
+
+    @Query(value = "select SUM(numbers) from TransactionRecord where transactionTime >= ?1 and transactionTime <= ?2")
+    Integer findALLTotalSalesByTransactionTimeBetween(Date from, Date to);
 }

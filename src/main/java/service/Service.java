@@ -3,17 +3,21 @@ package service;
 import dao.DAOInterfaces.AccountRepository;
 import dao.DAOInterfaces.MaterialRepository;
 import dao.DAOInterfaces.MaterialUsageRepository;
+import dao.DAOInterfaces.TransactionRecordRepository;
 import dao.DAO_Type;
 import dao.tables.Account;
 import dao.tables.Material;
 
 import java.sql.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.function.Predicate;
 
 public class Service {
-    private static Service service = new Service();
+    private final Account account;
+
+    private Service(Account account) {
+        this.account = account;
+    }
 
     /**
      * login verification
@@ -27,16 +31,22 @@ public class Service {
         if (!account.getPasswordHashValue().equals(password))
             return null;
         else
-            return service;
+            return new Service(account);
     }
 
+
+    /* ****************************************************** */
+    //services
     /**
      * get the material usage between a period of time
      * @param from begging time
      * @param until ending time
      * @return material usage map
+     * @throws IllegalRequestException
      */
-    public Map<String, Float> getMaterialUsageBetween(Date from, Date until) {
+    public Map<String, Float> getALLMaterialUsageBetween(Date from, Date until) throws IllegalRequestException {
+        if (!account.getAccessInfo().getAccessToStock() || !account.getAccessInfo().getAccessToOrder()) throw new IllegalRequestException();
+
         MaterialRepository materialRepository = (MaterialRepository) DAO_Type.MATERIAL.getTableRepository();
         MaterialUsageRepository materialUsageRepository = (MaterialUsageRepository) DAO_Type.MATERIAL_USAGE.getTableRepository();
 
@@ -54,12 +64,29 @@ public class Service {
      * @param from begging time
      * @param until ending time
      * @return material usage
+     * @throws IllegalRequestException
      */
-    public float getMaterialUsageBetween(String materialName, Date from, Date until) {
+    public float getMaterialUsageBetween(String materialName, Date from, Date until) throws IllegalRequestException {
+        if (!account.getAccessInfo().getAccessToStock() || !account.getAccessInfo().getAccessToOrder()) throw new IllegalRequestException();
+
         MaterialRepository materialRepository = (MaterialRepository) DAO_Type.MATERIAL.getTableRepository();
         MaterialUsageRepository materialUsageRepository = (MaterialUsageRepository) DAO_Type.MATERIAL_USAGE.getTableRepository();
 
         Material material = materialRepository.findByName(materialName);
         return materialUsageRepository.getTotalUsageByTimeBetween(material.getId(), from, until);
+    }
+
+    /**
+     * get total sales volume between a period of time
+     * @param from begging time
+     * @param until ending time
+     * @return sales volume
+     * @throws IllegalRequestException
+     */
+    public int getTotalSalesFromTo(Date from, Date until) throws IllegalRequestException {
+        if (!account.getAccessInfo().getAccessToOrder()) throw new IllegalRequestException();
+
+        TransactionRecordRepository transactionRecordRepository = (TransactionRecordRepository) DAO_Type.TRANSACTION_RECORD.getTableRepository();
+        return transactionRecordRepository.findALLTotalSalesByTransactionTimeBetween(from, until);
     }
 }

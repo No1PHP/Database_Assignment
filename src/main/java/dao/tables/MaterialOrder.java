@@ -33,12 +33,12 @@ public class MaterialOrder implements Serializable {
 
 
     //material order foreign key
-    @OneToOne(targetEntity = OperationRecord.class, optional = false, cascade = CascadeType.ALL)
+    @OneToOne(targetEntity = OperationRecord.class, optional = false, cascade = {CascadeType.REFRESH, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REMOVE})
     @JoinColumn(name = "op_OrderID", referencedColumnName = "operationId")
     private OperationRecord orderRecord;
 
     //material order foreign key
-    @OneToOne(targetEntity = OperationRecord.class, cascade = CascadeType.ALL)
+    @OneToOne(targetEntity = OperationRecord.class, cascade = {CascadeType.REFRESH, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REMOVE})
     @JoinColumn(name = "op_StorageID", referencedColumnName = "operationId")
     private OperationRecord storageRecord;
     /********************************************************/

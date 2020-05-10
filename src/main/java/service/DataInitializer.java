@@ -173,7 +173,7 @@ public abstract class DataInitializer {
         materialUsageRepository.flush();
     }
 
-    private static void addMaterialOrder() {
+    private static void addTransactionRecord() {
 
     }
 
@@ -181,11 +181,11 @@ public abstract class DataInitializer {
 
     }
 
-    private static void addScheduleRecord() {
+    private static void addMaterialOrder() {
 
     }
 
-    private static void addTransactionRecord() {
+    private static void addScheduleRecord() {
 
     }
 }

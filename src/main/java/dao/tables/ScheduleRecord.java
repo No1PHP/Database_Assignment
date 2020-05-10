@@ -32,7 +32,7 @@ public class ScheduleRecord implements Serializable {
     private Staff staff;
 
     //schedule record foreign key
-    @OneToOne(targetEntity = OperationRecord.class, optional = false, cascade = CascadeType.ALL)
+    @OneToOne(targetEntity = OperationRecord.class, optional = false, cascade = {CascadeType.REFRESH, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REMOVE})
     @JoinColumn(name = "op_ID", referencedColumnName = "operationId")
     private OperationRecord operationRecord;
 

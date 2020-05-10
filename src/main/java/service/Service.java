@@ -8,12 +8,22 @@ import dao.tables.Material;
 import dao.tables.Recipe;
 import dao.tables.Stall;
 
-//import controller.model.Recipe;
-
 import java.sql.Date;
 import java.util.*;
 
 public class Service {
+    private static final ScheduleRecordRepository scheduleRecordRepository = (ScheduleRecordRepository) DAO_Type.SCHEDULE_RECORD.getTableRepository();
+    private static final MaterialOrderRepository materialOrderRepository = (MaterialOrderRepository) DAO_Type.MATERIAL_ORDER.getTableRepository();
+    private static final OperationRecordRepository operationRecordRepository = (OperationRecordRepository) DAO_Type.OPERATION_RECORD.getTableRepository();
+    private static final AccountRepository accountRepository = (AccountRepository) DAO_Type.ACCOUNT.getTableRepository();
+    private static final StaffRepository staffRepository = (StaffRepository) DAO_Type.STAFF.getTableRepository();
+    private static final AccessInfoRepository accessInfoRepository = (AccessInfoRepository) DAO_Type.ACCESS_INFO.getTableRepository();
+    private static final TransactionRecordRepository transactionRecordRepository = (TransactionRecordRepository) DAO_Type.TRANSACTION_RECORD.getTableRepository();
+    private static final MaterialUsageRepository materialUsageRepository = (MaterialUsageRepository) DAO_Type.MATERIAL_USAGE.getTableRepository();
+    private static final RecipeRepository recipeRepository = (RecipeRepository) DAO_Type.RECIPE.getTableRepository();
+    private static final MaterialRepository materialRepository = (MaterialRepository) DAO_Type.MATERIAL.getTableRepository();
+    private static final StallRepository stallRepository = (StallRepository) DAO_Type.STALL.getTableRepository();
+
     private final Account account;
 
     private Service(Account account) {
@@ -48,14 +58,17 @@ public class Service {
      * @throws IllegalRequestException
      */
     public Material saveMaterial(String name, MaterialTypes types, float unitPrice, int availablePeriod) throws IllegalRequestException {
-        return saveMaterial(EntityFactor.getMaterial(name, types, unitPrice, availablePeriod));
-    }
-
-    public Material saveMaterial(Material material) throws IllegalRequestException {
         if (!account.getAccessInfo().getPosition().equals("admin")) throw new IllegalRequestException();
 
-        MaterialRepository materialRepository = (MaterialRepository) DAO_Type.MATERIAL.getTableRepository();
-        return materialRepository.saveAndFlush(material);
+        Material material = materialRepository.findByName(name);
+        if (material == null)
+            return materialRepository.saveAndFlush(EntityFactor.getMaterial(name, types, unitPrice, availablePeriod));
+        else {
+            material.setType((byte) types.ordinal());
+            material.setUnitPrice(unitPrice);
+            material.setAvailablePeriod(availablePeriod);
+            return materialRepository.saveAndFlush(material);
+        }
     }
 
     /**
@@ -67,7 +80,6 @@ public class Service {
     public Material removeMaterial(String name) throws IllegalRequestException {
         if (!account.getAccessInfo().getPosition().equals("admin")) throw new IllegalRequestException();
 
-        MaterialRepository materialRepository = (MaterialRepository) DAO_Type.MATERIAL.getTableRepository();
         return materialRepository.deleteByName(name);
     }
 
@@ -80,18 +92,22 @@ public class Service {
      * @throws IllegalRequestException
      */
     public Stall saveStall(String stallName, int stallLocation, float stallRent) throws IllegalRequestException {
-        return saveStall(EntityFactor.getStall(stallName, stallLocation, stallRent));
-    }
-
-    public Stall saveStall(Stall stall) throws IllegalRequestException {
         if (!account.getAccessInfo().getPosition().equals("admin")) throw new IllegalRequestException();
 
-        StallRepository stallRepository = (StallRepository) DAO_Type.STALL.getTableRepository();
-        return stallRepository.save(stall);
+        Stall stall = stallRepository.findByStallName(stallName);
+        if (stall == null)
+            return stallRepository.saveAndFlush(EntityFactor.getStall(stallName, stallLocation, stallRent));
+        else {
+            stall.setStallLocation(stallLocation);
+            stall.setStallRent(stallRent);
+            return stallRepository.saveAndFlush(stall);
+        }
     }
 
     public Stall saveStallWithRecipes(String stallName, int stallLocation, float stallRent, Collection<Recipe> recipes) throws IllegalRequestException {
-        return saveStall(EntityFactor.getStallWithRecipes(stallName, stallLocation, stallRent, recipes));
+        if (!account.getAccessInfo().getPosition().equals("admin")) throw new IllegalRequestException();
+
+        return stallRepository.saveAndFlush(EntityFactor.getStallWithRecipes(stallName, stallLocation, stallRent, recipes));
     }
 
     //
@@ -105,9 +121,6 @@ public class Service {
      */
     public Map<String, Float> getALLMaterialUsageBetween(Date from, Date until) throws IllegalRequestException {
         if (!account.getAccessInfo().getAccessToMaterial()) throw new IllegalRequestException();
-
-        MaterialRepository materialRepository = (MaterialRepository) DAO_Type.MATERIAL.getTableRepository();
-        MaterialUsageRepository materialUsageRepository = (MaterialUsageRepository) DAO_Type.MATERIAL_USAGE.getTableRepository();
 
         List<Material> materials = materialRepository.findAll();
         Map<String, Float> result = new HashMap<>(materials.size());
@@ -128,9 +141,6 @@ public class Service {
     public float getMaterialUsageBetween(String materialName, Date from, Date until) throws IllegalRequestException {
         if (!account.getAccessInfo().getAccessToMaterial()) throw new IllegalRequestException();
 
-        MaterialRepository materialRepository = (MaterialRepository) DAO_Type.MATERIAL.getTableRepository();
-        MaterialUsageRepository materialUsageRepository = (MaterialUsageRepository) DAO_Type.MATERIAL_USAGE.getTableRepository();
-
         Material material = materialRepository.findByName(materialName);
         return materialUsageRepository.getTotalUsageByTimeBetween(material.getId(), from, until);
     }
@@ -141,7 +151,6 @@ public class Service {
      * @return map contains material and corresponding amount
      */
     public Map<String, Float> getALLMaterialBelow(float amount) {
-        MaterialRepository materialRepository = (MaterialRepository) DAO_Type.MATERIAL.getTableRepository();
         List<Material> materials = materialRepository.findALLByAvailableAmountBetween(0, amount);
         Map<String, Float> result = new HashMap<>(materials.size());
         for (Material e : materials) {
@@ -161,7 +170,6 @@ public class Service {
     public int getTotalSalesFromTo(Date from, Date until) throws IllegalRequestException {
         if (!account.getAccessInfo().getAccessToStall()) throw new IllegalRequestException();
 
-        TransactionRecordRepository transactionRecordRepository = (TransactionRecordRepository) DAO_Type.TRANSACTION_RECORD.getTableRepository();
         return transactionRecordRepository.findALLTotalSalesByTransactionTimeBetween(from, until);
     }
 }

@@ -41,7 +41,7 @@ public class OperationRecord implements Serializable {
     private Staff staff;
 
     //material order foreign key
-    @OneToOne(mappedBy = "orderRecord", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "orderRecord", cascade = {CascadeType.REFRESH, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REMOVE})
     private MaterialOrder orderedMaterialRecord;
 
     //material order foreign key
@@ -49,7 +49,7 @@ public class OperationRecord implements Serializable {
     private MaterialOrder storageMaterialRecord;
 
     //schedule record foreign key
-    @OneToOne(mappedBy = "operationRecord", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "operationRecord", cascade = {CascadeType.REFRESH, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REMOVE})
     private ScheduleRecord scheduleRecord;
 
     /********************************************************/

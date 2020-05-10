@@ -1,11 +1,8 @@
 import dao.DAOInterfaces.*;
 import dao.DAO_Type;
-import dao.tables.Material;
-import dao.tables.Recipe;
-import dao.tables.Stall;
+import dao.tables.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import service.DataInitializer;
@@ -37,14 +34,20 @@ public class DataInitializerTest {
 
     @Test
     public void clearAll() {
-        scheduleRecordRepository.deleteAll();
-        materialOrderRepository.deleteAll();
-        operationRecordRepository.deleteAll();
-        accountRepository.deleteAll();
-        staffRepository.deleteAll();
-        accessInfoRepository.deleteAll();
-        transactionRecordRepository.deleteAll();
-        materialUsageRepository.deleteAll();
+        List<ScheduleRecord> scheduleRecordList = scheduleRecordRepository.findAll();
+        for (ScheduleRecord e : scheduleRecordList) {
+            e.setStaff(null);
+        }
+        scheduleRecordRepository.saveAll(scheduleRecordList);
+        scheduleRecordRepository.flush();
+
+        List<MaterialOrder> materialOrderList = materialOrderRepository.findAll();
+        for (MaterialOrder e : materialOrderList) {
+            e.setMaterial(null);
+            e.setStorageRecord(null);
+        }
+        materialOrderRepository.saveAll(materialOrderList);
+        materialOrderRepository.flush();
 
         List<Recipe> recipeList = recipeRepository.findAll();
         for (Recipe e : recipeList) {
@@ -68,6 +71,14 @@ public class DataInitializerTest {
         stallRepository.saveAll(stallList);
         stallRepository.flush();
 
+        scheduleRecordRepository.deleteAll();
+        materialOrderRepository.deleteAll();
+        operationRecordRepository.deleteAll();
+        accountRepository.deleteAll();
+        staffRepository.deleteAll();
+        accessInfoRepository.deleteAll();
+        transactionRecordRepository.deleteAll();
+        materialUsageRepository.deleteAll();
         recipeRepository.deleteAll();
         materialRepository.deleteAll();
         stallRepository.deleteAll();

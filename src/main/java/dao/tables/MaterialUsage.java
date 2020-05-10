@@ -5,6 +5,7 @@ import org.springframework.data.annotation.CreatedDate;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Date;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "MaterialUsage")
@@ -23,7 +24,7 @@ public class MaterialUsage implements Serializable {
 
     @CreatedDate
     @Column(name = "time", nullable = false, updatable = false)
-    private Date time;
+    private Timestamp time = new Timestamp(System.currentTimeMillis());
 
     @Column(name = "amount", nullable = false)
     private Float amount;
@@ -45,7 +46,6 @@ public class MaterialUsage implements Serializable {
 
     public void setUsageId(Integer usageId) {
         this.usageId = usageId;
-
     }
     public Integer getStallID() {
         return stallID;
@@ -63,11 +63,11 @@ public class MaterialUsage implements Serializable {
         this.materialID = materialID;
     }
 
-    public Date getTime() {
+    public Timestamp getTime() {
         return time;
     }
 
-    public void setTime(Date time) {
+    public void setTime(Timestamp time) {
         this.time = time;
     }
 

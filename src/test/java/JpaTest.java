@@ -5,6 +5,7 @@ import dao.tables.AccessInfo;
 import dao.tables.Staff;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -12,6 +13,7 @@ import java.sql.Time;
 import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
+@EnableJpaAuditing
 @ContextConfiguration(locations = "classpath:applicationContext.xml")
 public class JpaTest {
 
@@ -32,7 +34,7 @@ public class JpaTest {
         AccessInfo accessInfo = accessInfoRepository.findByPosition("admin");
         System.out.println(accessInfo);
         System.out.println();
-        List<AccessInfo> list = accessInfoRepository.findALLByAccessToOrder(true);
+        List<AccessInfo> list = accessInfoRepository.findALLByAccessToMaterial(true);
         for (AccessInfo e : list) {
             System.out.println(e);
         }

@@ -1,6 +1,7 @@
-package dao;
+package service;
 
 import dao.DAOInterfaces.OperationRecordRepository;
+import dao.DAO_Type;
 import dao.enums.MaterialTypes;
 import dao.enums.OperationType;
 import dao.enums.StaffCategoryTypes;
@@ -8,6 +9,7 @@ import dao.tables.*;
 
 import java.sql.Date;
 import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -25,7 +27,7 @@ public abstract class EntityFactor {
      * @param accessToStall permission to stall
      * @return AccessInfo entity
      */
-    public static AccessInfo getAccessInfo(String position, boolean accessToMaterial, boolean accessToStaff, boolean accessToStall) {
+    protected static AccessInfo getAccessInfo(String position, boolean accessToMaterial, boolean accessToStaff, boolean accessToStall) {
         AccessInfo accessInfo = new AccessInfo();
         accessInfo.setPosition(position);
         accessInfo.setAccessToMaterial(accessToMaterial);
@@ -46,7 +48,7 @@ public abstract class EntityFactor {
      * @param passwordHashValue password of account
      * @return Account entity
      */
-    public static Account getAccount(Staff staff, AccessInfo accessInfo, String accountName, String passwordHashValue) {
+    protected static Account getAccount(Staff staff, AccessInfo accessInfo, String accountName, String passwordHashValue) {
         Account account = new Account();
         account.setAccountName(accountName);
         account.setPasswordHashValue(passwordHashValue);
@@ -68,7 +70,7 @@ public abstract class EntityFactor {
      * @param availablePeriod day before unavaliable
      * @return Material entity
      */
-    public static Material getMaterial(String name, MaterialTypes types, float unitPrice, int availablePeriod) {
+    protected static Material getMaterial(String name, MaterialTypes types, float unitPrice, int availablePeriod) {
         Material material = new Material();
         material.setName(name);
         material.setType((byte) types.ordinal());
@@ -90,7 +92,7 @@ public abstract class EntityFactor {
      * @param materialAmount material amount been ordered
      * @return MaterialOrder entiry
      */
-    public static MaterialOrder getMaterialOrder(Staff staff, String note, Material material, float materialAmount) {
+    protected static MaterialOrder getMaterialOrder(Staff staff, String note, Material material, float materialAmount) {
         OperationRecord operationRecord = getOperationRecord(OperationType.ORDER, staff, false, note);
         OperationRecordRepository operationRecordRepository = (OperationRecordRepository) DAO_Type.OPERATION_RECORD.getTableRepository();
         operationRecordRepository.saveAndFlush(operationRecord);
@@ -115,7 +117,7 @@ public abstract class EntityFactor {
      * @param materialOrder the order record been confirmed
      * @return the order record after confirmed
      */
-    public static MaterialOrder confirmMaterialOrder(Staff staff, String note, MaterialOrder materialOrder) {
+    protected static MaterialOrder confirmMaterialOrder(Staff staff, String note, MaterialOrder materialOrder) {
         OperationRecord operationRecord = getOperationRecord(OperationType.PULL, staff, false, note);
         OperationRecordRepository operationRecordRepository = (OperationRecordRepository) DAO_Type.OPERATION_RECORD.getTableRepository();
         operationRecordRepository.saveAndFlush(operationRecord);
@@ -137,7 +139,7 @@ public abstract class EntityFactor {
      * @param note comments
      * @return OperationRecord entity
      */
-    public static OperationRecord getOperationRecord(OperationType type, Staff staff, boolean sendMessage, String note) {
+    protected static OperationRecord getOperationRecord(OperationType type, Staff staff, boolean sendMessage, String note) {
         OperationRecord operationRecord = new OperationRecord();
         operationRecord.setOperationType((byte) type.ordinal());
         operationRecord.setStaff(staff);
@@ -157,7 +159,7 @@ public abstract class EntityFactor {
      * @param materials materials that recipe needs
      * @return Recipe entity
      */
-    public static Recipe getRecipe(String recipeName, float price, Collection<Material> materials) {
+    protected static Recipe getRecipe(String recipeName, float price, Collection<Material> materials) {
         Recipe recipe = new Recipe();
         recipe.setRecipeName(recipeName);
         recipe.setPrice(price);
@@ -168,7 +170,7 @@ public abstract class EntityFactor {
         return recipe;
     }
 
-    public static Recipe getRecipe(String recipeName, float price, Material... materials) {
+    protected static Recipe getRecipe(String recipeName, float price, Material... materials) {
         return getRecipe(recipeName, price, Arrays.asList(materials));
     }
 
@@ -185,7 +187,7 @@ public abstract class EntityFactor {
      * @param note comments
      * @return ScheduleRecord entity
      */
-    public static ScheduleRecord getScheduleRecord(Date start, Date end, Staff targetStaff, Staff manager, String note) {
+    protected static ScheduleRecord getScheduleRecord(Timestamp start, Timestamp end, Staff targetStaff, Staff manager, String note) {
         OperationRecord operationRecord = getOperationRecord(OperationType.DAY_SHIFT, manager, true, note);
         OperationRecordRepository operationRecordRepository = (OperationRecordRepository) DAO_Type.OPERATION_RECORD.getTableRepository();
         operationRecordRepository.saveAndFlush(operationRecord);
@@ -207,7 +209,7 @@ public abstract class EntityFactor {
      * @param staffName name of the staff
      * @return Staff entity
      */
-    public static Staff getStaff(String staffName) {
+    protected static Staff getStaff(String staffName) {
         Staff staff = new Staff();
         staff.setStaffName(staffName);
         return staff;
@@ -221,7 +223,7 @@ public abstract class EntityFactor {
      * @param types type of the staff category
      * @return Staff entity
      */
-    public static Staff getStaff(String staffName, StaffCategoryTypes types) {
+    protected static Staff getStaff(String staffName, StaffCategoryTypes types) {
         Staff staff = getStaff(staffName);
         staff.setStaffCategory((byte) types.ordinal());
         return staff;
@@ -237,7 +239,7 @@ public abstract class EntityFactor {
      * @param end time end to work
      * @return Staff entity
      */
-    public static Staff getStaff(String staffName, StaffCategoryTypes types, Time start, Time end) {
+    protected static Staff getStaff(String staffName, StaffCategoryTypes types, Time start, Time end) {
         Staff staff = getStaff(staffName, types);
         staff.setTimeStartWorking(start);
         staff.setTimeEndWorking(end);
@@ -253,7 +255,7 @@ public abstract class EntityFactor {
      * @param stallRent stall rent per month
      * @return Stall entity
      */
-    public static Stall getStall(String stallName, int stallLocation, float stallRent) {
+    protected static Stall getStall(String stallName, int stallLocation, float stallRent) {
         Stall stall = new Stall();
         stall.setStallName(stallName);
         stall.setStallLocation(stallLocation);
@@ -272,13 +274,17 @@ public abstract class EntityFactor {
      * @param recipes available recipe
      * @return Stall entity
      */
-    public static Stall getStallWithRecipes(String stallName, int stallLocation, float stallRent, Collection<Recipe> recipes) {
+    protected static Stall getStallWithRecipes(String stallName, int stallLocation, float stallRent, Collection<Recipe> recipes) {
         Stall stall = getStall(stallName, stallLocation, stallRent);
         stall.getRecipes().addAll(recipes);
         for (Recipe e : recipes) {
             e.getStalls().add(stall);
         }
         return stall;
+    }
+
+    protected static Stall getStallWithRecipes(String stallName, int stallLocation, float stallRent, Recipe... recipes) {
+        return getStallWithRecipes(stallName, stallLocation, stallRent, Arrays.asList(recipes));
     }
 
     /**
@@ -293,7 +299,7 @@ public abstract class EntityFactor {
      * @param stall stall that make this record
      * @return TransactionRecord entity
      */
-    public static TransactionRecord getTransactionRecord(int amount, float price, Recipe recipe, Stall stall) {
+    protected static TransactionRecord getTransactionRecord(int amount, float price, Recipe recipe, Stall stall) {
         TransactionRecord transactionRecord = new TransactionRecord();
         transactionRecord.setNumbers(amount);
         transactionRecord.setTransactionPrice(price);
@@ -311,7 +317,7 @@ public abstract class EntityFactor {
      * @param amount the amount been used
      * @return MaterialUsage entity
      */
-    public static MaterialUsage getMaterialUsage(Stall stall, Material material, float amount) {
+    protected static MaterialUsage getMaterialUsage(Stall stall, Material material, float amount) {
         MaterialUsage materialUsage = new MaterialUsage();
         materialUsage.setAmount(amount);
         materialUsage.setStall(stall);

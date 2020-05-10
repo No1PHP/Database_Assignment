@@ -3,6 +3,7 @@ package dao.tables;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -20,10 +21,10 @@ public class ScheduleRecord implements Serializable {
     private Integer staffID;
 
     @Column(name = "work_time_start", nullable = false)
-    private Date timeScheduledToStartWorking;
+    private Timestamp timeScheduledToStartWorking;
 
     @Column(name = "work_time_end", nullable = false)
-    private Date timeScheduledToEndWorking;
+    private Timestamp timeScheduledToEndWorking;
     /********************************************************/
     //schedule record foreign key
     @ManyToOne(targetEntity = Staff.class, optional = false, cascade = {CascadeType.MERGE, CascadeType.REFRESH})
@@ -52,19 +53,19 @@ public class ScheduleRecord implements Serializable {
         this.staffID = staffID;
     }
 
-    public Date getTimeScheduledToStartWorking() {
+    public Timestamp getTimeScheduledToStartWorking() {
         return timeScheduledToStartWorking;
     }
 
-    public void setTimeScheduledToStartWorking(Date timeScheduledToStartWorking) {
+    public void setTimeScheduledToStartWorking(Timestamp timeScheduledToStartWorking) {
         this.timeScheduledToStartWorking = timeScheduledToStartWorking;
     }
 
-    public Date getTimeScheduledToEndWorking() {
+    public Timestamp getTimeScheduledToEndWorking() {
         return timeScheduledToEndWorking;
     }
 
-    public void setTimeScheduledToEndWorking(Date timeScheduledToEndWorking) {
+    public void setTimeScheduledToEndWorking(Timestamp timeScheduledToEndWorking) {
         this.timeScheduledToEndWorking = timeScheduledToEndWorking;
     }
 

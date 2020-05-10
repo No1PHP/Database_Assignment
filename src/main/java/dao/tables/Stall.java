@@ -39,7 +39,7 @@ public class Stall implements Serializable {
     @OneToMany(mappedBy = "stall", cascade = CascadeType.ALL)
     private Set<TransactionRecord> transactionRecords = new HashSet<>();
 
-    @ManyToMany(targetEntity = Recipe.class, cascade = {CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST})
+    @ManyToMany(targetEntity = Recipe.class, cascade = {CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.EAGER)
     @JoinTable(
             name = "Recipe_Stall_Association",
             joinColumns = {@JoinColumn(name = "stall_id", referencedColumnName = "stall_id")},

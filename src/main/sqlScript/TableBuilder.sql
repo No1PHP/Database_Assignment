@@ -14,7 +14,7 @@ CREATE TABLE Recipe (
 DROP TABLE IF EXISTS AccessInfo;
 CREATE TABLE AccessInfo(
     `position`              VARCHAR(20) PRIMARY KEY,
-    `AccessToMaterial`         BOOLEAN NOT NULL,
+    `AccessToMaterial`      BOOLEAN NOT NULL,
     `AccessToStaff`         BOOLEAN NOT NULL,
     `AccessToStall`         BOOLEAN NOT NULL
 );

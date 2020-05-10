@@ -5,6 +5,7 @@ import org.springframework.data.annotation.CreatedDate;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Date;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "OperationRecord")
@@ -28,9 +29,8 @@ public class OperationRecord implements Serializable {
     private String note;
 
     //need parsing from sql datetime type
-    @CreatedDate
     @Column(name = "operationTime", nullable = false, updatable = false)
-    private Date operationTime;
+    private Timestamp operationTime = new Timestamp(System.currentTimeMillis());
 
     @Column(name = "willSendUpdateMessage", nullable = false)
     private Boolean willSendUpdateMessage;
@@ -85,11 +85,11 @@ public class OperationRecord implements Serializable {
         this.note = note;
     }
 
-    public Date getOperationTime() {
+    public Timestamp getOperationTime() {
         return operationTime;
     }
 
-    public void setOperationTime(Date operationTime) {
+    public void setOperationTime(Timestamp operationTime) {
         this.operationTime = operationTime;
     }
 

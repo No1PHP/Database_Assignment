@@ -1,11 +1,13 @@
 package dao.tables;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-
+@Data
 @Entity
 @Table(name = "Material")
 public class Material implements Serializable {
@@ -42,88 +44,4 @@ public class Material implements Serializable {
     //recipeUsage foreign key
     @OneToMany(mappedBy = "material", cascade = CascadeType.ALL)
     private Set<MaterialUsage> materialUsages = new HashSet<>();
-    /********************************************************/
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Byte getType() {
-        return type;
-    }
-
-    public void setType(Byte type) {
-        this.type = type;
-    }
-
-    public Float getUnitPrice() {
-        return unitPrice;
-    }
-
-    public void setUnitPrice(Float unitPrice) {
-        this.unitPrice = unitPrice;
-    }
-
-    public Float getAvailableAmount() {
-        return availableAmount;
-    }
-
-    public void setAvailableAmount(Float availableAmount) {
-        this.availableAmount = availableAmount;
-    }
-
-    public Integer getAvailablePeriod() {
-        return availablePeriod;
-    }
-
-    public void setAvailablePeriod(Integer availablePeriod) {
-        this.availablePeriod = availablePeriod;
-    }
-
-    public Set<MaterialOrder> getMaterialOrders() {
-        return materialOrders;
-    }
-
-    public void setMaterialOrders(Set<MaterialOrder> materialOrders) {
-        this.materialOrders = materialOrders;
-    }
-
-    public Set<Recipe> getRecipes() {
-        return recipes;
-    }
-
-    public void setRecipes(Set<Recipe> recipes) {
-        this.recipes = recipes;
-    }
-
-    public Set<MaterialUsage> getMaterialUsages() {
-        return materialUsages;
-    }
-
-    public void setMaterialUsages(Set<MaterialUsage> materialUsages) {
-        this.materialUsages = materialUsages;
-    }
-
-    @Override
-    public String toString() {
-        return "Material{" +
-                "id=" + id +
-                ", name=" + name +
-                ", type=" + type +
-                ", unitPrice=" + unitPrice +
-                ", availableAmount=" + availableAmount +
-                ", availablePeriod=" + availablePeriod +
-                '}';
-    }
 }

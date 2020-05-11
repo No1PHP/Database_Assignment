@@ -144,10 +144,12 @@ CREATE TABLE MaterialUsage(
     `usage_id`              INT UNSIGNED NOT NULL AUTO_INCREMENT,
     `stallID`               INT UNSIGNED NOT NULL,
     `materialID`            INT UNSIGNED NOT NULL,
+    `storageID`             INT UNSIGNED NOT NULL,
     `time`                  DATETIME NOT NULL,
     `amount`                FLOAT NOT NULL,
 
     PRIMARY KEY (`usage_id`),
     FOREIGN KEY (`stallID`) REFERENCES Stall(`stall_id`) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (`storageID`) REFERENCES MaterialOrder(`op_storageID`) ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY (`materialID`) REFERENCES Material(`id`) ON UPDATE CASCADE ON DELETE CASCADE
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;

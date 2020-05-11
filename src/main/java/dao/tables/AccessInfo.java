@@ -1,10 +1,13 @@
 package dao.tables;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
+@Data
 @Entity
 @Table(name = "AccessInfo")
 public class AccessInfo implements Serializable {
@@ -29,55 +32,4 @@ public class AccessInfo implements Serializable {
     //account foreign key
     @OneToMany(mappedBy = "accessInfo", cascade = {CascadeType.MERGE, CascadeType.REFRESH})
     private Set<Account> accounts = new HashSet<>();
-
-    /********************************************************/
-    public String getPosition() {
-        return position;
-    }
-
-    public void setPosition(String position) {
-        this.position = position;
-    }
-
-    public Boolean getAccessToMaterial() {
-        return accessToMaterial;
-    }
-
-    public void setAccessToMaterial(Boolean accessToMaterial) {
-        this.accessToMaterial = accessToMaterial;
-    }
-
-    public Boolean getAccessToStaff() {
-        return accessToStaff;
-    }
-
-    public void setAccessToStaff(Boolean accessToStaff) {
-        this.accessToStaff = accessToStaff;
-    }
-
-    public Boolean getAccessToStall() {
-        return accessToStall;
-    }
-
-    public void setAccessToStall(Boolean accessToStall) {
-        this.accessToStall = accessToStall;
-    }
-
-    public Set<Account> getAccounts() {
-        return accounts;
-    }
-
-    public void setAccounts(Set<Account> accounts) {
-        this.accounts = accounts;
-    }
-
-    @Override
-    public String toString() {
-        return "AccessInfo{" +
-                "position='" + position + '\'' +
-                ", AccessToOrder=" + accessToMaterial +
-                ", AccessToStaff=" + accessToStaff +
-                ", AccessToStock=" + accessToStall +
-                '}';
-    }
 }

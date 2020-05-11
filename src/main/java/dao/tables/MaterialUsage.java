@@ -1,5 +1,6 @@
 package dao.tables;
 
+import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
@@ -7,6 +8,7 @@ import java.io.Serializable;
 import java.sql.Date;
 import java.sql.Timestamp;
 
+@Data
 @Entity
 @Table(name = "MaterialUsage")
 public class MaterialUsage implements Serializable {
@@ -22,7 +24,9 @@ public class MaterialUsage implements Serializable {
     @Column(name = "materialID", nullable = false, insertable = false, updatable = false)
     private Integer materialID;
 
-    @CreatedDate
+    @Column(name = "storageID", nullable = false, insertable = false, updatable = false)
+    private Integer storageID;
+
     @Column(name = "time", nullable = false, updatable = false)
     private Timestamp time = new Timestamp(System.currentTimeMillis());
 
@@ -39,59 +43,7 @@ public class MaterialUsage implements Serializable {
     @JoinColumn(name = "materialID", referencedColumnName = "id")
     private Material material;
 
-    /********************************************************/
-    public Integer getUsageId() {
-        return usageId;
-    }
-
-    public void setUsageId(Integer usageId) {
-        this.usageId = usageId;
-    }
-    public Integer getStallID() {
-        return stallID;
-    }
-
-    public void setStallID(Integer stallID) {
-        this.stallID = stallID;
-    }
-
-    public Integer getMaterialID() {
-        return materialID;
-    }
-
-    public void setMaterialID(Integer materialID) {
-        this.materialID = materialID;
-    }
-
-    public Timestamp getTime() {
-        return time;
-    }
-
-    public void setTime(Timestamp time) {
-        this.time = time;
-    }
-
-    public Float getAmount() {
-        return amount;
-    }
-
-    public void setAmount(Float amount) {
-        this.amount = amount;
-    }
-
-    public Stall getStall() {
-        return stall;
-    }
-
-    public void setStall(Stall stall) {
-        this.stall = stall;
-    }
-
-    public Material getMaterial() {
-        return material;
-    }
-
-    public void setMaterial(Material material) {
-        this.material = material;
-    }
+    @ManyToOne(targetEntity = MaterialOrder.class, optional = false, cascade = {CascadeType.REFRESH, CascadeType.MERGE})
+    @JoinColumn(name = "storageID", referencedColumnName = "op_storageID")
+    private MaterialOrder materialOrder;
 }

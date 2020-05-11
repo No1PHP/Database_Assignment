@@ -1,6 +1,7 @@
 package dao.tables;
 
 import com.vladmihalcea.hibernate.type.json.JsonStringType;
+import lombok.Data;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
@@ -10,6 +11,7 @@ import java.util.List;
 import java.util.Set;
 import javax.persistence.*;
 
+@Data
 @Entity
 @Table(name = "Recipe")
 public class Recipe implements Serializable {
@@ -42,63 +44,4 @@ public class Recipe implements Serializable {
             inverseJoinColumns = {@JoinColumn(name = "material_id", referencedColumnName = "id")}
     )
     private Set<Material> materials = new HashSet<>();
-
-    /********************************************************/
-
-    public Integer getRecipeID() {
-        return recipeID;
-    }
-
-    public void setRecipeID(Integer recipeID) {
-        this.recipeID = recipeID;
-    }
-
-    public String getRecipeName() {
-        return recipeName;
-    }
-
-    public void setRecipeName(String recipeName) {
-        this.recipeName = recipeName;
-    }
-
-    public Float getPrice() {
-        return price;
-    }
-
-    public void setPrice(Float price) {
-        this.price = price;
-    }
-
-    public Set<TransactionRecord> getTransactionRecords() {
-        return transactionRecords;
-    }
-
-    public void setTransactionRecords(Set<TransactionRecord> transactionRecords) {
-        this.transactionRecords = transactionRecords;
-    }
-
-    public Set<Stall> getStalls() {
-        return stalls;
-    }
-
-    public void setStalls(Set<Stall> stalls) {
-        this.stalls = stalls;
-    }
-
-    public Set<Material> getMaterials() {
-        return materials;
-    }
-
-    public void setMaterials(Set<Material> materials) {
-        this.materials = materials;
-    }
-
-    @Override
-    public String toString() {
-        return "Recipe{" +
-                "recipeID=" + recipeID +
-                ", recipeName='" + recipeName + '\'' +
-                ", price=" + price +
-                '}';
-    }
 }

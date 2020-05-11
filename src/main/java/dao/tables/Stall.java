@@ -1,10 +1,13 @@
 package dao.tables;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
+@Data
 @Entity
 @Table(name = "Stall")
 public class Stall implements Serializable {
@@ -50,108 +53,4 @@ public class Stall implements Serializable {
     //recipeUsage foreign key
     @OneToMany(mappedBy = "stall", cascade = CascadeType.ALL)
     private Set<MaterialUsage> materialUsages = new HashSet<>();
-
-    /********************************************************/
-    public Integer getStallID() {
-        return stallID;
-    }
-
-    public void setStallID(Integer stallID) {
-        this.stallID = stallID;
-    }
-
-    public String getStallName() {
-        return stallName;
-    }
-
-    public void setStallName(String stallName) {
-        this.stallName = stallName;
-    }
-
-    public Integer getStallLocation() {
-        return stallLocation;
-    }
-
-    public void setStallLocation(Integer stallLocation) {
-        this.stallLocation = stallLocation;
-    }
-
-    public Float getStallRent() {
-        return stallRent;
-    }
-
-    public void setStallRent(Float stallRent) {
-        this.stallRent = stallRent;
-    }
-
-    public Float getCostLastMonth() {
-        return costLastMonth;
-    }
-
-    public void setCostLastMonth(Float costLastMonth) {
-        this.costLastMonth = costLastMonth;
-    }
-
-    public Integer getManageTimeSoFar() {
-        return manageTimeSoFar;
-    }
-
-    public void setManageTimeSoFar(Integer manageTimeSoFar) {
-        this.manageTimeSoFar = manageTimeSoFar;
-    }
-
-    public Float getAveMonthlySalesAmount() {
-        return aveMonthlySalesAmount;
-    }
-
-    public void setAveMonthlySalesAmount(Float aveMonthlySalesAmount) {
-        this.aveMonthlySalesAmount = aveMonthlySalesAmount;
-    }
-
-    public Float getAveSalesIncome() {
-        return aveSalesIncome;
-    }
-
-    public void setAveSalesIncome(Float aveSalesIncome) {
-        this.aveSalesIncome = aveSalesIncome;
-    }
-
-    public Set<TransactionRecord> getTransactionRecords() {
-        return transactionRecords;
-    }
-
-    public void setTransactionRecords(Set<TransactionRecord> transactionRecords) {
-        this.transactionRecords = transactionRecords;
-    }
-
-    public Set<Recipe> getRecipes() {
-        return recipes;
-    }
-
-    public void setRecipes(Set<Recipe> recipes) {
-        this.recipes = recipes;
-    }
-
-    public Set<MaterialUsage> getMaterialUsages() {
-        return materialUsages;
-    }
-
-    public void setMaterialUsages(Set<MaterialUsage> materialUsages) {
-        this.materialUsages = materialUsages;
-    }
-
-    @Override
-    public String toString() {
-        return "Stall{" +
-                "stallID=" + stallID +
-                ", stallName='" + stallName + '\'' +
-                ", stallLocation=" + stallLocation +
-                ", stallRent=" + stallRent +
-                ", costLastMonth=" + costLastMonth +
-                ", manageTimeSoFar=" + manageTimeSoFar +
-                ", aveMonthlySalesAmount=" + aveMonthlySalesAmount +
-                ", aveSalesIncome=" + aveSalesIncome +
-                ", transactionRecords=" + transactionRecords +
-                '}';
-    }
 }

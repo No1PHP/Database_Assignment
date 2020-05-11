@@ -1,5 +1,6 @@
 package dao.tables;
 
+import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
@@ -8,6 +9,7 @@ import java.sql.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+@Data
 @Entity
 @Table(name = "TransactionRecord")
 public class TransactionRecord implements Serializable {
@@ -48,81 +50,4 @@ public class TransactionRecord implements Serializable {
     @ManyToOne(targetEntity = Stall.class, optional = false, cascade = {CascadeType.REFRESH, CascadeType.MERGE})
     @JoinColumn(name = "stall_id", referencedColumnName = "stall_id")
     private Stall stall;
-
-    /********************************************************/
-    public Integer getTransactionID() {
-        return transactionID;
-    }
-
-    public void setTransactionID(Integer transactionID) {
-        this.transactionID = transactionID;
-    }
-
-    public Integer getStallID() {
-        return stallID;
-    }
-
-    public void setStallID(Integer stallID) {
-        this.stallID = stallID;
-    }
-
-    public Integer getRecipeID() {
-        return recipeID;
-    }
-
-    public void setRecipeID(Integer recipeID) {
-        this.recipeID = recipeID;
-    }
-
-    public Date getTransactionTime() {
-        return transactionTime;
-    }
-
-    public void setTransactionTime(Date transactionTime) {
-        this.transactionTime = transactionTime;
-    }
-
-    public Integer getNumbers() {
-        return numbers;
-    }
-
-    public void setNumbers(Integer numbers) {
-        this.numbers = numbers;
-    }
-
-    public Float getTransactionPrice() {
-        return transactionPrice;
-    }
-
-    public void setTransactionPrice(Float transactionPrice) {
-        this.transactionPrice = transactionPrice;
-    }
-
-    public Recipe getRecipe() {
-        return recipe;
-    }
-
-    public void setRecipe(Recipe recipe) {
-        this.recipe = recipe;
-    }
-
-    public Stall getStall() {
-        return stall;
-    }
-
-    public void setStall(Stall stall) {
-        this.stall = stall;
-    }
-
-    @Override
-    public String toString() {
-        return "TransactionRecord{" +
-                "transactionID=" + transactionID +
-                ", stallID=" + stallID +
-                ", recipeID=" + recipeID +
-                ", transactionTime=" + transactionTime +
-                ", numbers=" + numbers +
-                ", transactionPrice=" + transactionPrice +
-                '}';
-    }
 }

@@ -1,11 +1,14 @@
 package dao.tables;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Time;
 import java.util.HashSet;
 import java.util.Set;
 
+@Data
 @Entity
 @Table(name = "Staff")
 public class Staff implements Serializable {
@@ -40,80 +43,4 @@ public class Staff implements Serializable {
     //operation record foreign key
     @OneToMany(mappedBy = "staff", cascade = {CascadeType.REFRESH, CascadeType.MERGE, CascadeType.PERSIST})
     private Set<OperationRecord> operationRecords = new HashSet<>();
-
-    /********************************************************/
-    public Integer getStaffID() {
-        return staffID;
-    }
-
-    public void setStaffID(Integer staffID) {
-        this.staffID = staffID;
-    }
-
-    public String getStaffName() {
-        return staffName;
-    }
-
-    public void setStaffName(String staffName) {
-        this.staffName = staffName;
-    }
-
-    public Byte getStaffCategory() {
-        return staffCategory;
-    }
-
-    public void setStaffCategory(Byte staffCategory) {
-        this.staffCategory = staffCategory;
-    }
-
-    public Time getTimeStartWorking() {
-        return timeStartWorking;
-    }
-
-    public void setTimeStartWorking(Time timeStartWorking) {
-        this.timeStartWorking = timeStartWorking;
-    }
-
-    public Time getTimeEndWorking() {
-        return timeEndWorking;
-    }
-
-    public void setTimeEndWorking(Time timeEndWorking) {
-        this.timeEndWorking = timeEndWorking;
-    }
-
-    public Account getAccount() {
-        return account;
-    }
-
-    public void setAccount(Account account) {
-        this.account = account;
-    }
-
-    public Set<ScheduleRecord> getScheduleRecords() {
-        return scheduleRecords;
-    }
-
-    public void setScheduleRecords(Set<ScheduleRecord> scheduleRecords) {
-        this.scheduleRecords = scheduleRecords;
-    }
-
-    public Set<OperationRecord> getOperationRecords() {
-        return operationRecords;
-    }
-
-    public void setOperationRecords(Set<OperationRecord> operationRecords) {
-        this.operationRecords = operationRecords;
-    }
-
-    @Override
-    public String toString() {
-        return "Staff{" +
-                "staffID=" + staffID +
-                ", staffName='" + staffName + '\'' +
-                ", staffCategory=" + staffCategory +
-                ", timeStartWorking=" + timeStartWorking +
-                ", timeEndWorking=" + timeEndWorking +
-                '}';
-    }
 }

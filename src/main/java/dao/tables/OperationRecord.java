@@ -1,12 +1,13 @@
 package dao.tables;
 
+import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.sql.Date;
 import java.sql.Timestamp;
 
+@Data
 @Entity
 @Table(name = "OperationRecord")
 public class OperationRecord implements Serializable {
@@ -51,97 +52,4 @@ public class OperationRecord implements Serializable {
     //schedule record foreign key
     @OneToOne(mappedBy = "operationRecord", cascade = {CascadeType.REFRESH, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REMOVE})
     private ScheduleRecord scheduleRecord;
-
-    /********************************************************/
-    public Integer getOperationID() {
-        return operationID;
-    }
-
-    public void setOperationID(Integer operationID) {
-        this.operationID = operationID;
-    }
-
-    public Integer getStaffID() {
-        return staffID;
-    }
-
-    public void setStaffID(Integer staffID) {
-        this.staffID = staffID;
-    }
-
-    public Byte getOperationType() {
-        return operationType;
-    }
-
-    public void setOperationType(Byte operationType) {
-        this.operationType = operationType;
-    }
-
-    public String getNote() {
-        return note;
-    }
-
-    public void setNote(String note) {
-        this.note = note;
-    }
-
-    public Timestamp getOperationTime() {
-        return operationTime;
-    }
-
-    public void setOperationTime(Timestamp operationTime) {
-        this.operationTime = operationTime;
-    }
-
-    public Boolean getWillSendUpdateMessage() {
-        return willSendUpdateMessage;
-    }
-
-    public void setWillSendUpdateMessage(Boolean willSendUpdateMessage) {
-        this.willSendUpdateMessage = willSendUpdateMessage;
-    }
-
-    public Staff getStaff() {
-        return staff;
-    }
-
-    public void setStaff(Staff staff) {
-        this.staff = staff;
-    }
-
-    public MaterialOrder getOrderedMaterialRecord() {
-        return orderedMaterialRecord;
-    }
-
-    public void setOrderedMaterialRecord(MaterialOrder orderedMaterialRecord) {
-        this.orderedMaterialRecord = orderedMaterialRecord;
-    }
-
-    public MaterialOrder getStorageMaterialRecord() {
-        return storageMaterialRecord;
-    }
-
-    public void setStorageMaterialRecord(MaterialOrder storageMaterialRecord) {
-        this.storageMaterialRecord = storageMaterialRecord;
-    }
-
-    public ScheduleRecord getScheduleRecord() {
-        return scheduleRecord;
-    }
-
-    public void setScheduleRecord(ScheduleRecord scheduleRecord) {
-        this.scheduleRecord = scheduleRecord;
-    }
-
-    @Override
-    public String toString() {
-        return "OperationRecord{" +
-                "operationID=" + operationID +
-                ", staffID=" + staffID +
-                ", operationType=" + operationType +
-                ", note='" + note + '\'' +
-                ", operationTime=" + operationTime +
-                ", willSendUpdateMessage=" + willSendUpdateMessage +
-                '}';
-    }
 }

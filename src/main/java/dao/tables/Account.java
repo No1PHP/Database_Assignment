@@ -1,10 +1,13 @@
 package dao.tables;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
+@Data
 @Entity
 @Table(name = "Account")
 public class Account implements Serializable {
@@ -33,64 +36,4 @@ public class Account implements Serializable {
     @ManyToOne(targetEntity = AccessInfo.class, optional = false, cascade = {CascadeType.MERGE, CascadeType.REFRESH})
     @JoinColumn(name = "position", referencedColumnName = "position")
     private AccessInfo accessInfo;
-
-    /********************************************************/
-    public Integer getStaffID() {
-        return staffID;
-    }
-
-    public void setStaffID(Integer staffID) {
-        this.staffID = staffID;
-    }
-
-    public String getPosition() {
-        return position;
-    }
-
-    public void setPosition(String position) {
-        this.position = position;
-    }
-
-    public String getAccountName() {
-        return accountName;
-    }
-
-    public void setAccountName(String accountName) {
-        this.accountName = accountName;
-    }
-
-    public String getPasswordHashValue() {
-        return passwordHashValue;
-    }
-
-    public void setPasswordHashValue(String passwordHashValue) {
-        this.passwordHashValue = passwordHashValue;
-    }
-
-    public Staff getStaff() {
-        return staff;
-    }
-
-    public void setStaff(Staff staff) {
-        this.staff = staff;
-        this.staffID = staff.getStaffID();
-    }
-
-    public AccessInfo getAccessInfo() {
-        return accessInfo;
-    }
-
-    public void setAccessInfo(AccessInfo accessInfo) {
-        this.accessInfo = accessInfo;
-    }
-
-    @Override
-    public String toString() {
-        return "Account{" +
-                "staffID=" + staffID +
-                ", position='" + position + '\'' +
-                ", accountName='" + accountName + '\'' +
-                ", passwordHashValue='" + passwordHashValue + '\'' +
-                '}';
-    }
 }

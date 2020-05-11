@@ -1,10 +1,13 @@
 package dao.tables;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
+@Data
 @Entity
 @Table(name = "MaterialOrder")
 public class MaterialOrder implements Serializable {
@@ -31,7 +34,6 @@ public class MaterialOrder implements Serializable {
     @JoinColumn(name = "materialID", referencedColumnName = "id")
     private Material material;
 
-
     //material order foreign key
     @OneToOne(targetEntity = OperationRecord.class, optional = false, cascade = {CascadeType.REFRESH, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REMOVE})
     @JoinColumn(name = "op_OrderID", referencedColumnName = "operationId")
@@ -41,70 +43,7 @@ public class MaterialOrder implements Serializable {
     @OneToOne(targetEntity = OperationRecord.class, cascade = {CascadeType.REFRESH, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REMOVE})
     @JoinColumn(name = "op_StorageID", referencedColumnName = "operationId")
     private OperationRecord storageRecord;
-    /********************************************************/
-    public Integer getOperationOrderID() {
-        return operationOrderID;
-    }
 
-    public void setOperationOrderID(Integer operationOrderID) {
-        this.operationOrderID = operationOrderID;
-    }
-
-    public Integer getOperationStorageID() {
-        return operationStorageID;
-    }
-
-    public void setOperationStorageID(Integer operationStorageID) {
-        this.operationStorageID = operationStorageID;
-    }
-
-    public Integer getMaterialID() {
-        return materialID;
-    }
-
-    public void setMaterialID(Integer materialID) {
-        this.materialID = materialID;
-    }
-
-    public Float getMaterialAmount() {
-        return materialAmount;
-    }
-
-    public void setMaterialAmount(Float materialAmount) {
-        this.materialAmount = materialAmount;
-    }
-
-    public Material getMaterial() {
-        return material;
-    }
-
-    public void setMaterial(Material material) {
-        this.material = material;
-    }
-
-    public OperationRecord getOrderRecord() {
-        return orderRecord;
-    }
-
-    public void setOrderRecord(OperationRecord orderRecord) {
-        this.orderRecord = orderRecord;
-    }
-
-    public OperationRecord getStorageRecord() {
-        return storageRecord;
-    }
-
-    public void setStorageRecord(OperationRecord storageRecord) {
-        this.storageRecord = storageRecord;
-    }
-
-    @Override
-    public String toString() {
-        return "MaterialOrder{" +
-                "operationOrderID=" + operationOrderID +
-                ", operationStorageID=" + operationStorageID +
-                ", materialID=" + materialID +
-                ", materialAmount=" + materialAmount +
-                '}';
-    }
+    @OneToMany(mappedBy = "materialOrder", cascade = {CascadeType.REFRESH, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REMOVE})
+    private Set<MaterialUsage> materialUsages = new HashSet<>();
 }

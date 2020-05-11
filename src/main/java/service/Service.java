@@ -3,12 +3,13 @@ package service;
 import dao.DAOInterfaces.*;
 import dao.DAO_Type;
 import dao.enums.MaterialTypes;
-import dao.tables.Account;
-import dao.tables.Material;
-import dao.tables.Recipe;
-import dao.tables.Stall;
+import dao.enums.StaffCategoryTypes;
+import dao.tables.*;
+import service.exceptions.IllegalRequestException;
+import service.exceptions.RestrictedOperationException;
 
 import java.sql.Date;
+import java.sql.Time;
 import java.util.*;
 
 public class Service {
@@ -77,10 +78,13 @@ public class Service {
      * @return material entity been removed
      * @throws IllegalRequestException
      */
-    public Material removeMaterial(String name) throws IllegalRequestException {
+    public void removeMaterial(String name) throws IllegalRequestException, RestrictedOperationException {
         if (!account.getAccessInfo().getPosition().equals("admin")) throw new IllegalRequestException();
+        Material material = materialRepository.findByName(name);
+        if (material.getRecipes().size() >= 1) throw new RestrictedOperationException("material "+name+" still has relevant recipe!");
 
-        return materialRepository.deleteByName(name);
+        materialRepository.deleteByName(name);
+        materialRepository.flush();
     }
 
     /**
@@ -110,6 +114,84 @@ public class Service {
         return stallRepository.saveAndFlush(EntityFactor.getStallWithRecipes(stallName, stallLocation, stallRent, recipes));
     }
 
+    /**
+     * remove a stall row
+     * @param name stall name
+     */
+    public void removeStall(String name) throws IllegalRequestException {
+        if (!account.getAccessInfo().getPosition().equals("admin")) throw new IllegalRequestException();
+
+        Stall stall = stallRepository.findByStallName(name);
+        Set<Recipe> recipes = stall.getRecipes();
+        for (Recipe e : recipes)
+            e.getStalls().remove(stall);
+        recipeRepository.saveAll(recipes);
+        stall.getRecipes().clear();
+        stallRepository.saveAndFlush(stall);
+        stallRepository.delete(stall);
+        stallRepository.flush();
+    }
+
+    /**
+     * insert a staff
+     * @param staffName staff name
+     * @param types staff working type
+     * @param start start working time in a day
+     * @param end end working time in a day
+     * @return staff entity
+     * @throws IllegalRequestException
+     */
+    public Staff insertStaff(String staffName, StaffCategoryTypes types, Time start, Time end) throws IllegalRequestException, RestrictedOperationException {
+        if (!account.getAccessInfo().getPosition().equals("admin")) throw new IllegalRequestException();
+        if (staffName.equals("none") || types == StaffCategoryTypes.ADMIN) throw new RestrictedOperationException("cannot insert this staff!");
+
+        return staffRepository.saveAndFlush(EntityFactor.getStaff(staffName, types, start, end));
+    }
+
+    /**
+     * update a staff
+     * @param types staff working type
+     * @param start start working time in a day
+     * @param end end working time in a day
+     * @return staff entity
+     * @throws IllegalRequestException
+     */
+    public Staff updateStaff(int id, StaffCategoryTypes types, Time start, Time end) throws IllegalRequestException, RestrictedOperationException {
+        if (!account.getAccessInfo().getPosition().equals("admin")) throw new IllegalRequestException();
+        Staff staff = staffRepository.findByStaffID(id);
+        if (staff.getStaffName().equals("none") || staff.getStaffCategory() == StaffCategoryTypes.ADMIN.ordinal())
+            throw new RestrictedOperationException("cannot update this staff!");
+
+        staff.setStaffCategory((byte) types.ordinal());
+        staff.setTimeStartWorking(start);
+        staff.setTimeEndWorking(end);
+        return staffRepository.saveAndFlush(staff);
+    }
+
+    /**
+     * remove a staff
+     * @param id staff id
+     * @throws IllegalRequestException
+     * @throws RestrictedOperationException
+     */
+    public void removeStaff(int id) throws IllegalRequestException, RestrictedOperationException {
+        if (!account.getAccessInfo().getPosition().equals("admin")) throw new IllegalRequestException();
+        Staff staff = staffRepository.findByStaffID(id);
+        if (staff.getStaffName().equals("none") || staff.getStaffCategory() == StaffCategoryTypes.ADMIN.ordinal())
+            throw new RestrictedOperationException("cannot delete this staff!");
+
+        Set<OperationRecord> operationRecords = staff.getOperationRecords();
+        Staff none = staffRepository.findALLByStaffName("none").get(0);
+        for (OperationRecord e : operationRecords) {
+            e.setStaff(none);
+            none.getOperationRecords().add(e);
+        }
+        operationRecordRepository.saveAll(operationRecords);
+        operationRecordRepository.flush();
+        staffRepository.saveAndFlush(none);
+        staffRepository.delete(staff);
+        staffRepository.flush();
+    }
     //
     //material services
     /**

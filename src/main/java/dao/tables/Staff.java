@@ -22,7 +22,7 @@ public class Staff implements Serializable {
     @Column(name = "staff_id")
     private Integer staffID;
 
-    @Column(name = "staff_name", length = 30, nullable = false)
+    @Column(name = "staff_name", length = 30, nullable = false, updatable = false)
     private String staffName;
 
     @Column(name = "staff_category")

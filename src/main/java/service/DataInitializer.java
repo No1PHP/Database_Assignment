@@ -149,28 +149,28 @@ public abstract class DataInitializer {
     }
 
     private static void addMaterialUsage() {
-        MaterialUsageRepository materialUsageRepository = (MaterialUsageRepository) DAO_Type.MATERIAL_USAGE.getTableRepository();
-        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("自选美食"), materialMap.get("potato"), (float) (20*Math.random())));
-        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("自选美食"), materialMap.get("chicken"), (float) (20*Math.random())));
-        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("自选美食"), materialMap.get("carrot"), (float) (20*Math.random())));
-        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("自选美食"), materialMap.get("pork"), (float) (20*Math.random())));
-        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("自选美食"), materialMap.get("carrot"), (float) (20*Math.random())));
-        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("自选美食"), materialMap.get("rice"), (float) (20*Math.random())));
-        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("广东风味"), materialMap.get("rice"), (float) (20*Math.random())));
-        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("广东风味"), materialMap.get("chicken"), (float) (20*Math.random())));
-        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("广东风味"), materialMap.get("egg"), (float) (20*Math.random())));
-        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("广东风味"), materialMap.get("pork"), (float) (20*Math.random())));
-        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("广东风味"), materialMap.get("rice"), (float) (20*Math.random())));
-        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("广东风味"), materialMap.get("chicken"), (float) (20*Math.random())));
-        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("包子铺"), materialMap.get("flower"), (float) (20*Math.random())));
-        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("包子铺"), materialMap.get("beef"), (float) (20*Math.random())));
-        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("包子铺"), materialMap.get("cabbage"), (float) (20*Math.random())));
-        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("包子铺"), materialMap.get("flower"), (float) (20*Math.random())));
-        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("包子铺"), materialMap.get("flower"), (float) (20*Math.random())));
-        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("兰州拉面"), materialMap.get("noodle"), (float) (20*Math.random())));
-        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("兰州拉面"), materialMap.get("pork"), (float) (20*Math.random())));
-        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("兰州拉面"), materialMap.get("noodle"), (float) (20*Math.random())));
-        materialUsageRepository.flush();
+//        MaterialUsageRepository materialUsageRepository = (MaterialUsageRepository) DAO_Type.MATERIAL_USAGE.getTableRepository();
+//        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("自选美食"), materialMap.get("potato"), (float) (20*Math.random())));
+//        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("自选美食"), materialMap.get("chicken"), (float) (20*Math.random())));
+//        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("自选美食"), materialMap.get("carrot"), (float) (20*Math.random())));
+//        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("自选美食"), materialMap.get("pork"), (float) (20*Math.random())));
+//        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("自选美食"), materialMap.get("carrot"), (float) (20*Math.random())));
+//        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("自选美食"), materialMap.get("rice"), (float) (20*Math.random())));
+//        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("广东风味"), materialMap.get("rice"), (float) (20*Math.random())));
+//        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("广东风味"), materialMap.get("chicken"), (float) (20*Math.random())));
+//        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("广东风味"), materialMap.get("egg"), (float) (20*Math.random())));
+//        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("广东风味"), materialMap.get("pork"), (float) (20*Math.random())));
+//        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("广东风味"), materialMap.get("rice"), (float) (20*Math.random())));
+//        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("广东风味"), materialMap.get("chicken"), (float) (20*Math.random())));
+//        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("包子铺"), materialMap.get("flower"), (float) (20*Math.random())));
+//        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("包子铺"), materialMap.get("beef"), (float) (20*Math.random())));
+//        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("包子铺"), materialMap.get("cabbage"), (float) (20*Math.random())));
+//        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("包子铺"), materialMap.get("flower"), (float) (20*Math.random())));
+//        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("包子铺"), materialMap.get("flower"), (float) (20*Math.random())));
+//        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("兰州拉面"), materialMap.get("noodle"), (float) (20*Math.random())));
+//        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("兰州拉面"), materialMap.get("pork"), (float) (20*Math.random())));
+//        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("兰州拉面"), materialMap.get("noodle"), (float) (20*Math.random())));
+//        materialUsageRepository.flush();
     }
 
     private static void addTransactionRecord() {

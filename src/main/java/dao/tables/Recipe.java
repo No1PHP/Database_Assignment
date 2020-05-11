@@ -2,6 +2,9 @@ package dao.tables;
 
 import com.vladmihalcea.hibernate.type.json.JsonStringType;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
@@ -11,7 +14,8 @@ import java.util.List;
 import java.util.Set;
 import javax.persistence.*;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "Recipe")
 public class Recipe implements Serializable {

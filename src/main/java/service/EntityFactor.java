@@ -52,6 +52,7 @@ public abstract class EntityFactor {
         Account account = new Account();
         account.setAccountName(accountName);
         account.setPasswordHashValue(passwordHashValue);
+        account.setStaffID(staff.getStaffID());
         account.setStaff(staff);
         staff.setAccount(account);
         account.setAccessInfo(accessInfo);

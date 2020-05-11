@@ -1,6 +1,9 @@
 package dao.tables;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -9,7 +12,8 @@ import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "Schedule_record")
 public class ScheduleRecord implements Serializable {

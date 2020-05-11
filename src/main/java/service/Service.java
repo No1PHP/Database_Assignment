@@ -140,10 +140,11 @@ public class Service {
      * @param end end working time in a day
      * @return staff entity
      * @throws IllegalRequestException
+     * @throws RestrictedOperationException
      */
     public Staff insertStaff(String staffName, StaffCategoryTypes types, Time start, Time end) throws IllegalRequestException, RestrictedOperationException {
         if (!account.getAccessInfo().getPosition().equals("admin")) throw new IllegalRequestException();
-        if (staffName.equals("none") || types == StaffCategoryTypes.ADMIN) throw new RestrictedOperationException("cannot insert this staff!");
+        if (staffName.equals("none") || staffName.equals("admin") || types == StaffCategoryTypes.ADMIN) throw new RestrictedOperationException("cannot insert this staff!");
 
         return staffRepository.saveAndFlush(EntityFactor.getStaff(staffName, types, start, end));
     }
@@ -155,11 +156,12 @@ public class Service {
      * @param end end working time in a day
      * @return staff entity
      * @throws IllegalRequestException
+     * @throws RestrictedOperationException
      */
     public Staff updateStaff(int id, StaffCategoryTypes types, Time start, Time end) throws IllegalRequestException, RestrictedOperationException {
         if (!account.getAccessInfo().getPosition().equals("admin")) throw new IllegalRequestException();
         Staff staff = staffRepository.findByStaffID(id);
-        if (staff.getStaffName().equals("none") || staff.getStaffCategory() == StaffCategoryTypes.ADMIN.ordinal())
+        if (staff.getStaffName().equals("none") || staff.getStaffName().equals("admin"))
             throw new RestrictedOperationException("cannot update this staff!");
 
         staff.setStaffCategory((byte) types.ordinal());
@@ -191,6 +193,32 @@ public class Service {
         staffRepository.saveAndFlush(none);
         staffRepository.delete(staff);
         staffRepository.flush();
+    }
+
+    /**
+     * update or insert a account row
+     * @param staff master of account
+     * @param accessInfo account access type
+     * @param accountName account username
+     * @param passwordHashValue account password
+     * @return account entity
+     * @throws IllegalRequestException
+     * @throws RestrictedOperationException
+     */
+    public Account saveAccount(Staff staff, AccessInfo accessInfo, String accountName, String passwordHashValue) throws IllegalRequestException, RestrictedOperationException  {
+        if (!account.getAccessInfo().getPosition().equals("admin")) throw new IllegalRequestException();
+        if (staff.getStaffName().equals("none") || staff.getStaffName().equals("admin"))
+            throw new RestrictedOperationException("can't update account for this staff!");
+
+        Account account = accountRepository.findByStaffID(staff.getStaffID());
+        if (account == null) {
+            account = EntityFactor.getAccount(staff, accessInfo, accountName, passwordHashValue);
+        } else {
+            account.setAccessInfo(accessInfo);
+            account.setAccountName(accountName);
+            account.setPasswordHashValue(passwordHashValue);
+        }
+        return accountRepository.saveAndFlush(account);
     }
     //
     //material services

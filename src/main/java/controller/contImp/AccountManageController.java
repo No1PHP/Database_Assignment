@@ -3,14 +3,19 @@ package controller.contImp;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import common.HttpServletRequestUtils;
 import controller.model.LoginAccount;
+import controller.model.PasswordChange;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import service.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
+import static Constants.globalConstants.LOGIN_STATUS;
+import static Constants.globalConstants.SERVICE;
 
 /**
  * @description Login Operation Management
@@ -19,8 +24,9 @@ import java.util.Map;
  * @create 2020-04-29-18-17
  **/
 @Controller
-@RequestMapping(value = "/")//访问路径 未定
+@RequestMapping(value = "./")//访问路径 未定
 public class AccountManageController {
+
 
     /**
     * @author Zhining
@@ -32,7 +38,7 @@ public class AccountManageController {
     **/
     @RequestMapping(value = "/loginPage",method = RequestMethod.POST)
     @ResponseBody
-    private Map<String,Object> login(HttpServletRequest request){
+    public Map<String,Object> login(HttpServletRequest request){
         Map<String, Object> map = new HashMap<String, Object>();
         //1 receive and parse the request parameter
         String accountInfoString = HttpServletRequestUtils.getString(request, "accountString");
@@ -47,6 +53,13 @@ public class AccountManageController {
         }
 
         //2 打包给service
+        boolean loginSucceeded = (Service.connect(log.getAccountName(),log.getPasswordValue()))!=null;
+        if(loginSucceeded) {
+            SERVICE = Service.connect(log.getAccountName(),log.getPasswordValue());
+        }
+        String statusMessage = loginSucceeded?"login success":"login failed";
+        LOGIN_STATUS = loginSucceeded;
+        map.put("status",statusMessage);
 
 
         //3 接受service返回的对象，return
@@ -71,16 +84,24 @@ public class AccountManageController {
         Map<String, Object> map = new HashMap<String, Object>();
         String accountInfoString = HttpServletRequestUtils.getString(request, "passwordChangeString");
         ObjectMapper mapper = new ObjectMapper();
-        LoginAccount log = null;
+        PasswordChange changeInfo = null;
         try{
-            log = mapper.readValue(accountInfoString, LoginAccount.class);
+            changeInfo = mapper.readValue(accountInfoString, PasswordChange.class);
         }catch (Exception e){
             map.put("succeed", false);
             map.put("message: ", e.getMessage());
             return map;
         }
 
-        // 打包
+        Service service = (Service.connect(changeInfo.getAccountName(),changeInfo.getPasswordValue()));
+        boolean loginVerify = (service!=null);
+
+        if(loginVerify) {
+            service.changePassword(changeInfo.getAccountName(),changeInfo.getPasswordValue());
+            map.put("message","password successfully changed");
+        }else{
+            map.put("message","password doesn't match username, try again");
+        }
 
 
         //return
@@ -88,6 +109,24 @@ public class AccountManageController {
     }
 
 
+    /**
+    * @author Zhining
+    * @description 登出，清空service与登录状态
+    * @param logStage
+    * @return Map
+    * @create 2020/5/13 1:35 上午
+    **/
+    @RequestMapping(value = "/LoginPage/{logStage}",method = RequestMethod.GET)
+    @ResponseBody
+    private Map<String,Object> logout(@PathVariable("logStage") String logStage) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        if(logStage.equals("logout")){
+            LOGIN_STATUS = false;
+            SERVICE = null;
+        }
+        map.put("logout:",(LOGIN_STATUS==false)?"succeed":"failed, try again");
+        return map;
+    }
 
 
 

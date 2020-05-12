@@ -1,25 +1,38 @@
 package controller.model;
 
+import dao.enums.StaffCategoryTypes;
+import dao.tables.Account;
+import dao.tables.OperationRecord;
+import dao.tables.ScheduleRecord;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.sql.Time;
+import java.util.HashSet;
+import java.util.Set;
+
 /**
- * @description staff information class for controller
- * @create 2020-05-02-23-27
+ * @description
+ * @create 2020-05-13-03-07
  **/
+@Getter
+@Setter
 public class Staff {
-    public Integer stallID;
+    private Integer staffID;
 
-    public String stallName;
+    private String staffName;
 
-    public String stallLocation;
+    private StaffCategoryTypes staffCategory;
 
-    public Float stallRent;
+    private Time timeStartWorking;
 
-    public Float costLastMonth;
+    private Time timeEndWorking;
 
-    public Integer manageTimeSoFar;
+    private Account account;
 
-    public Float aveMonthlySalesAmount;
+    private Set<ScheduleRecord> scheduleRecords = new HashSet<>();
 
-    public String operationName;
+    private Set<OperationRecord> operationRecords = new HashSet<>();
 
-
+    private String operationName;
 }

@@ -5,7 +5,6 @@ import dao.DAO_Type;
 import dao.enums.MaterialTypes;
 import dao.enums.StaffCategoryTypes;
 import dao.tables.*;
-import org.springframework.data.jpa.repository.Modifying;
 import service.exceptions.IllegalRequestException;
 import service.exceptions.RestrictedOperationException;
 
@@ -415,4 +414,41 @@ public class Service {
     public TransactionRecord stallSell(String recipeName, String stallName, int amount, float price) {
         return null;
     }
+
+//
+//    public Map<String,Object> addRecipe(Integer recipeID, String recipeName, String relevantIngredient, float price){
+//        return null;
+//    }
+
+    public Recipe saveRecipe(Integer recipeID, String recipeName, String relevantIngredient, float price){
+        return null;
+    }
+
+    public Recipe removeRecipe(Integer recipeID, String recipeName, String relevantIngredient, float price){
+        return null;
+    }
+    /**
+     * @author Zhining
+     * @description
+     * @param username, newPassword
+     * @return
+     * @create 2020/5/12 8:59 上午
+     * @throws IllegalRequestException
+     **/
+//    @Query("update Account a set a.passwordHashValue = :newPassword where a.accountName = :username")
+    public String changePassword(String username, String newPassword){
+        if (!account.getAccessInfo().getAccessToStall()) {
+            throw new IllegalRequestException();
+        }
+
+        Account account = accountRepository.findByAccountName(username);
+        if(account == null) {
+            return "no such account";
+        } else {
+            account.setPasswordHashValue(newPassword);
+            return String.valueOf(accountRepository.saveAndFlush(account));
+        }
+
+    }
+
 }

@@ -15,6 +15,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
+import static Constants.globalConstants.LOGIN_STATUS;
+import static Constants.globalConstants.SERVICE;
+
 /**
  * @description Set of controller of staff information handling request
  * @create 2020-05-01-01-11
@@ -23,16 +26,15 @@ import java.util.Map;
 @Controller
 public class StaffInfoController implements PageTurningFunction {
 
-
     /**
     * @author Zhining
     * @description 处理增删改职工先关信息的请求
     * @param request
     * @RequestJson
-    * {stallID:'',stallName:'',
-    * stallLocation:'',stallRent:'[Float]',
-    * costLastMonth:'[Float]',manageTimeSoFar:'[Float]',
-    * aveMonthlySalesAmount:'[Float]',OperationName:'',
+    * {staffID:'',staffName:'',
+    * staffCategoryTypes:'',timeStartWorking:'[DATETIME]',
+    * timeEndWorking:'[DATETIME]',account:'[AccountJsonForm]',
+    * scheduleRecords:'',OperationRecord:'',
     * operationName:''}
      *
     * @return Map
@@ -55,13 +57,19 @@ public class StaffInfoController implements PageTurningFunction {
 
         // 请求含条件，打包给不同方法
         //TO-DO: 外部接口 空值判断
-        if(staffReq.operationName.equals("AddStaff"))
-            ; //调用daoImpl，map接受返回参数
-        if(staffReq.operationName.equals("ModifyStaff"))
-            ;
-        if(staffReq.operationName.equals("DeleteStaff"))
-            ;
-
+        if(LOGIN_STATUS) {
+            if (staffReq.getOperationName().equals("AddStaff")) {
+                SERVICE.insertStaff(staffReq.getStaffName(),staffReq.getStaffCategory(),staffReq.getTimeStartWorking(),staffReq.getTimeEndWorking());
+            }
+            if (staffReq.getOperationName().equals("ModifyStaff")){
+                SERVICE.updateStaff(staffReq.getStaffID(),staffReq.getStaffCategory(),staffReq.getTimeStartWorking(),staffReq.getTimeEndWorking());
+            }
+            if (staffReq.getOperationName().equals("DeleteStaff")){
+                SERVICE.removeStaff(staffReq.getStaffID());
+            }
+        }else {
+            map.put("message","Please login first");
+        }
         //return
         return map;
 

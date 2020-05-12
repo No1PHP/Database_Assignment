@@ -15,6 +15,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
+import static Constants.globalConstants.LOGIN_STATUS;
+import static Constants.globalConstants.SERVICE;
+
 /**
  * @description Set of controller of recipe info handling related request
  * @operation
@@ -23,6 +26,7 @@ import java.util.Map;
 @RequestMapping(value = "/Recipe")
 @Controller
 public class RecipeInfoController implements PageTurningFunction {
+
 
     /**
      * @author Zhining
@@ -38,7 +42,7 @@ public class RecipeInfoController implements PageTurningFunction {
      **/
     @RequestMapping(value = "/",method = RequestMethod.POST)
     @ResponseBody
-    public Map<String, Object> StaffInfoOperation(HttpServletRequest request){
+    public Map<String, Object> RecipeInfoOperation(HttpServletRequest request){
         Map<String, Object> map = new HashMap<String, Object>();
         String recipeRequestString = HttpServletRequestUtils.getString(request, "recipeRequestString");
         ObjectMapper mapper = new ObjectMapper();
@@ -53,13 +57,19 @@ public class RecipeInfoController implements PageTurningFunction {
 
         // 请求含条件，打包给不同方法
         //TO-DO: 最好写个外部接口 空值判断
-        if(recipeReq.operationName.equals("AddRecipe"))
-            ; //调用daoImpl，map接受返回参数
-        if(recipeReq.operationName.equals("ModifyRecipe"))
-            ;
-        if(recipeReq.operationName.equals("DeleteRecipe"))
-            ;
-
+        if(LOGIN_STATUS) {
+            if (recipeReq.getOperationName().equals("addRecipe")){
+                SERVICE.saveRecipe(recipeReq.getRecipeID(),recipeReq.getRecipeName(),recipeReq.getRelevantIngredient(),recipeReq.getPrice());
+            }
+            if (recipeReq.getOperationName().equals("ModifyRecipe")){
+                SERVICE.saveRecipe(recipeReq.getRecipeID(),recipeReq.getRecipeName(),recipeReq.getRelevantIngredient(),recipeReq.getPrice());
+            }
+            if (recipeReq.operationName.equals("DeleteRecipe")){
+                SERVICE.removeRecipe(recipeReq.getRecipeID(),recipeReq.getRecipeName(),recipeReq.getRelevantIngredient(),recipeReq.getPrice());
+            }
+        }else{
+            map.put("message","Please login first");
+        }
         //return
         return map;
 

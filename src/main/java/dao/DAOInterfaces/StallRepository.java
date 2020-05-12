@@ -9,8 +9,6 @@ import java.util.List;
 
 @Repository
 public interface StallRepository extends JpaRepository<Stall, Integer>, JpaSpecificationExecutor<Stall> {
-    Stall findByStallID(int id);
-
     Stall findByStallName(String name);
 
     List<Stall> findALLByStallNameLike(String name);

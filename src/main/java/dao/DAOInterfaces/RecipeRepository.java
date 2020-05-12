@@ -9,8 +9,6 @@ import java.util.List;
 
 @Repository
 public interface RecipeRepository extends JpaRepository<Recipe, Integer>, JpaSpecificationExecutor<Recipe> {
-    Recipe findByRecipeID(int id);
-
     Recipe findByRecipeName(String name);
 
     List<Recipe> findALLByPriceBetween(float min, float max);

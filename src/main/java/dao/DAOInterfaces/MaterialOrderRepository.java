@@ -13,5 +13,5 @@ public interface MaterialOrderRepository extends JpaRepository<MaterialOrder, In
 
     MaterialOrder findByOperationStorageID(int operationStorageID);
 
-    List<MaterialOrder> findALLByMaterialID(int materialID);
+    List<MaterialOrder> findALLByMaterialName(String materialName);
 }

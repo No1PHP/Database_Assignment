@@ -248,13 +248,13 @@ public class Service {
      * @return material usage map
      * @throws IllegalRequestException
      */
-    public Map<String, Float> getALLMaterialUsageBetween(Date from, Date until) throws IllegalRequestException {
+    public Map<String, Float> getALLMaterialUsageBetween(Timestamp from, Timestamp until) throws IllegalRequestException {
         if (!account.getAccessInfo().getAccessToMaterial()) throw new IllegalRequestException();
 
         List<Material> materials = materialRepository.findAll();
         Map<String, Float> result = new HashMap<>(materials.size());
         for (Material e : materials) {
-            result.put(e.getName(), materialUsageRepository.getTotalUsageByTimeBetween(e.getId(), from, until));
+            result.put(e.getName(), materialUsageRepository.getTotalUsageByTimeBetween(e.getName(), from, until));
         }
         return result;
     }
@@ -267,11 +267,11 @@ public class Service {
      * @return material usage
      * @throws IllegalRequestException
      */
-    public float getMaterialUsageBetween(String materialName, Date from, Date until) throws IllegalRequestException {
+    public float getMaterialUsageBetween(String materialName, Timestamp from, Timestamp until) throws IllegalRequestException {
         if (!account.getAccessInfo().getAccessToMaterial()) throw new IllegalRequestException();
 
         Material material = materialRepository.findByName(materialName);
-        return materialUsageRepository.getTotalUsageByTimeBetween(material.getId(), from, until);
+        return materialUsageRepository.getTotalUsageByTimeBetween(material.getName(), from, until);
     }
 
     public Map<String, Float> getMaterialUsagePrediction() throws IllegalRequestException {
@@ -333,13 +333,13 @@ public class Service {
      * @return sales volume
      * @throws IllegalRequestException
      */
-    public int getTotalSalesDuring(Date from, Date until) throws IllegalRequestException {
+    public int getTotalSalesDuring(Timestamp from, Timestamp until) throws IllegalRequestException {
         if (!account.getAccessInfo().getAccessToStall()) throw new IllegalRequestException();
 
         return transactionRecordRepository.findALLTotalSalesByTransactionTimeBetween(from, until);
     }
 
-    public int getTotalSalesDuring(String stallName, Date from, Date until) throws IllegalRequestException {
+    public int getTotalSalesDuring(String stallName, Timestamp from, Timestamp until) throws IllegalRequestException {
         if (!account.getAccessInfo().getAccessToStall()) throw new IllegalRequestException();
 
         return transactionRecordRepository.findALLTotalSalesByTransactionTimeBetween(from, until);

@@ -17,11 +17,7 @@ import java.util.Set;
 public class Stall implements Serializable {
     private static final long serialVersionUID = 9L;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "stall_id", updatable = false)
-    private Integer stallID;
-
-    @Column(name = "stall_name", length = 40, nullable = false, unique = true)
+    @Column(name = "stall_name", length = 30)
     private String stallName;
 
     @Column(name = "stall_location", nullable = false, unique = true)
@@ -49,8 +45,8 @@ public class Stall implements Serializable {
     @ManyToMany(targetEntity = Recipe.class, cascade = {CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.EAGER)
     @JoinTable(
             name = "Recipe_Stall_Association",
-            joinColumns = {@JoinColumn(name = "stall_id", referencedColumnName = "stall_id")},
-            inverseJoinColumns = {@JoinColumn(name = "recipe_id", referencedColumnName = "recipeID")}
+            joinColumns = {@JoinColumn(name = "stall_name", referencedColumnName = "stall_name")},
+            inverseJoinColumns = {@JoinColumn(name = "recipe_name", referencedColumnName = "recipeName")}
     )
     private Set<Recipe> recipes = new HashSet<>();
 

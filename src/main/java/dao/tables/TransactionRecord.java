@@ -9,6 +9,7 @@ import org.springframework.data.annotation.CreatedDate;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -25,17 +26,17 @@ public class TransactionRecord implements Serializable {
     private Integer transactionID;
 
     //stall id
-    @Column(name = "stall_id", nullable = false, insertable = false, updatable = false)
-    private Integer stallID;
+    @Column(name = "stall_name", nullable = false, insertable = false, updatable = false)
+    private String stallName;
 
     //recipe's id that have been ordered, a foreign key of recipe table
-    @Column(name = "recipeID", insertable = false, updatable = false)
-    private Integer recipeID;
+    @Column(name = "recipeName", insertable = false, updatable = false)
+    private String recipeName;
 
     //date being sold
     @CreatedDate
     @Column(name = "TransactionTime", nullable = false, updatable = false)
-    private Date transactionTime;
+    private Timestamp transactionTime;
 
     //amount of the dish sold, default to be 1
     @Column(name = "numbers", nullable = false, updatable = false)
@@ -47,11 +48,11 @@ public class TransactionRecord implements Serializable {
     /********************************************************/
     //transaction record foreign key
     @ManyToOne(targetEntity = Recipe.class, cascade = {CascadeType.REFRESH, CascadeType.MERGE})
-    @JoinColumn(name = "recipeID", referencedColumnName = "recipeID")
+    @JoinColumn(name = "recipeName", referencedColumnName = "recipeName")
     private Recipe recipe;
 
     //transaction record foreign key
     @ManyToOne(targetEntity = Stall.class, optional = false, cascade = {CascadeType.REFRESH, CascadeType.MERGE})
-    @JoinColumn(name = "stall_id", referencedColumnName = "stall_id")
+    @JoinColumn(name = "stall_name", referencedColumnName = "stall_name")
     private Stall stall;
 }

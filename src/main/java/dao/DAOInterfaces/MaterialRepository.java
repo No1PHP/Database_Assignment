@@ -9,8 +9,6 @@ import java.util.List;
 
 @Repository
 public interface MaterialRepository extends JpaRepository<Material, Integer>, JpaSpecificationExecutor<Material> {
-    Material findById(int id);
-
     Material findByName(String name);
 
     List<Material> findALLByType(byte type);
@@ -19,5 +17,5 @@ public interface MaterialRepository extends JpaRepository<Material, Integer>, Jp
 
     List<Material> findALLByAvailableAmountBetween(float min, float max);
 
-    Material deleteByName(String name);
+    void deleteByName(String name);
 }

@@ -20,14 +20,8 @@ import javax.persistence.*;
 @Table(name = "Recipe")
 public class Recipe implements Serializable {
     private static final long serialVersionUID = 6L;
-    //recipe index, primary key
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "recipeID")
-    private Integer recipeID;
-
-    // @description recipe name, length<30
-    @Column(name = "recipeName", length = 30, nullable = false, unique = true)
+    @Column(name = "recipeName", length = 30)
     private String recipeName;
 
     //recipe price
@@ -44,8 +38,8 @@ public class Recipe implements Serializable {
     @ManyToMany(targetEntity = Material.class, cascade = {CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.EAGER)
     @JoinTable(
             name = "Recipe_Material_Association",
-            joinColumns = {@JoinColumn(name = "recipe_id", referencedColumnName = "recipeID")},
-            inverseJoinColumns = {@JoinColumn(name = "material_id", referencedColumnName = "id")}
+            joinColumns = {@JoinColumn(name = "recipe_name", referencedColumnName = "recipeName")},
+            inverseJoinColumns = {@JoinColumn(name = "material_name", referencedColumnName = "name")}
     )
     private Set<Material> materials = new HashSet<>();
 }

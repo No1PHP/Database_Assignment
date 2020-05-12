@@ -22,11 +22,11 @@ public class MaterialUsage implements Serializable {
     @Column(name = "usage_id")
     private Integer usageId;
 
-    @Column(name = "stallID", nullable = false, insertable = false, updatable = false)
-    private Integer stallID;
+    @Column(name = "stall_name", nullable = false, insertable = false, updatable = false)
+    private String stallName;
 
-    @Column(name = "materialID", nullable = false, insertable = false, updatable = false)
-    private Integer materialID;
+    @Column(name = "material_name", nullable = false, insertable = false, updatable = false)
+    private String materialName;
 
     @Column(name = "storageID", nullable = false, insertable = false, updatable = false)
     private Integer storageID;
@@ -39,12 +39,12 @@ public class MaterialUsage implements Serializable {
     /********************************************************/
     //recipeUsage foreign key
     @ManyToOne(targetEntity = Stall.class, optional = false, cascade = {CascadeType.REFRESH, CascadeType.MERGE})
-    @JoinColumn(name = "stallID", referencedColumnName = "stall_id")
+    @JoinColumn(name = "stall_name", referencedColumnName = "stall_name")
     private Stall stall;
 
     //recipeUsage foreign key
     @ManyToOne(targetEntity = Material.class, optional = false, cascade = {CascadeType.REFRESH, CascadeType.MERGE})
-    @JoinColumn(name = "materialID", referencedColumnName = "id")
+    @JoinColumn(name = "material_name", referencedColumnName = "name")
     private Material material;
 
     @ManyToOne(targetEntity = MaterialOrder.class, optional = false, cascade = {CascadeType.REFRESH, CascadeType.MERGE})

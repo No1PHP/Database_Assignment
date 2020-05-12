@@ -27,15 +27,15 @@ public class MaterialOrder implements Serializable {
      private Integer operationStorageID;
 
      //dictation index
-     @Column(name = "materialID", nullable = false, insertable = false, updatable = false)
-     private Integer materialID;
+     @Column(name = "material_name", nullable = false, insertable = false, updatable = false)
+     private String materialName;
 
     @Column(name = "amount", nullable = false)
     private Float materialAmount;
     /********************************************************/
     //material order foreign key
     @ManyToOne(targetEntity = Material.class, optional = false, cascade = {CascadeType.MERGE, CascadeType.REFRESH})
-    @JoinColumn(name = "materialID", referencedColumnName = "id")
+    @JoinColumn(name = "material_name", referencedColumnName = "name")
     private Material material;
 
     //material order foreign key

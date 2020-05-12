@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.List;
 
 @Repository
@@ -16,7 +17,7 @@ public interface ScheduleRecordRepository extends JpaRepository<ScheduleRecord, 
 
     List<ScheduleRecord> findFirst20ByStaffIDOrderByTimeScheduledToEndWorkingDesc(int id);
 
-    List<ScheduleRecord> findALLByTimeScheduledToStartWorkingBetween(Date min, Date max);
+    List<ScheduleRecord> findALLByTimeScheduledToStartWorkingBetween(Timestamp min, Timestamp max);
 
-    List<ScheduleRecord> findALLByTimeScheduledToEndWorkingBetween(Date min, Date max);
+    List<ScheduleRecord> findALLByTimeScheduledToEndWorkingBetween(Timestamp min, Timestamp max);
 }

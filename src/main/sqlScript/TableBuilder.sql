@@ -4,12 +4,9 @@ USE `restaurant`;
 
 DROP TABLE IF EXISTS Recipe;
 CREATE TABLE Recipe (
-    `recipeID`              INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `recipeName`            CHAR(30) NOT NULL UNIQUE ,
-    `price`                 FLOAT NOT NULL,
-
-    PRIMARY KEY (`recipeID`)
-);
+    `recipeName`            CHAR(30) PRIMARY KEY,
+    `price`                 FLOAT NOT NULL
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS AccessInfo;
 CREATE TABLE AccessInfo(
@@ -17,12 +14,11 @@ CREATE TABLE AccessInfo(
     `AccessToMaterial`      BOOLEAN NOT NULL,
     `AccessToStaff`         BOOLEAN NOT NULL,
     `AccessToStall`         BOOLEAN NOT NULL
-);
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS Material;
 CREATE TABLE Material (
-    `id`                    INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-    `name`                  CHAR(30) NOT NULL UNIQUE,
+    `name`                  CHAR(30) PRIMARY KEY,
     `type`                  TINYINT NOT NULL,
     `unit_price`            FLOAT NOT NULL,
     `availableAmount`       FLOAT NOT NULL DEFAULT 0,
@@ -31,16 +27,13 @@ CREATE TABLE Material (
 
 DROP TABLE IF EXISTS Stall;
 CREATE TABLE Stall(
-    `stall_id`              INT UNSIGNED AUTO_INCREMENT,
-    `stall_name`            CHAR(40) NOT NULL UNIQUE,
+    `stall_name`            CHAR(30) PRIMARY KEY,
     `stall_location`        SMALLINT NOT NULL UNIQUE,
     `stall_rent`            FLOAT NOT NULL,
     `oper_cost_last_month`  FLOAT DEFAULT 0.0,
     `oper_time`             INT UNSIGNED NOT NULL DEFAULT 0,
     `Aver_mon_sales`        FLOAT DEFAULT 0.0,
-    `Aver_sales_amount`     FLOAT DEFAULT 0.0,
-
-    PRIMARY KEY ( `stall_id` )
+    `Aver_sales_amount`     FLOAT DEFAULT 0.0
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- 有时间
@@ -59,16 +52,16 @@ CREATE TABLE Staff(
 DROP TABLE IF EXISTS TransactionRecord;
 CREATE TABLE TransactionRecord (
     `TransactionID`         INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `stall_id`              INT UNSIGNED NOT NULL,
-    `recipeID`              INT UNSIGNED,
+    `stall_name`            CHAR(30) NOT NULL,
+    `recipeName`            CHAR(30) NOT NULL ,
     `TransactionTime`       DATETIME NOT NULL,
     `numbers`               TINYINT DEFAULT 1,
     `TransactionPrice`      FLOAT NOT NULL,
 
     PRIMARY KEY (`TransactionID`),
-    FOREIGN KEY (`recipeID`) REFERENCES Recipe (`recipeID`)  ON UPDATE CASCADE ON DELETE RESTRICT,
-    FOREIGN KEY (`stall_id`) REFERENCES Stall (`stall_id`) ON UPDATE CASCADE ON DELETE CASCADE
-);
+    FOREIGN KEY (`recipeName`) REFERENCES Recipe (`recipeName`)  ON UPDATE CASCADE ON DELETE RESTRICT,
+    FOREIGN KEY (`stall_name`) REFERENCES Stall (`stall_name`) ON UPDATE CASCADE ON DELETE CASCADE
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS Account;
 CREATE TABLE Account(
@@ -79,7 +72,7 @@ CREATE TABLE Account(
 
     FOREIGN KEY (`staffId`) REFERENCES Staff(`staff_id`) ON UPDATE CASCADE ON DELETE CASCADE ,
     FOREIGN KEY (`position`) REFERENCES AccessInfo(`position`) ON UPDATE CASCADE ON DELETE CASCADE
-);
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `OperationRecord`;
 CREATE TABLE `OperationRecord`(
@@ -91,17 +84,17 @@ CREATE TABLE `OperationRecord`(
     `willSendUpdateMessage` TINYINT(1),-- check bit Of 推送通知
 
     FOREIGN KEY(`staffId`) REFERENCES Staff(`staff_id`) ON UPDATE CASCADE ON DELETE RESTRICT
-);
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS MaterialOrder;
 CREATE TABLE MaterialOrder (
     `op_OrderID`            INT UNSIGNED NOT NULL,
     `op_storageID`          INT UNSIGNED DEFAULT NULL,
-    `materialID`            INT UNSIGNED NOT NULL,
+    `material_name`         CHAR(30) NOT NULL,
     `amount`                FLOAT NOT NULL,
 
     PRIMARY KEY (`op_OrderID`),
-    FOREIGN KEY(`materialID`) REFERENCES Material(`id`) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY(`material_name`) REFERENCES Material(`name`) ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY(`op_OrderID`) REFERENCES OperationRecord(`operationId`) ON UPDATE CASCADE ON DELETE CASCADE ,
     FOREIGN KEY(`op_StorageID`) REFERENCES OperationRecord(`operationId`) ON UPDATE CASCADE ON DELETE RESTRICT
 ) ENGINE = InnoDB DEFAULT CHARSET=utf8;
@@ -121,35 +114,35 @@ CREATE TABLE `Schedule_record`(
 
 DROP TABLE IF EXISTS `Recipe_Material_Association`;
 CREATE TABLE `Recipe_Material_Association`(
-    `recipe_id`             INT UNSIGNED NOT NULL,
-    `material_id`           INT UNSIGNED NOT NULL,
+    `recipe_name`           CHAR(30) NOT NULL,
+    `material_name`         CHAR(30) NOT NULL,
 
-    PRIMARY KEY (`recipe_id`, `material_id`),
-    FOREIGN KEY (`recipe_id`) REFERENCES Recipe(`recipeID`) ON UPDATE CASCADE ON DELETE CASCADE,
-    FOREIGN KEY (`material_id`) REFERENCES Material(`id`) ON UPDATE CASCADE ON DELETE CASCADE
+    PRIMARY KEY (`recipe_name`, `material_name`),
+    FOREIGN KEY (`recipe_name`) REFERENCES Recipe(`recipeName`) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (`material_name`) REFERENCES Material(`name`) ON UPDATE CASCADE ON DELETE CASCADE
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `Recipe_Stall_Association`;
 CREATE TABLE `Recipe_Stall_Association`(
-    `recipe_id`             INT UNSIGNED NOT NULL,
-    `stall_id`              INT UNSIGNED NOT NULL,
+    `recipe_name`           CHAR(30) NOT NULL,
+    `stall_name`            CHAR(30) NOT NULL,
 
-    PRIMARY KEY (`recipe_id`, `stall_id`),
-    FOREIGN KEY (`recipe_id`) REFERENCES Recipe(`recipeID`) ON UPDATE CASCADE ON DELETE CASCADE,
-    FOREIGN KEY (`stall_id`) REFERENCES Stall(`stall_id`) ON UPDATE CASCADE ON DELETE CASCADE
+    PRIMARY KEY (`recipe_name`, `stall_name`),
+    FOREIGN KEY (`recipe_name`) REFERENCES Recipe(`recipeName`) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (`stall_name`) REFERENCES Stall(`stall_name`) ON UPDATE CASCADE ON DELETE CASCADE
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS MaterialUsage;
 CREATE TABLE MaterialUsage(
     `usage_id`              INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `stallID`               INT UNSIGNED NOT NULL,
-    `materialID`            INT UNSIGNED NOT NULL,
+    `stall_name`            CHAR(30) NOT NULL,
+    `material_name`         CHAR(30) NOT NULL,
     `storageID`             INT UNSIGNED NOT NULL,
     `time`                  DATETIME NOT NULL,
     `amount`                FLOAT NOT NULL,
 
     PRIMARY KEY (`usage_id`),
-    FOREIGN KEY (`stallID`) REFERENCES Stall(`stall_id`) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (`stall_name`) REFERENCES Stall(`stall_name`) ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY (`storageID`) REFERENCES MaterialOrder(`op_storageID`) ON UPDATE CASCADE ON DELETE CASCADE,
-    FOREIGN KEY (`materialID`) REFERENCES Material(`id`) ON UPDATE CASCADE ON DELETE CASCADE
+    FOREIGN KEY (`material_name`) REFERENCES Material(`name`) ON UPDATE CASCADE ON DELETE CASCADE
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;

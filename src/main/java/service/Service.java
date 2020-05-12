@@ -10,6 +10,7 @@ import service.exceptions.RestrictedOperationException;
 
 import java.sql.Date;
 import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.*;
 
 public class Service {
@@ -205,7 +206,7 @@ public class Service {
      * @throws IllegalRequestException
      * @throws RestrictedOperationException
      */
-    public Account saveAccount(Staff staff, AccessInfo accessInfo, String accountName, String passwordHashValue) throws IllegalRequestException, RestrictedOperationException  {
+    public Account saveAccount(Staff staff, AccessInfo accessInfo, String accountName, String passwordHashValue) throws IllegalRequestException, RestrictedOperationException {
         if (!account.getAccessInfo().getPosition().equals("admin")) throw new IllegalRequestException();
         if (staff.getStaffName().equals("none") || staff.getStaffName().equals("admin"))
             throw new RestrictedOperationException("can't update account for this staff!");
@@ -220,8 +221,25 @@ public class Service {
         }
         return accountRepository.saveAndFlush(account);
     }
+
+    public void updateAdminAccount(String passwordHashValue) throws IllegalRequestException {
+
+    }
+
+    public AccessInfo saveAccessInfo(String position, boolean accessToMaterial, boolean accessToStaff, boolean accessToStall) throws IllegalRequestException, RestrictedOperationException {
+        return null;
+    }
+
+    public AccessInfo removeAccessInfo(String position) throws IllegalRequestException, RestrictedOperationException {
+        return null;
+    }
     //
     //material services
+
+    public float getMaterialAvailableAmount(String materialName) throws IllegalRequestException {
+        return 0;
+    }
+
     /**
      * get the material usage between a period of time
      * @param from begging time
@@ -255,6 +273,14 @@ public class Service {
         return materialUsageRepository.getTotalUsageByTimeBetween(material.getId(), from, until);
     }
 
+    public Map<String, Float> getMaterialUsagePrediction() throws IllegalRequestException {
+        return null;
+    }
+
+    public float getMaterialUsagePrediction(String materialName) throws IllegalRequestException {
+        return 0;
+    }
+
     /**
      * get all material names and current amount which below amount
      * @param amount the maximum amount
@@ -268,8 +294,37 @@ public class Service {
         }
         return result;
     }
+
+    public MaterialOrder orderMaterial(String note, String materialName, float materialAmount) throws IllegalRequestException {
+        return null;
+    }
+
+    public List<MaterialOrder> findMaterialOrder(String materialName) throws IllegalRequestException {
+        return null;
+    }
+
+    public MaterialOrder ensureMaterialOrder(MaterialOrder order) throws IllegalRequestException {
+        return null;
+    }
+
+    public List<MaterialOrder> findMaterialOrderOutOfDate(int limit) throws IllegalRequestException {
+        return null;
+    }
+
+    public List<MaterialOrder> findMaterialOrderOutOfDate(String materialName, int limit) throws IllegalRequestException {
+        return null;
+    }
     /* ****************************************************** */
     //stall services
+
+    public Stall addRecipeForStall(String stallName, List<Recipe> recipes) throws IllegalRequestException {
+        return null;
+    }
+
+    public List<Object[]> getRecipeInOrderBySellingDuring(Date from, Date to) throws IllegalRequestException {
+        return null;
+    }
+
     /**
      * get total sales volume between a period of time
      * @param from begging time
@@ -277,9 +332,86 @@ public class Service {
      * @return sales volume
      * @throws IllegalRequestException
      */
-    public int getTotalSalesFromTo(Date from, Date until) throws IllegalRequestException {
+    public int getTotalSalesDuring(Date from, Date until) throws IllegalRequestException {
         if (!account.getAccessInfo().getAccessToStall()) throw new IllegalRequestException();
 
         return transactionRecordRepository.findALLTotalSalesByTransactionTimeBetween(from, until);
+    }
+
+    public int getTotalSalesDuring(String stallName, Date from, Date until) throws IllegalRequestException {
+        if (!account.getAccessInfo().getAccessToStall()) throw new IllegalRequestException();
+
+        return transactionRecordRepository.findALLTotalSalesByTransactionTimeBetween(from, until);
+    }
+
+    public List<Object[]> getStallInOrderBySellingBetweenDate(Date from, Date to) throws IllegalRequestException {
+        return null;
+    }
+
+    public Map<Material, Float> getStallUsageDuring(Date from, Date to) throws IllegalRequestException {
+        return null;
+    }
+
+    public float getStallUsageDuring(String materialName, Date from, Date to) throws IllegalRequestException {
+        return 0;
+    }
+
+    public float getStallProfitDuring(String stallName, Date from, Date to) throws IllegalRequestException {
+        return 0;
+    }
+
+    public float getStallRent(String stallName) throws IllegalRequestException {
+        return 0;
+    }
+
+    public List<TransactionRecord> getTransactionRecordDuring(String stall, Date from, Date to) throws IllegalRequestException {
+        return null;
+    }
+    /* ****************************************************** */
+    //staff services
+    public Staff getStaffByID(int id) throws IllegalRequestException {
+        return null;
+    }
+
+    public StaffCategoryTypes getStaffCategoryTypes(int id) throws IllegalRequestException {
+        return null;
+    }
+
+    public List<OperationRecord> getOperationRecord(int id) throws IllegalRequestException {
+        return null;
+    }
+
+    public List<ScheduleRecord> getScheduleRecord(int id, boolean showFinished) throws IllegalRequestException {
+        return null;
+    }
+
+    public boolean scheduleStaff(Timestamp start, Timestamp end, Staff targetStaff, String note) throws IllegalRequestException, RestrictedOperationException {
+        return false;
+    }
+    /* ****************************************************** */
+    //general services
+
+    public int getOwnID() {
+        return 0;
+    }
+
+    public StaffCategoryTypes getOwnCategoryType() {
+        return null;
+    }
+
+    public List<OperationRecord> getOwnOperationRecord() {
+        return null;
+    }
+
+    public List<ScheduleRecord> getOwnScheduleRecord(boolean showFinished) {
+        return null;
+    }
+
+    public boolean getMaterialForStall(String materialName, String stallName, float amount) {
+        return false;
+    }
+
+    public TransactionRecord stallSell(String recipeName, String stallName, int amount, float price) {
+        return null;
     }
 }

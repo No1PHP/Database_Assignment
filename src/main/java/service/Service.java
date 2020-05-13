@@ -41,7 +41,7 @@ public class Service {
     public static Service connect(String username, String password) {
         AccountRepository accountRepository = (AccountRepository) DAO_Type.ACCOUNT.getTableRepository();
         Account account = accountRepository.findByAccountName(username);
-        if (!account.getPasswordHashValue().equals(password))
+        if (account == null || !account.getPasswordHashValue().equals(password))
             return null;
         else
             return new Service(account);
@@ -415,10 +415,10 @@ public class Service {
         return null;
     }
 
-//
-//    public Map<String,Object> addRecipe(Integer recipeID, String recipeName, String relevantIngredient, float price){
-//        return null;
-//    }
+
+    public Map<String,Object> addRecipe(Integer recipeID, String recipeName, String relevantIngredient, float price){
+        return null;
+    }
 
     public Recipe saveRecipe(Integer recipeID, String recipeName, String relevantIngredient, float price){
         return null;
@@ -430,25 +430,14 @@ public class Service {
     /**
      * @author Zhining
      * @description
-     * @param username, newPassword
+     * @param newPassword
      * @return
      * @create 2020/5/12 8:59 上午
      * @throws IllegalRequestException
      **/
-//    @Query("update Account a set a.passwordHashValue = :newPassword where a.accountName = :username")
-    public String changePassword(String username, String newPassword){
-        if (!account.getAccessInfo().getAccessToStall()) {
-            throw new IllegalRequestException();
-        }
-
-        Account account = accountRepository.findByAccountName(username);
-        if(account == null) {
-            return "no such account";
-        } else {
-            account.setPasswordHashValue(newPassword);
-            return String.valueOf(accountRepository.saveAndFlush(account));
-        }
-
+    public String changePassword(String newPassword){
+        account.setPasswordHashValue(newPassword);
+        return String.valueOf(accountRepository.saveAndFlush(account));
     }
 
 }

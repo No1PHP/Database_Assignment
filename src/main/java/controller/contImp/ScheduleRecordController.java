@@ -14,8 +14,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import static Constants.globalConstants.LOGIN_STATUS;
-import static Constants.globalConstants.SERVICE;
+import static constants.globalConstants.LOGIN_STATUS;
+import static constants.globalConstants.SERVICE;
 
 /**
  * @author Zhining

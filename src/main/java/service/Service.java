@@ -5,9 +5,12 @@ import dao.DAO_Type;
 import dao.enums.MaterialTypes;
 import dao.enums.StaffCategoryTypes;
 import dao.tables.*;
+import org.springframework.data.jpa.domain.JpaSort;
+import org.springframework.data.jpa.domain.Specification;
 import service.exceptions.IllegalRequestException;
 import service.exceptions.RestrictedOperationException;
 
+import javax.persistence.criteria.*;
 import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
@@ -57,7 +60,7 @@ public class Service {
      * @param unitPrice material price
      * @param availablePeriod material available time
      * @return entity been inserted/updated
-     * @throws IllegalRequestException
+     * @throws IllegalRequestException current account doesn't have the permission
      */
     public Material saveMaterial(String name, MaterialTypes types, float unitPrice, int availablePeriod) throws IllegalRequestException {
         if (!account.getAccessInfo().getPosition().equals("admin")) throw new IllegalRequestException();
@@ -76,8 +79,7 @@ public class Service {
     /**
      * remove a material
      * @param name material name
-     * @return material entity been removed
-     * @throws IllegalRequestException
+     * @throws IllegalRequestException current account doesn't have the permission
      */
     public void removeMaterial(String name) throws IllegalRequestException, RestrictedOperationException {
         if (!account.getAccessInfo().getPosition().equals("admin")) throw new IllegalRequestException();
@@ -94,7 +96,7 @@ public class Service {
      * @param stallLocation stall location in int number
      * @param stallRent stall rent per month
      * @return entity been inserted/updated
-     * @throws IllegalRequestException
+     * @throws IllegalRequestException current account doesn't have the permission
      */
     public Stall saveStall(String stallName, int stallLocation, float stallRent) throws IllegalRequestException {
         if (!account.getAccessInfo().getPosition().equals("admin")) throw new IllegalRequestException();
@@ -140,8 +142,8 @@ public class Service {
      * @param start start working time in a day
      * @param end end working time in a day
      * @return staff entity
-     * @throws IllegalRequestException
-     * @throws RestrictedOperationException
+     * @throws IllegalRequestException current account doesn't have the permission
+     * @throws RestrictedOperationException current operation cannot be applied
      */
     public Staff insertStaff(String staffName, StaffCategoryTypes types, Time start, Time end) throws IllegalRequestException, RestrictedOperationException {
         if (!account.getAccessInfo().getPosition().equals("admin")) throw new IllegalRequestException();
@@ -156,8 +158,8 @@ public class Service {
      * @param start start working time in a day
      * @param end end working time in a day
      * @return staff entity
-     * @throws IllegalRequestException
-     * @throws RestrictedOperationException
+     * @throws IllegalRequestException current account doesn't have the permission
+     * @throws RestrictedOperationException current operation cannot be applied
      */
     public Staff updateStaff(int id, StaffCategoryTypes types, Time start, Time end) throws IllegalRequestException, RestrictedOperationException {
         if (!account.getAccessInfo().getPosition().equals("admin")) throw new IllegalRequestException();
@@ -174,8 +176,8 @@ public class Service {
     /**
      * remove a staff
      * @param id staff id
-     * @throws IllegalRequestException
-     * @throws RestrictedOperationException
+     * @throws IllegalRequestException current account doesn't have the permission
+     * @throws RestrictedOperationException current operation cannot be applied
      */
     public void removeStaff(int id) throws IllegalRequestException, RestrictedOperationException {
         if (!account.getAccessInfo().getPosition().equals("admin")) throw new IllegalRequestException();
@@ -203,8 +205,8 @@ public class Service {
      * @param accountName account username
      * @param passwordHashValue account password
      * @return account entity
-     * @throws IllegalRequestException
-     * @throws RestrictedOperationException
+     * @throws IllegalRequestException current account doesn't have the permission
+     * @throws RestrictedOperationException current operation cannot be applied
      */
     public Account saveAccount(Staff staff, AccessInfo accessInfo, String accountName, String passwordHashValue) throws IllegalRequestException, RestrictedOperationException {
         if (!account.getAccessInfo().getPosition().equals("admin")) throw new IllegalRequestException();
@@ -222,22 +224,61 @@ public class Service {
         return accountRepository.saveAndFlush(account);
     }
 
-    public void updateAdminAccount(String passwordHashValue) throws IllegalRequestException {
-
-    }
-
+    /**
+     * insert or update an access info row
+     * @param position access info type name
+     * @param accessToMaterial access permission to material
+     * @param accessToStaff access permission to staff
+     * @param accessToStall access permission to stall
+     * @return access info entity
+     * @throws IllegalRequestException current account doesn't have the permission
+     * @throws RestrictedOperationException current operation cannot be applied
+     */
     public AccessInfo saveAccessInfo(String position, boolean accessToMaterial, boolean accessToStaff, boolean accessToStall) throws IllegalRequestException, RestrictedOperationException {
-        return null;
+        if (account.getAccessInfo().getPosition().equals("admin")) throw new IllegalRequestException();
+        if (position.equals("none") || position.equals("admin")) throw new RestrictedOperationException("cannot update this access info!");
+
+        AccessInfo accessInfo = accessInfoRepository.findByPosition(position);
+        if (accessInfo == null) {
+            accessInfo = EntityFactor.getAccessInfo(position, accessToMaterial, accessToStaff, accessToStall);
+        } else {
+            accessInfo.setAccessToMaterial(accessToMaterial);
+            accessInfo.setAccessToStaff(accessToStaff);
+            accessInfo.setAccessToStall(accessToStall);
+        }
+        return accessInfoRepository.saveAndFlush(accessInfo);
     }
 
-    public AccessInfo removeAccessInfo(String position) throws IllegalRequestException, RestrictedOperationException {
-        return null;
+    /**
+     * remove access info row
+     * @param position position name
+     * @throws IllegalRequestException current account doesn't have the permission
+     * @throws RestrictedOperationException current operation cannot be applied
+     */
+    public void removeAccessInfo(String position) throws IllegalRequestException, RestrictedOperationException {
+        if (account.getAccessInfo().getPosition().equals("admin")) throw new IllegalRequestException();
+        if (position.equals("none") || position.equals("admin")) throw new RestrictedOperationException("cannot remove this access info!");
+
+        AccessInfo accessInfo = accessInfoRepository.findByPosition(position);
+        if (accessInfo != null) {
+            accessInfoRepository.delete(accessInfo);
+            accessInfoRepository.flush();
+        }
     }
     //
     //material services
 
+    /**
+     * get available amount of one material
+     * @param materialName material name
+     * @return available amount
+     * @throws IllegalRequestException current account doesn't have the permission
+     */
     public float getMaterialAvailableAmount(String materialName) throws IllegalRequestException {
-        return 0;
+        if (!account.getAccessInfo().getAccessToMaterial()) throw new IllegalRequestException();
+
+        Material material = materialRepository.findByName(materialName);
+        return (material == null)? 0 : material.getAvailableAmount();
     }
 
     /**
@@ -245,7 +286,7 @@ public class Service {
      * @param from begging time
      * @param until ending time
      * @return material usage map
-     * @throws IllegalRequestException
+     * @throws IllegalRequestException current account doesn't have the permission
      */
     public Map<String, Float> getALLMaterialUsageBetween(Timestamp from, Timestamp until) throws IllegalRequestException {
         if (!account.getAccessInfo().getAccessToMaterial()) throw new IllegalRequestException();
@@ -264,7 +305,7 @@ public class Service {
      * @param from begging time
      * @param until ending time
      * @return material usage
-     * @throws IllegalRequestException
+     * @throws IllegalRequestException current account doesn't have the permission
      */
     public float getMaterialUsageBetween(String materialName, Timestamp from, Timestamp until) throws IllegalRequestException {
         if (!account.getAccessInfo().getAccessToMaterial()) throw new IllegalRequestException();
@@ -273,12 +314,26 @@ public class Service {
         return materialUsageRepository.getTotalUsageByTimeBetween(material.getName(), from, until);
     }
 
+    /**
+     * get the prediction
+     * @return the prediction usage value
+     * @throws IllegalRequestException current account doesn't have the permission
+     */
     public Map<String, Float> getMaterialUsagePrediction() throws IllegalRequestException {
-        return null;
+        if (!account.getAccessInfo().getAccessToMaterial()) throw new IllegalRequestException();
+
+        List<Material> materials = materialRepository.findAll();
+        Map<String, Float> result = new HashMap<>(materials.size());
+        for (Material e : materials) {
+            result.put(e.getName(), getMaterialUsagePrediction(e.getName()));
+        }
+        return result;
     }
 
     public float getMaterialUsagePrediction(String materialName) throws IllegalRequestException {
-        return 0;
+        if (!account.getAccessInfo().getAccessToMaterial()) throw new IllegalRequestException();
+
+        return getMaterialUsageBetween(materialName, new Timestamp(System.currentTimeMillis() - 2592000),  new Timestamp(System.currentTimeMillis()));
     }
 
     /**
@@ -286,7 +341,9 @@ public class Service {
      * @param amount the maximum amount
      * @return map contains material and corresponding amount
      */
-    public Map<String, Float> getALLMaterialBelow(float amount) {
+    public Map<String, Float> getALLMaterialBelow(float amount) throws IllegalRequestException {
+        if (!account.getAccessInfo().getAccessToMaterial()) throw new IllegalRequestException();
+
         List<Material> materials = materialRepository.findALLByAvailableAmountBetween(0, amount);
         Map<String, Float> result = new HashMap<>(materials.size());
         for (Material e : materials) {
@@ -295,12 +352,48 @@ public class Service {
         return result;
     }
 
-    public MaterialOrder orderMaterial(String note, String materialName, float materialAmount) throws IllegalRequestException {
-        return null;
+    /**
+     * make order for materail
+     * @param note comments
+     * @param materialName material name
+     * @param materialAmount order amount
+     * @return material order entity
+     * @throws IllegalRequestException current account doesn't have the permission
+     * @throws RestrictedOperationException current operation cannot be applied
+     */
+    public MaterialOrder orderMaterial(String note, String materialName, float materialAmount) throws IllegalRequestException, RestrictedOperationException {
+        if (!account.getAccessInfo().getAccessToMaterial()) throw new IllegalRequestException();
+
+        Material material = materialRepository.findByName(materialName);
+        if (material == null) throw new RestrictedOperationException("the material doesn't exist!");
+
+        return materialOrderRepository.saveAndFlush(EntityFactor.getMaterialOrder(account.getStaff(), note, material, materialAmount));
     }
 
-    public List<MaterialOrder> findMaterialOrder(String materialName) throws IllegalRequestException {
-        return null;
+    /**
+     * find orders of a material
+     * @param materialName material name
+     * @param from starting time
+     * @param to ending time
+     * @return order list
+     * @throws IllegalRequestException current account doesn't have the permission
+     * @throws RestrictedOperationException current operation cannot be applied
+     */
+    public List<MaterialOrder> findMaterialOrder(String materialName, Timestamp from, Timestamp to) throws IllegalRequestException, RestrictedOperationException {
+        if (!account.getAccessInfo().getAccessToMaterial()) throw new IllegalRequestException();
+
+        Material material = materialRepository.findByName(materialName);
+        if (material == null) throw new RestrictedOperationException("the material doesn't exist!");
+
+        Specification<MaterialOrder> specification = (Specification<MaterialOrder>) (root, query, criteriaBuilder) -> {
+            Path<Material> material1 = root.get("material");
+            Path<OperationRecord> operationRecord = root.get("orderRecord");
+
+            Predicate equalName = criteriaBuilder.equal(material1.<String>get("name"), materialName);
+            Predicate betweenTime = criteriaBuilder.between(operationRecord.get("operationTime"), from, to);
+            return criteriaBuilder.and(equalName, betweenTime);
+        };
+        return materialOrderRepository.findAll(specification);
     }
 
     public MaterialOrder ensureMaterialOrder(MaterialOrder order) throws IllegalRequestException {

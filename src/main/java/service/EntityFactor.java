@@ -110,6 +110,7 @@ public abstract class EntityFactor {
         operationRecordRepository.saveAndFlush(operationRecord);
 
         MaterialOrder materialOrder = new MaterialOrder();
+        materialOrder.setOperationOrderID(operationRecord.getOperationID());
         materialOrder.setMaterial(material);
         material.getMaterialOrders().add(materialOrder);
         materialOrder.setMaterialAmount(materialAmount);

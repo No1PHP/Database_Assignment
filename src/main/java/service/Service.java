@@ -3,11 +3,9 @@ package service;
 import dao.DAOInterfaces.*;
 import dao.DAO_Type;
 import dao.enums.MaterialTypes;
-import dao.enums.OperationType;
 import dao.enums.StaffCategoryTypes;
 import dao.tables.*;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.repository.Query;
 import service.exceptions.IllegalRequestException;
 import service.exceptions.RestrictedOperationException;
 
@@ -396,11 +394,11 @@ public class Service {
         if (material == null) throw new RestrictedOperationException("the material doesn't exist!");
 
         Specification<MaterialOrder> specification = (Specification<MaterialOrder>) (root, query, criteriaBuilder) -> {
-            Path<Material> material1 = root.get("material");
-            Path<OperationRecord> operationRecord = root.get("orderRecord");
+            Path<String> name = root.join("material").get("name");
+            Path<Timestamp> time = root.join("orderRecord").get("operationTime");
 
-            Predicate equalName = criteriaBuilder.equal(material1.<String>get("name"), materialName);
-            Predicate betweenTime = criteriaBuilder.between(operationRecord.get("operationTime"), from, to);
+            Predicate equalName = criteriaBuilder.equal(name, materialName);
+            Predicate betweenTime = criteriaBuilder.between(time, from, to);
             return criteriaBuilder.and(equalName, betweenTime);
         };
         return materialOrderRepository.findAll(specification);
@@ -414,7 +412,7 @@ public class Service {
      * @throws IllegalRequestException current account doesn't have the permission
      * @throws RestrictedOperationException current operation cannot be applied
      */
-    public MaterialOrder ensureMaterialOrder(int orderID, String note) throws IllegalRequestException {
+    public MaterialOrder ensureMaterialOrder(int orderID, String note) throws IllegalRequestException, RestrictedOperationException {
         if (!account.getAccessInfo().getAccessToMaterial()) throw new IllegalRequestException();
 
         MaterialOrder materialOrder = materialOrderRepository.findByOperationOrderID(orderID);
@@ -462,11 +460,11 @@ public class Service {
         for (MaterialOrder e : orders) {
             if (e.getStorageRecord() == null) continue;
             if (usedUp(e)) continue;
-            Timestamp earliest = new Timestamp((long) (System.currentTimeMillis() - 86400000L * (e.getMaterial().getAvailablePeriod() - limit)));
+            Timestamp earliest = new Timestamp((long) (System.currentTimeMillis() - 86400000L * (material.getAvailablePeriod() - limit)));
             if (e.getStorageRecord().getOperationTime().after(earliest)) continue;
             result.addLast(e);
         }
-        return null;
+        return result;
     }
 
     private boolean usedUp(MaterialOrder materialOrder) {
@@ -479,11 +477,55 @@ public class Service {
     /* ****************************************************** */
     //stall services
 
-    public Stall addRecipeForStall(String stallName, List<Recipe> recipes) throws IllegalRequestException {
-        return null;
+    /**
+     * add recipes for stall
+     * @param stallName stall name
+     * @param recipes recipe names
+     * @return stall entity
+     * @throws IllegalRequestException current account doesn't have the permission
+     * @throws RestrictedOperationException current operation cannot be applied
+     */
+    public Stall addRecipeForStall(String stallName, Iterable<String> recipes) throws IllegalRequestException, RestrictedOperationException {
+        if (!account.getAccessInfo().getAccessToStall()) throw new IllegalRequestException();
+        Stall stall = stallRepository.findByStallName(stallName);
+        for (String e : recipes) {
+            addRecipeForStall(stall, recipeRepository.findByRecipeName(e));
+        }
+        stallRepository.saveAndFlush(stall);
+        return stall;
     }
 
-    public List<Object[]> getRecipeInOrderBySellingDuring(Date from, Date to) throws IllegalRequestException {
+    private void addRecipeForStall(Stall stall, Recipe recipe) throws RestrictedOperationException {
+        if (stall == null) throw new RestrictedOperationException("no such stall!");
+        stall.getRecipes().add(recipe);
+        recipe.getStalls().add(stall);
+    }
+
+    /**
+     * get the selling order of recipe during period of time
+     * @param from starting time
+     * @param to ending time
+     * @return first array for material entity in type Recipe, second array for the corresponding selling amount in type Float
+     * @throws IllegalRequestException current account doesn't have the permission
+     */
+    //未完成！！！！！！！！！！！！！！！！！！！！！
+    public Object[] getRecipeInOrderBySellingDuring(Timestamp from, Timestamp to) throws IllegalRequestException {
+        if (!account.getAccessInfo().getAccessToStall()) throw new IllegalRequestException();
+
+        Object[] result = new Object[2];
+        Specification<Recipe> specification = new Specification<Recipe>() {
+            @Override
+            public Predicate toPredicate(Root<Recipe> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+                SetJoin<Recipe, TransactionRecord> transactionJoin = root.joinSet("transactionRecords");
+                Path<Timestamp> time = transactionJoin.get("transactionTime");
+
+                Predicate timeLimit = criteriaBuilder.between(time, from, to);
+                Expression<Integer> sells = criteriaBuilder.sum(transactionJoin.get("numbers"));
+
+                query.orderBy(criteriaBuilder.desc(sells));
+                return timeLimit;
+            }
+        };
         return null;
     }
 

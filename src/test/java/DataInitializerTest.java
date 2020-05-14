@@ -28,7 +28,6 @@ public class DataInitializerTest {
     @Test
     @Transactional
     public void run() {
-        System.out.println(System.currentTimeMillis());
         clearAll();
         DataInitializer.run();
     }

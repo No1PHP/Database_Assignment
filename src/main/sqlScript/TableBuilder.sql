@@ -76,7 +76,7 @@ CREATE TABLE Account(
 
 DROP TABLE IF EXISTS `OperationRecord`;
 CREATE TABLE `OperationRecord`(
-    `operationId`           INT UNSIGNED PRIMARY KEY,
+    `operationId`           INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     `staffId`               INT UNSIGNED NOT NULL,
     `operationType`         TINYINT NOT NULL,
     `note`                  TEXT,

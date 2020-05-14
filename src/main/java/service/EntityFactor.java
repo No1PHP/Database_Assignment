@@ -1,6 +1,6 @@
 package service;
 
-import dao.DAOInterfaces.OperationRecordRepository;
+import dao.DAOInterfaces.*;
 import dao.DAO_Type;
 import dao.enums.MaterialTypes;
 import dao.enums.OperationType;
@@ -17,6 +17,17 @@ import java.util.Collection;
  * provide useful methods to generate table entities
  */
 public abstract class EntityFactor {
+    private static final ScheduleRecordRepository scheduleRecordRepository = (ScheduleRecordRepository) DAO_Type.SCHEDULE_RECORD.getTableRepository();
+    private static final MaterialOrderRepository materialOrderRepository = (MaterialOrderRepository) DAO_Type.MATERIAL_ORDER.getTableRepository();
+    private static final OperationRecordRepository operationRecordRepository = (OperationRecordRepository) DAO_Type.OPERATION_RECORD.getTableRepository();
+    private static final AccountRepository accountRepository = (AccountRepository) DAO_Type.ACCOUNT.getTableRepository();
+    private static final StaffRepository staffRepository = (StaffRepository) DAO_Type.STAFF.getTableRepository();
+    private static final AccessInfoRepository accessInfoRepository = (AccessInfoRepository) DAO_Type.ACCESS_INFO.getTableRepository();
+    private static final TransactionRecordRepository transactionRecordRepository = (TransactionRecordRepository) DAO_Type.TRANSACTION_RECORD.getTableRepository();
+    private static final MaterialUsageRepository materialUsageRepository = (MaterialUsageRepository) DAO_Type.MATERIAL_USAGE.getTableRepository();
+    private static final RecipeRepository recipeRepository = (RecipeRepository) DAO_Type.RECIPE.getTableRepository();
+    private static final MaterialRepository materialRepository = (MaterialRepository) DAO_Type.MATERIAL.getTableRepository();
+    private static final StallRepository stallRepository = (StallRepository) DAO_Type.STALL.getTableRepository();
     /**
      * @see AccessInfo
      *
@@ -58,6 +69,11 @@ public abstract class EntityFactor {
         account.setAccessInfo(accessInfo);
         accessInfo.getAccounts().add(account);
         return account;
+    }
+
+    protected static Account getAccount(Staff staff, String position, String accountName, String passwordHashValue) {
+        AccessInfo accessInfo = accessInfoRepository.findByPosition(position);
+        return getAccount(staff, accessInfo, accountName, passwordHashValue);
     }
 
     /**
@@ -107,6 +123,11 @@ public abstract class EntityFactor {
         return materialOrder;
     }
 
+    protected static MaterialOrder getMaterialOrder(Staff staff, String note, String materialName, float materialAmount) {
+        Material material = materialRepository.findByName(materialName);
+        return getMaterialOrder(staff, note, material, materialAmount);
+    }
+
     /**
      * @see MaterialOrder
      * @see OperationRecord
@@ -126,6 +147,11 @@ public abstract class EntityFactor {
         materialOrder.setStorageRecord(operationRecord);
         operationRecord.setStorageMaterialRecord(materialOrder);
         return materialOrder;
+    }
+
+    protected static MaterialOrder confirmMaterialOrder(Staff staff, String note, int materialOrderID) {
+        MaterialOrder materialOrder = materialOrderRepository.findByOperationOrderID(materialOrderID);
+        return confirmMaterialOrder(staff, note, materialOrder);
     }
 
     /**
@@ -201,6 +227,11 @@ public abstract class EntityFactor {
         scheduleRecord.setOperationRecord(operationRecord);
         operationRecord.setScheduleRecord(scheduleRecord);
         return scheduleRecord;
+    }
+
+    protected static ScheduleRecord getScheduleRecord(Timestamp start, Timestamp end, Staff targetStaff, int managerID, String note) {
+        Staff manager = staffRepository.findByStaffID(managerID);
+        return getScheduleRecord(start, end, targetStaff, manager, note);
     }
 
     /**
@@ -318,13 +349,22 @@ public abstract class EntityFactor {
      * @param amount the amount been used
      * @return MaterialUsage entity
      */
-    protected static MaterialUsage getMaterialUsage(Stall stall, Material material, float amount) {
+    protected static MaterialUsage getMaterialUsage(Stall stall, Material material, MaterialOrder materialOrder, float amount) {
         MaterialUsage materialUsage = new MaterialUsage();
         materialUsage.setAmount(amount);
         materialUsage.setStall(stall);
         stall.getMaterialUsages().add(materialUsage);
         materialUsage.setMaterial(material);
         material.getMaterialUsages().add(materialUsage);
+        materialUsage.setMaterialOrder(materialOrder);
+        materialOrder.getMaterialUsages().add(materialUsage);
         return materialUsage;
+    }
+
+    protected static MaterialUsage getMaterialUsage(String stallName, String materialName, int materialOrderID, float amount) {
+        Stall stall = stallRepository.findByStallName(stallName);
+        Material material = materialRepository.findByName(materialName);
+        MaterialOrder materialOrder = materialOrderRepository.findByOperationOrderID(materialOrderID);
+        return getMaterialUsage(stall, material, materialOrder, amount);
     }
 }

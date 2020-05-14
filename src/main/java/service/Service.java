@@ -3,10 +3,11 @@ package service;
 import dao.DAOInterfaces.*;
 import dao.DAO_Type;
 import dao.enums.MaterialTypes;
+import dao.enums.OperationType;
 import dao.enums.StaffCategoryTypes;
 import dao.tables.*;
-import org.springframework.data.jpa.domain.JpaSort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.repository.Query;
 import service.exceptions.IllegalRequestException;
 import service.exceptions.RestrictedOperationException;
 
@@ -62,7 +63,7 @@ public class Service {
      * @return entity been inserted/updated
      * @throws IllegalRequestException current account doesn't have the permission
      */
-    public Material saveMaterial(String name, MaterialTypes types, float unitPrice, int availablePeriod) throws IllegalRequestException {
+    public Material saveMaterial(String name, MaterialTypes types, float unitPrice, float availablePeriod) throws IllegalRequestException {
         if (!account.getAccessInfo().getPosition().equals("admin")) throw new IllegalRequestException();
 
         Material material = materialRepository.findByName(name);
@@ -333,7 +334,7 @@ public class Service {
     public float getMaterialUsagePrediction(String materialName) throws IllegalRequestException {
         if (!account.getAccessInfo().getAccessToMaterial()) throw new IllegalRequestException();
 
-        return getMaterialUsageBetween(materialName, new Timestamp(System.currentTimeMillis() - 2592000),  new Timestamp(System.currentTimeMillis()));
+        return getMaterialUsageBetween(materialName, new Timestamp(System.currentTimeMillis() - 2592000000L),  new Timestamp(System.currentTimeMillis()));
     }
 
     /**
@@ -378,6 +379,10 @@ public class Service {
      * @return order list
      * @throws IllegalRequestException current account doesn't have the permission
      * @throws RestrictedOperationException current operation cannot be applied
+     * @Query (value = "from MaterialOrder as Order " +
+     *            "inner join Material on Order.materialName = Material.name " +
+     *            "inner join OperationRecord as Oper on Order.operationOrderID = Oper.operationID " +
+     *            "where Material.name = ?1 and Oper.operationTime >= ?2 and Oper.operationTime <= ?3")
      */
     public List<MaterialOrder> findMaterialOrder(String materialName, Timestamp from, Timestamp to) throws IllegalRequestException, RestrictedOperationException {
         if (!account.getAccessInfo().getAccessToMaterial()) throw new IllegalRequestException();
@@ -396,16 +401,75 @@ public class Service {
         return materialOrderRepository.findAll(specification);
     }
 
-    public MaterialOrder ensureMaterialOrder(MaterialOrder order) throws IllegalRequestException {
+    /**
+     * ensure the material is stored
+     * @param orderID the order id been ensured
+     * @param note comment
+     * @return order entity
+     * @throws IllegalRequestException current account doesn't have the permission
+     * @throws RestrictedOperationException current operation cannot be applied
+     */
+    public MaterialOrder ensureMaterialOrder(int orderID, String note) throws IllegalRequestException {
+        if (!account.getAccessInfo().getAccessToMaterial()) throw new IllegalRequestException();
+
+        MaterialOrder materialOrder = materialOrderRepository.findByOperationOrderID(orderID);
+        if (materialOrder == null) throw new RestrictedOperationException("no such order!");
+
+        materialOrderRepository.saveAndFlush(EntityFactor.confirmMaterialOrder(account.getStaff(), note, materialOrder));
         return null;
     }
 
+    /**
+     * find the material orders that is going to out of date
+     * @param limit time limit before out of date
+     * @return material order list
+     * @throws IllegalRequestException current account doesn't have the permission
+     */
     public List<MaterialOrder> findMaterialOrderOutOfDate(int limit) throws IllegalRequestException {
+        if (!account.getAccessInfo().getAccessToMaterial()) throw new IllegalRequestException();
+
+        List<MaterialOrder> result = new LinkedList<>();
+        List<Material> materialList = materialRepository.findAll();
+        for (Material e : materialList) {
+            result.addAll(findMaterialOrderOutOfDate(e, limit));
+        }
+        return result;
+    }
+
+    /**
+     * find the material orders that is going to out of date
+     * @param materialName material name
+     * @param limit time limit before out of date
+     * @return material order list
+     * @throws IllegalRequestException current account doesn't have the permission
+     */
+    public List<MaterialOrder> findMaterialOrderOutOfDate(String materialName, int limit) throws IllegalRequestException {
+        if (!account.getAccessInfo().getAccessToMaterial()) throw new IllegalRequestException();
+
+        return findMaterialOrderOutOfDate(materialRepository.findByName(materialName), limit);
+    }
+
+    public List<MaterialOrder> findMaterialOrderOutOfDate(Material material, int limit) throws IllegalRequestException {
+        if (!account.getAccessInfo().getAccessToMaterial() || material == null) throw new IllegalRequestException();
+
+        LinkedList<MaterialOrder> result = new LinkedList<>();
+        Set<MaterialOrder> orders = material.getMaterialOrders();
+        for (MaterialOrder e : orders) {
+            if (e.getStorageRecord() == null) continue;
+            if (usedUp(e)) continue;
+            Timestamp earliest = new Timestamp((long) (System.currentTimeMillis() - 86400000L * (e.getMaterial().getAvailablePeriod() - limit)));
+            if (e.getStorageRecord().getOperationTime().after(earliest)) continue;
+            result.addLast(e);
+        }
         return null;
     }
 
-    public List<MaterialOrder> findMaterialOrderOutOfDate(String materialName, int limit) throws IllegalRequestException {
-        return null;
+    private boolean usedUp(MaterialOrder materialOrder) {
+        float used = 0;
+        for (MaterialUsage e : materialOrder.getMaterialUsages()) {
+            used += e.getAmount();
+        }
+        return used >= materialOrder.getMaterialAmount();
     }
     /* ****************************************************** */
     //stall services

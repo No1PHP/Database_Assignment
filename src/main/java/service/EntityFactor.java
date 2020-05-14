@@ -71,7 +71,7 @@ public abstract class EntityFactor {
      * @param availablePeriod day before unavaliable
      * @return Material entity
      */
-    protected static Material getMaterial(String name, MaterialTypes types, float unitPrice, int availablePeriod) {
+    protected static Material getMaterial(String name, MaterialTypes types, float unitPrice, float availablePeriod) {
         Material material = new Material();
         material.setName(name);
         material.setType((byte) types.ordinal());

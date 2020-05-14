@@ -45,7 +45,7 @@ public class MaterialOrder implements Serializable {
 
     //material order foreign key
     @OneToOne(targetEntity = OperationRecord.class, cascade = {CascadeType.REFRESH, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REMOVE})
-    @JoinColumn(name = "op_StorageID", referencedColumnName = "operationId")
+    @JoinColumn(name = "op_storageID", referencedColumnName = "operationId")
     private OperationRecord storageRecord;
 
     @OneToMany(mappedBy = "materialOrder", cascade = {CascadeType.REFRESH, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REMOVE})

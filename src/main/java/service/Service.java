@@ -201,20 +201,25 @@ public class Service {
 
     /**
      * update or insert a account row
-     * @param staff master of account
-     * @param accessInfo account access type
+     * @param staffId master of account
+     * @param position account access type
      * @param accountName account username
      * @param passwordHashValue account password
      * @return account entity
      * @throws IllegalRequestException current account doesn't have the permission
      * @throws RestrictedOperationException current operation cannot be applied
      */
-    public Account saveAccount(Staff staff, AccessInfo accessInfo, String accountName, String passwordHashValue) throws IllegalRequestException, RestrictedOperationException {
+    public Account saveAccount(int staffId, String position, String accountName, String passwordHashValue) throws IllegalRequestException, RestrictedOperationException {
         if (!account.getAccessInfo().getPosition().equals("admin")) throw new IllegalRequestException();
+
+        Staff staff = staffRepository.findByStaffID(staffId);
+        AccessInfo accessInfo = accessInfoRepository.findByPosition(position);
         if (staff.getStaffName().equals("none") || staff.getStaffName().equals("admin"))
             throw new RestrictedOperationException("can't update account for this staff!");
+        if (accessInfo == null)
+            throw new RestrictedOperationException("position doesn't exist!");
 
-        Account account = accountRepository.findByStaffID(staff.getStaffID());
+        Account account = staff.getAccount();
         if (account == null) {
             account = EntityFactor.getAccount(staff, accessInfo, accountName, passwordHashValue);
         } else {

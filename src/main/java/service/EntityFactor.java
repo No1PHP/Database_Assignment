@@ -71,11 +71,6 @@ public abstract class EntityFactor {
         return account;
     }
 
-    protected static Account getAccount(Staff staff, String position, String accountName, String passwordHashValue) {
-        AccessInfo accessInfo = accessInfoRepository.findByPosition(position);
-        return getAccount(staff, accessInfo, accountName, passwordHashValue);
-    }
-
     /**
      * @see Material
      * @see MaterialTypes
@@ -123,11 +118,6 @@ public abstract class EntityFactor {
         return materialOrder;
     }
 
-    protected static MaterialOrder getMaterialOrder(Staff staff, String note, String materialName, float materialAmount) {
-        Material material = materialRepository.findByName(materialName);
-        return getMaterialOrder(staff, note, material, materialAmount);
-    }
-
     /**
      * @see MaterialOrder
      * @see OperationRecord
@@ -147,11 +137,6 @@ public abstract class EntityFactor {
         materialOrder.setStorageRecord(operationRecord);
         operationRecord.setStorageMaterialRecord(materialOrder);
         return materialOrder;
-    }
-
-    protected static MaterialOrder confirmMaterialOrder(Staff staff, String note, int materialOrderID) {
-        MaterialOrder materialOrder = materialOrderRepository.findByOperationOrderID(materialOrderID);
-        return confirmMaterialOrder(staff, note, materialOrder);
     }
 
     /**
@@ -227,11 +212,6 @@ public abstract class EntityFactor {
         scheduleRecord.setOperationRecord(operationRecord);
         operationRecord.setScheduleRecord(scheduleRecord);
         return scheduleRecord;
-    }
-
-    protected static ScheduleRecord getScheduleRecord(Timestamp start, Timestamp end, Staff targetStaff, int managerID, String note) {
-        Staff manager = staffRepository.findByStaffID(managerID);
-        return getScheduleRecord(start, end, targetStaff, manager, note);
     }
 
     /**
@@ -359,12 +339,5 @@ public abstract class EntityFactor {
         materialUsage.setMaterialOrder(materialOrder);
         materialOrder.getMaterialUsages().add(materialUsage);
         return materialUsage;
-    }
-
-    protected static MaterialUsage getMaterialUsage(String stallName, String materialName, int materialOrderID, float amount) {
-        Stall stall = stallRepository.findByStallName(stallName);
-        Material material = materialRepository.findByName(materialName);
-        MaterialOrder materialOrder = materialOrderRepository.findByOperationOrderID(materialOrderID);
-        return getMaterialUsage(stall, material, materialOrder, amount);
     }
 }

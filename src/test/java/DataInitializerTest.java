@@ -3,6 +3,7 @@ import dao.DAO_Type;
 import dao.tables.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import service.DataInitializer;
@@ -27,12 +28,15 @@ public class DataInitializerTest {
 
     @Test
     @Transactional
+    @Rollback(false)
     public void run() {
         clearAll();
         DataInitializer.run();
     }
 
     @Test
+    @Transactional
+    @Rollback(false)
     public void clearAll() {
         List<ScheduleRecord> scheduleRecordList = scheduleRecordRepository.findAll();
         for (ScheduleRecord e : scheduleRecordList) {

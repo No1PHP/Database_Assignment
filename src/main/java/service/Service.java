@@ -488,45 +488,47 @@ public class Service {
     public Stall addRecipeForStall(String stallName, Iterable<String> recipes) throws IllegalRequestException, RestrictedOperationException {
         if (!account.getAccessInfo().getAccessToStall()) throw new IllegalRequestException();
         Stall stall = stallRepository.findByStallName(stallName);
+        if (stall == null) throw new RestrictedOperationException("no such stall!");
+
         for (String e : recipes) {
-            addRecipeForStall(stall, recipeRepository.findByRecipeName(e));
+            Recipe recipe = recipeRepository.findByRecipeName(e);
+            stall.getRecipes().add(recipe);
+            recipe.getStalls().add(stall);
         }
         stallRepository.saveAndFlush(stall);
         return stall;
     }
 
-    private void addRecipeForStall(Stall stall, Recipe recipe) throws RestrictedOperationException {
+    public Stall removeRecipeFromStall(String stallName, Iterable<String> recipes) throws IllegalRequestException, RestrictedOperationException  {
+        if (!account.getAccessInfo().getAccessToStall()) throw new IllegalRequestException();
+        Stall stall = stallRepository.findByStallName(stallName);
         if (stall == null) throw new RestrictedOperationException("no such stall!");
-        stall.getRecipes().add(recipe);
-        recipe.getStalls().add(stall);
+
+        for (String e : recipes) {
+            Recipe recipe = recipeRepository.findByRecipeName(e);
+            stall.getRecipes().remove(recipe);
+            recipe.getStalls().remove(stall);
+        }
+        stallRepository.saveAndFlush(stall);
+        return stall;
     }
 
     /**
      * get the selling order of recipe during period of time
      * @param from starting time
      * @param to ending time
-     * @return first array for material entity in type Recipe, second array for the corresponding selling amount in type Float
+     * @return material entity and the corresponding selling amount in type Float
      * @throws IllegalRequestException current account doesn't have the permission
+     *
+     * select Recipe.recipeName as name, sum(T.numbers) as total from Recipe
+     * left join TransactionRecord as T using(recipeName)
+     * where T.transactionTime >= from and t.transactionTime <= to
+     * group by name
+     * order by total
      */
-    //未完成！！！！！！！！！！！！！！！！！！！！！
-    public Object[] getRecipeInOrderBySellingDuring(Timestamp from, Timestamp to) throws IllegalRequestException {
+    public List<Object[]> getRecipeInOrderBySellingDuring(Timestamp from, Timestamp to) throws IllegalRequestException {
         if (!account.getAccessInfo().getAccessToStall()) throw new IllegalRequestException();
-
-        Object[] result = new Object[2];
-        Specification<Recipe> specification = new Specification<Recipe>() {
-            @Override
-            public Predicate toPredicate(Root<Recipe> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
-                SetJoin<Recipe, TransactionRecord> transactionJoin = root.joinSet("transactionRecords");
-                Path<Timestamp> time = transactionJoin.get("transactionTime");
-
-                Predicate timeLimit = criteriaBuilder.between(time, from, to);
-                Expression<Integer> sells = criteriaBuilder.sum(transactionJoin.get("numbers"));
-
-                query.orderBy(criteriaBuilder.desc(sells));
-                return timeLimit;
-            }
-        };
-        return null;
+        return recipeRepository.findSalesOrderDuring(from, to);
     }
 
     /**
@@ -542,34 +544,95 @@ public class Service {
         return transactionRecordRepository.findALLTotalSalesByTransactionTimeBetween(from, until);
     }
 
-    public int getTotalSalesDuring(String stallName, Timestamp from, Timestamp until) throws IllegalRequestException {
+    public int getTotalSalesDuring(String stallName, Timestamp from, Timestamp until) throws IllegalRequestException, RestrictedOperationException {
+        if (!account.getAccessInfo().getAccessToStall()) throw new IllegalRequestException();
+        if (stallRepository.findByStallName(stallName) == null) throw new RestrictedOperationException("no such stall!");
+
+        return transactionRecordRepository.findALLTotalSalesByStallNameAndTransactionTimeBetween(stallName, from, until);
+    }
+
+    /**
+     * get the selling order of stall during period of time
+     * @param from starting time
+     * @param to ending time
+     * @return stall entity and the corresponding selling amount in type Float
+     * @throws IllegalRequestException current account doesn't have the permission
+     *
+     * select Stall*, sum(T.numbers) as total from Stall
+     * left join TransactionRecord as T using(stallName)
+     * where T.transactionTime >= from and t.transactionTime <= to
+     * group by name
+     * order by total
+     */
+    public List<Object[]> getStallInOrderBySellingBetweenDate(Timestamp from, Timestamp to) throws IllegalRequestException {
+        if (!account.getAccessInfo().getAccessToStall()) throw new IllegalRequestException();
+        return stallRepository.findSalesDuring(from, to);
+    }
+
+    /**
+     * get the total material usage from stall
+     * @param from starting time
+     * @param to ending time
+     * @return result list
+     * @throws IllegalRequestException current account doesn't have the permission
+     */
+    public List<Object[]> getStallUsageDuring(Timestamp from, Timestamp to) throws IllegalRequestException {
         if (!account.getAccessInfo().getAccessToStall()) throw new IllegalRequestException();
 
-        return transactionRecordRepository.findALLTotalSalesByTransactionTimeBetween(from, until);
+        return materialUsageRepository.getUsageByTimeBetween(from, to);
     }
 
-    public List<Object[]> getStallInOrderBySellingBetweenDate(Date from, Date to) throws IllegalRequestException {
-        return null;
+    public List<Object[]> getStallUsageDuring(String stallName, Timestamp from, Timestamp to) throws IllegalRequestException {
+        if (!account.getAccessInfo().getAccessToStall()) throw new IllegalRequestException();
+
+        return materialUsageRepository.getUsageByTimeBetween(stallName, from, to);
     }
 
-    public Map<Material, Float> getStallUsageDuring(Date from, Date to) throws IllegalRequestException {
-        return null;
+    /**
+     * get the profit of a stall
+     * @param stallName stall name
+     * @param from starting time
+     * @param to ending time
+     * @return total profit
+     * @throws IllegalRequestException current account doesn't have the permission
+     * @throws RestrictedOperationException current operation cannot be applied
+     */
+    public float getStallProfitDuring(String stallName, Timestamp from, Timestamp to) throws IllegalRequestException, RestrictedOperationException {
+        if (!account.getAccessInfo().getAccessToStall()) throw new IllegalRequestException();
+        if (stallRepository.findByStallName(stallName) == null) throw new RestrictedOperationException("no such stall!");
+
+        return transactionRecordRepository.getProfitOfStallDuring(stallName, from, to);
     }
 
-    public float getStallUsageDuring(String materialName, Date from, Date to) throws IllegalRequestException {
-        return 0;
+    /**
+     * get the rent of the stall
+     * @param stallName stall name
+     * @return stall rent
+     * @throws IllegalRequestException current account doesn't have the permission
+     * @throws RestrictedOperationException current operation cannot be applied
+     */
+    public float getStallRent(String stallName) throws IllegalRequestException, RestrictedOperationException {
+        if (!account.getAccessInfo().getAccessToStall()) throw new IllegalRequestException();
+        Stall stall = stallRepository.findByStallName(stallName);
+        if (stall == null) throw new RestrictedOperationException("no such stall!");
+
+        return stall.getStallRent();
     }
 
-    public float getStallProfitDuring(String stallName, Date from, Date to) throws IllegalRequestException {
-        return 0;
-    }
-
-    public float getStallRent(String stallName) throws IllegalRequestException {
-        return 0;
-    }
-
-    public List<TransactionRecord> getTransactionRecordDuring(String stall, Date from, Date to) throws IllegalRequestException {
-        return null;
+    /**
+     * get all transaction record of a stall during a period of time
+     * @param stallName stall name
+     * @param from beginning time
+     * @param to ending time
+     * @return transaction record set
+     * @throws IllegalRequestException current account doesn't have the permission
+     * @throws RestrictedOperationException current operation cannot be applied
+     */
+    public Set<TransactionRecord> getTransactionRecordDuring(String stallName, Date from, Date to) throws IllegalRequestException, RestrictedOperationException {
+        if (!account.getAccessInfo().getAccessToStall()) throw new IllegalRequestException();
+        Stall stall = stallRepository.findByStallName(stallName);
+        if (stall == null) throw new RestrictedOperationException("no such stall!");
+        return stall.getTransactionRecords();
     }
     /* ****************************************************** */
     //staff services

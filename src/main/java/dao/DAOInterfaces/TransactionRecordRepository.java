@@ -22,4 +22,10 @@ public interface TransactionRecordRepository extends JpaRepository<TransactionRe
 
     @Query(value = "select SUM(numbers) from TransactionRecord where transactionTime >= ?1 and transactionTime <= ?2")
     Integer findALLTotalSalesByTransactionTimeBetween(Timestamp from, Timestamp to);
+
+    @Query(value = "select SUM(numbers) from TransactionRecord where stallName = ?1 and transactionTime >= ?2 and transactionTime <= ?3")
+    Integer findALLTotalSalesByStallNameAndTransactionTimeBetween(String name, Timestamp from, Timestamp to);
+
+    @Query(value = "select SUM(transactionPrice) from TransactionRecord where stallName = ?1 and transactionTime >= ?2 and transactionTime <= ?3")
+    Float getProfitOfStallDuring(String stallName, Timestamp from, Timestamp to);
 }

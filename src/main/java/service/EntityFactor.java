@@ -9,6 +9,7 @@ import dao.tables.*;
 
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -318,6 +319,7 @@ public abstract class EntityFactor {
         transactionRecord.setRecipe(recipe);
         recipe.getTransactionRecords().add(transactionRecord);
         transactionRecord.setStall(stall);
+        transactionRecord.setTransactionTime(Timestamp.valueOf(LocalDateTime.now()));
         stall.getTransactionRecords().add(transactionRecord);
         return transactionRecord;
     }

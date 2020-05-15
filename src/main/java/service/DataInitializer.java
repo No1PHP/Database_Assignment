@@ -18,7 +18,7 @@ public abstract class DataInitializer {
     private static Map<String, Recipe> recipeMap = new HashMap<>();
     private static Map<String, Stall> stallMap = new HashMap<>();
     private static Map<String,MaterialOrder> materialOrderMap = new HashMap<>();
-//    private static Map<Integer,TransactionRecord>
+    private static Map<Integer,TransactionRecord> transactionRecordMap = new HashMap<>();
 
     public static void run() {
         addAccessInfo();
@@ -28,7 +28,8 @@ public abstract class DataInitializer {
         addRecipe();
         addStall();
         addMaterialOrder();
-//        addMaterialUsage();
+        addMaterialUsage();
+        addTransactionRecord();
 
         accessInfoMap = null;
         staffMap = null;
@@ -153,7 +154,8 @@ public abstract class DataInitializer {
 
     private static void addMaterialUsage() {
         MaterialUsageRepository materialUsageRepository = (MaterialUsageRepository) DAO_Type.MATERIAL_USAGE.getTableRepository();
-        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("自选美食"),materialMap.get("potato"),materialOrderMap.get("C_potato0"),(float)(20*Math.random())));
+        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("自选美食"),
+                materialMap.get("potato"),materialOrderMap.get("potato0"),(float)(20*Math.random())));
 //        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("自选美食"), materialMap.get("potato"), (float) (20*Math.random())));
 //        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("自选美食"), materialMap.get("chicken"), (float) (20*Math.random())));
 //        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("自选美食"), materialMap.get("carrot"), (float) (20*Math.random())));
@@ -179,7 +181,10 @@ public abstract class DataInitializer {
 
     private static void addTransactionRecord() {
         TransactionRecordRepository transactionRecordRepository = (TransactionRecordRepository) DAO_Type.TRANSACTION_RECORD.getTableRepository();
-
+        TransactionRecord temp_transactionRecord = EntityFactor.getTransactionRecord(1, recipeMap.get("小笼包").getPrice(),recipeMap.get("小笼包"),stallMap.get("包子铺"));
+        transactionRecordMap.put(temp_transactionRecord.getTransactionID(),temp_transactionRecord);
+        transactionRecordRepository.saveAll(transactionRecordMap.values());
+        transactionRecordRepository.flush();
     }
 
     private static void addOperationRecord() {

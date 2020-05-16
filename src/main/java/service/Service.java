@@ -636,24 +636,58 @@ public class Service {
     }
     /* ****************************************************** */
     //staff services
+
+    /**
+     * get staff
+     * @param id staff id
+     * @return staff entity
+     * @throws IllegalRequestException current account doesn't have the permission
+     */
     public Staff getStaffByID(int id) throws IllegalRequestException {
-        return null;
+        if (!account.getAccessInfo().getAccessToStaff()) throw new IllegalRequestException();
+        return staffRepository.findByStaffID(id);
     }
 
-    public StaffCategoryTypes getStaffCategoryTypes(int id) throws IllegalRequestException {
-        return null;
-    }
-
+    /**
+     * get operation record list by staff id
+     * @param id staff id
+     * @return operation recode list
+     * @throws IllegalRequestException current account doesn't have the permission
+     */
     public List<OperationRecord> getOperationRecord(int id) throws IllegalRequestException {
-        return null;
+        if (!account.getAccessInfo().getAccessToStaff()) throw new IllegalRequestException();
+
+        return operationRecordRepository.findALLByStaffIDOrderByOperationTime(id);
     }
 
-    public List<ScheduleRecord> getScheduleRecord(int id, boolean showFinished) throws IllegalRequestException {
-        return null;
+    /**
+     * get staff schedule record list
+     * @param id staff id
+     * @param before the earliest time will return
+     * @return record entity
+     * @throws IllegalRequestException current account doesn't have the permission
+     */
+    public List<ScheduleRecord> getScheduleRecord(int id, Timestamp before) throws IllegalRequestException {
+        if (!account.getAccessInfo().getAccessToStaff()) throw new IllegalRequestException();
+
+        return scheduleRecordRepository.findByOperationIDAndTimeScheduledToStartWorkingAfterOrderByTimeScheduledToStartWorkingDesc(id, before);
     }
 
-    public boolean scheduleStaff(Timestamp start, Timestamp end, Staff targetStaff, String note) throws IllegalRequestException, RestrictedOperationException {
-        return false;
+    /**
+     * create a schedule record for a staff
+     * @param start start working time
+     * @param end end working time
+     * @param targetStaffID id of staff to be scheduled
+     * @param note comment
+     * @throws IllegalRequestException current account doesn't have the permission
+     * @throws RestrictedOperationException current operation cannot be applied
+     */
+    public void scheduleStaff(Timestamp start, Timestamp end, int targetStaffID, String note) throws IllegalRequestException, RestrictedOperationException {
+        if (!account.getAccessInfo().getAccessToStaff()) throw new IllegalRequestException();
+        Staff staff = staffRepository.findByStaffID(targetStaffID);
+        if (staff == null) throw new RestrictedOperationException("no such staff!");
+
+        scheduleRecordRepository.saveAndFlush(EntityFactor.getScheduleRecord(start, end, staff, account.getStaff(), note));
     }
     /* ****************************************************** */
     //general services

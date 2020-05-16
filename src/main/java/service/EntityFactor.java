@@ -319,7 +319,6 @@ public abstract class EntityFactor {
         transactionRecord.setRecipe(recipe);
         recipe.getTransactionRecords().add(transactionRecord);
         transactionRecord.setStall(stall);
-        transactionRecord.setTransactionTime(Timestamp.valueOf(LocalDateTime.now()));
         stall.getTransactionRecords().add(transactionRecord);
         return transactionRecord;
     }

@@ -34,9 +34,8 @@ public class TransactionRecord implements Serializable {
     private String recipeName;
 
     //date being sold
-    @CreatedDate
     @Column(name = "TransactionTime", nullable = false, updatable = false)
-    private Timestamp transactionTime;
+    private Timestamp transactionTime = new Timestamp(System.currentTimeMillis());
 
     //amount of the dish sold, default to be 1
     @Column(name = "numbers", nullable = false, updatable = false)

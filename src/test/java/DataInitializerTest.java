@@ -47,8 +47,7 @@ public class DataInitializerTest {
 
         List<MaterialOrder> materialOrderList = materialOrderRepository.findAll();
         for (MaterialOrder e : materialOrderList) {
-//            e.setMaterial(null);
-//            e.setStorageRecord(null);
+            e.setStorageRecord(null);
         }
         materialOrderRepository.saveAll(materialOrderList);
         materialOrderRepository.flush();

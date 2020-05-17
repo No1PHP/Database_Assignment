@@ -154,8 +154,9 @@ public abstract class DataInitializer {
 
     private static void addMaterialUsage() {
         MaterialUsageRepository materialUsageRepository = (MaterialUsageRepository) DAO_Type.MATERIAL_USAGE.getTableRepository();
+        MaterialOrderRepository materialOrderRepository = (MaterialOrderRepository) DAO_Type.MATERIAL_ORDER.getTableRepository();
         materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("自选美食"),
-                materialMap.get("potato"),materialOrderMap.get("potato0"),(float)(20*Math.random())));
+                materialMap.get("potato"),materialOrderRepository.findByOperationStorageID(materialOrderMap.get("potato0").getStorageRecord().getOperationID()),(float)(20*Math.random())));
 //        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("自选美食"), materialMap.get("potato"), (float) (20*Math.random())));
 //        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("自选美食"), materialMap.get("chicken"), (float) (20*Math.random())));
 //        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("自选美食"), materialMap.get("carrot"), (float) (20*Math.random())));

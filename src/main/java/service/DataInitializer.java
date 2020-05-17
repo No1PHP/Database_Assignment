@@ -1,5 +1,6 @@
 package service;
 
+import common.StringToTimeStamp;
 import dao.DAOInterfaces.*;
 import dao.DAO_Type;
 import dao.enums.MaterialTypes;
@@ -27,9 +28,10 @@ public abstract class DataInitializer {
         addMaterial();
         addRecipe();
         addStall();
-        addMaterialOrder();
-        addMaterialUsage();
-        addTransactionRecord();
+        //addMaterialOrder();
+        //addMaterialUsage();
+        //addTransactionRecord();
+        addScheduleRecord();
 
         accessInfoMap = null;
         staffMap = null;
@@ -205,6 +207,15 @@ public abstract class DataInitializer {
     }
 
     private static void addScheduleRecord() {
-
+        try{
+            ScheduleRecordRepository scheduleRecordRepository = (ScheduleRecordRepository) DAO_Type.SCHEDULE_RECORD.getTableRepository();
+            scheduleRecordRepository.save(EntityFactor.getScheduleRecord(
+                    StringToTimeStamp.string2Time("2020-03-12 08:00:00"),
+                    StringToTimeStamp.string2Time("2020-03-12 12:00:00"),
+                    staffMap.get("storeroomClerk4"),staffMap.get("manager1"),"checkListOfPotato"));
+            scheduleRecordRepository.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

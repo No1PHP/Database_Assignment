@@ -1,9 +1,7 @@
 package dao.tables;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -23,7 +21,7 @@ public class MaterialOrder implements Serializable {
      private Integer operationOrderID;
 
      //??
-     @Column(name = "op_storageID")
+     @Column(name = "op_storageID", insertable = false, updatable = false)
      private Integer operationStorageID;
 
      //dictation index
@@ -45,7 +43,7 @@ public class MaterialOrder implements Serializable {
 
     //material order foreign key
     @OneToOne(targetEntity = OperationRecord.class, cascade = {CascadeType.REFRESH, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REMOVE})
-    @JoinColumn(name = "op_StorageID", referencedColumnName = "operationId")
+    @JoinColumn(name = "op_storageID", referencedColumnName = "operationId")
     private OperationRecord storageRecord;
 
     @OneToMany(mappedBy = "materialOrder", cascade = {CascadeType.REFRESH, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REMOVE})

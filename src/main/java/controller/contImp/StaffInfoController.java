@@ -15,8 +15,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
-import static Constants.globalConstants.LOGIN_STATUS;
-import static Constants.globalConstants.SERVICE;
+import static constants.globalConstants.LOGIN_STATUS;
+import static constants.globalConstants.SERVICE;
 
 /**
  * @description Set of controller of staff information handling request

@@ -17,6 +17,8 @@ public abstract class DataInitializer {
     private static Map<String, Material> materialMap = new HashMap<>();
     private static Map<String, Recipe> recipeMap = new HashMap<>();
     private static Map<String, Stall> stallMap = new HashMap<>();
+    private static Map<String,MaterialOrder> materialOrderMap = new HashMap<>();
+    private static Map<Integer,TransactionRecord> transactionRecordMap = new HashMap<>();
 
     public static void run() {
         addAccessInfo();
@@ -25,7 +27,9 @@ public abstract class DataInitializer {
         addMaterial();
         addRecipe();
         addStall();
+        addMaterialOrder();
         addMaterialUsage();
+        addTransactionRecord();
 
         accessInfoMap = null;
         staffMap = null;
@@ -149,7 +153,10 @@ public abstract class DataInitializer {
     }
 
     private static void addMaterialUsage() {
-//        MaterialUsageRepository materialUsageRepository = (MaterialUsageRepository) DAO_Type.MATERIAL_USAGE.getTableRepository();
+        MaterialUsageRepository materialUsageRepository = (MaterialUsageRepository) DAO_Type.MATERIAL_USAGE.getTableRepository();
+        MaterialOrderRepository materialOrderRepository = (MaterialOrderRepository) DAO_Type.MATERIAL_ORDER.getTableRepository();
+        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("自选美食"),
+                materialMap.get("potato"),materialOrderRepository.findByOperationStorageID(materialOrderMap.get("potato0").getStorageRecord().getOperationID()),(float)(20*Math.random())));
 //        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("自选美食"), materialMap.get("potato"), (float) (20*Math.random())));
 //        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("自选美食"), materialMap.get("chicken"), (float) (20*Math.random())));
 //        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("自选美食"), materialMap.get("carrot"), (float) (20*Math.random())));
@@ -174,7 +181,11 @@ public abstract class DataInitializer {
     }
 
     private static void addTransactionRecord() {
-
+        TransactionRecordRepository transactionRecordRepository = (TransactionRecordRepository) DAO_Type.TRANSACTION_RECORD.getTableRepository();
+        TransactionRecord temp_transactionRecord = EntityFactor.getTransactionRecord(1, recipeMap.get("小笼包").getPrice(),recipeMap.get("小笼包"),stallMap.get("包子铺"));
+        transactionRecordMap.put(temp_transactionRecord.getTransactionID(),temp_transactionRecord);
+        transactionRecordRepository.saveAll(transactionRecordMap.values());
+        transactionRecordRepository.flush();
     }
 
     private static void addOperationRecord() {
@@ -182,7 +193,15 @@ public abstract class DataInitializer {
     }
 
     private static void addMaterialOrder() {
-
+        MaterialOrderRepository materialOrderRepository = (MaterialOrderRepository) DAO_Type.MATERIAL_ORDER.getTableRepository();
+        materialOrderMap.put("potato0",EntityFactor.getMaterialOrder(staffMap.get("admin"),"potato0",
+                materialMap.get("potato"),(float)(100*Math.random())));
+        materialOrderMap.put("rice0",EntityFactor.getMaterialOrder(staffMap.get("admin"),"rice0",
+                materialMap.get("rice"),(float)(200*Math.random())));
+        EntityFactor.confirmMaterialOrder(staffMap.get("admin"), "C_potato0",materialOrderMap.get("potato0"));
+        EntityFactor.confirmMaterialOrder(staffMap.get("admin"), "C_rice0",materialOrderMap.get("rice0"));
+        materialOrderRepository.saveAll(materialOrderMap.values());
+        materialOrderRepository.flush();
     }
 
     private static void addScheduleRecord() {

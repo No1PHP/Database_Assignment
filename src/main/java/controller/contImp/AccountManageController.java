@@ -14,8 +14,8 @@ import service.Service;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
-import static Constants.globalConstants.LOGIN_STATUS;
-import static Constants.globalConstants.SERVICE;
+import static constants.globalConstants.LOGIN_STATUS;
+import static constants.globalConstants.SERVICE;
 
 /**
  * @description Login Operation Management
@@ -97,7 +97,7 @@ public class AccountManageController {
         boolean loginVerify = (service!=null);
 
         if(loginVerify) {
-            service.changePassword(changeInfo.getAccountName(),changeInfo.getPasswordValue());
+            service.changePassword(changeInfo.getPasswordValue());
             map.put("message","password successfully changed");
         }else{
             map.put("message","password doesn't match username, try again");

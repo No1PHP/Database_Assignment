@@ -1,15 +1,15 @@
 package service;
 
-import dao.DAOInterfaces.OperationRecordRepository;
+import dao.DAOInterfaces.*;
 import dao.DAO_Type;
 import dao.enums.MaterialTypes;
 import dao.enums.OperationType;
 import dao.enums.StaffCategoryTypes;
 import dao.tables.*;
 
-import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -17,6 +17,17 @@ import java.util.Collection;
  * provide useful methods to generate table entities
  */
 public abstract class EntityFactor {
+    private static final ScheduleRecordRepository scheduleRecordRepository = (ScheduleRecordRepository) DAO_Type.SCHEDULE_RECORD.getTableRepository();
+    private static final MaterialOrderRepository materialOrderRepository = (MaterialOrderRepository) DAO_Type.MATERIAL_ORDER.getTableRepository();
+    private static final OperationRecordRepository operationRecordRepository = (OperationRecordRepository) DAO_Type.OPERATION_RECORD.getTableRepository();
+    private static final AccountRepository accountRepository = (AccountRepository) DAO_Type.ACCOUNT.getTableRepository();
+    private static final StaffRepository staffRepository = (StaffRepository) DAO_Type.STAFF.getTableRepository();
+    private static final AccessInfoRepository accessInfoRepository = (AccessInfoRepository) DAO_Type.ACCESS_INFO.getTableRepository();
+    private static final TransactionRecordRepository transactionRecordRepository = (TransactionRecordRepository) DAO_Type.TRANSACTION_RECORD.getTableRepository();
+    private static final MaterialUsageRepository materialUsageRepository = (MaterialUsageRepository) DAO_Type.MATERIAL_USAGE.getTableRepository();
+    private static final RecipeRepository recipeRepository = (RecipeRepository) DAO_Type.RECIPE.getTableRepository();
+    private static final MaterialRepository materialRepository = (MaterialRepository) DAO_Type.MATERIAL.getTableRepository();
+    private static final StallRepository stallRepository = (StallRepository) DAO_Type.STALL.getTableRepository();
     /**
      * @see AccessInfo
      *
@@ -71,7 +82,7 @@ public abstract class EntityFactor {
      * @param availablePeriod day before unavaliable
      * @return Material entity
      */
-    protected static Material getMaterial(String name, MaterialTypes types, float unitPrice, int availablePeriod) {
+    protected static Material getMaterial(String name, MaterialTypes types, float unitPrice, float availablePeriod) {
         Material material = new Material();
         material.setName(name);
         material.setType((byte) types.ordinal());
@@ -99,6 +110,7 @@ public abstract class EntityFactor {
         operationRecordRepository.saveAndFlush(operationRecord);
 
         MaterialOrder materialOrder = new MaterialOrder();
+        materialOrder.setOperationOrderID(operationRecord.getOperationID());
         materialOrder.setMaterial(material);
         material.getMaterialOrders().add(materialOrder);
         materialOrder.setMaterialAmount(materialAmount);
@@ -318,13 +330,15 @@ public abstract class EntityFactor {
      * @param amount the amount been used
      * @return MaterialUsage entity
      */
-    protected static MaterialUsage getMaterialUsage(Stall stall, Material material, float amount) {
+    protected static MaterialUsage getMaterialUsage(Stall stall, Material material, MaterialOrder materialOrder, float amount) {
         MaterialUsage materialUsage = new MaterialUsage();
         materialUsage.setAmount(amount);
         materialUsage.setStall(stall);
         stall.getMaterialUsages().add(materialUsage);
         materialUsage.setMaterial(material);
         material.getMaterialUsages().add(materialUsage);
+        materialUsage.setMaterialOrder(materialOrder);
+        materialOrder.getMaterialUsages().add(materialUsage);
         return materialUsage;
     }
 }

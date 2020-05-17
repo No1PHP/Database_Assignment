@@ -31,7 +31,7 @@ public class Material implements Serializable {
 
     //fresh period
     @Column(name = "availableTime", nullable = false)
-    private Integer availablePeriod;
+    private Float availablePeriod;
     /********************************************************/
     //material order foreign key
     @OneToMany(mappedBy = "material", cascade = CascadeType.ALL)

@@ -20,6 +20,12 @@ public interface MaterialUsageRepository extends JpaRepository<MaterialUsage, In
 
     List<MaterialUsage> findAllByTimeBetween(Timestamp from, Timestamp to);
 
+    @Query(value = "select materialName, SUM(amount) from MaterialUsage where time >= ?1 and time <= ?2 group by materialName")
+    List<Object[]> getUsageByTimeBetween(Timestamp from, Timestamp to);
+
+    @Query(value = "select materialName, SUM(amount) from MaterialUsage where stallName = ?1 and time >= ?2 and time <= ?3 group by materialName")
+    List<Object[]> getUsageByTimeBetween(String stallName, Timestamp from, Timestamp to);
+
     @Query(value = "select SUM(amount) from MaterialUsage where materialName = ?1 and time >= ?2 and time <= ?3")
     Float getTotalUsageByTimeBetween(String materialName, Timestamp from, Timestamp to);
 }

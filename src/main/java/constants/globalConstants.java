@@ -1,4 +1,4 @@
-package Constants;
+package constants;
 
 import service.Service;
 

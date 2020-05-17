@@ -8,6 +8,7 @@ import dao.enums.StaffCategoryTypes;
 import dao.tables.*;
 
 import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -210,8 +211,8 @@ public abstract class DataInitializer {
         try{
             ScheduleRecordRepository scheduleRecordRepository = (ScheduleRecordRepository) DAO_Type.SCHEDULE_RECORD.getTableRepository();
             scheduleRecordRepository.save(EntityFactor.getScheduleRecord(
-                    StringToTimeStamp.string2Time("2020-03-12 08:00:00"),
-                    StringToTimeStamp.string2Time("2020-03-12 12:00:00"),
+                    Timestamp.valueOf("2020-03-12 08:00:00"),
+                    Timestamp.valueOf("2020-03-12 13:00:00"),
                     staffMap.get("storeroomClerk4"),staffMap.get("manager1"),"checkListOfPotato"));
             scheduleRecordRepository.flush();
         } catch (Exception e) {

@@ -211,6 +211,7 @@ public abstract class EntityFactor {
         scheduleRecord.setStaff(targetStaff);
         targetStaff.getScheduleRecords().add(scheduleRecord);
         scheduleRecord.setOperationRecord(operationRecord);
+        scheduleRecord.setOperationID(operationRecord.getOperationID());
         operationRecord.setScheduleRecord(scheduleRecord);
         return scheduleRecord;
     }

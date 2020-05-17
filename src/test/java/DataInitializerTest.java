@@ -38,12 +38,6 @@ public class DataInitializerTest {
     @Transactional
     @Rollback(false)
     public void clearAll() {
-        List<ScheduleRecord> scheduleRecordList = scheduleRecordRepository.findAll();
-        for (ScheduleRecord e : scheduleRecordList) {
-            e.setStaff(null);
-        }
-        scheduleRecordRepository.saveAll(scheduleRecordList);
-        scheduleRecordRepository.flush();
 
         List<MaterialOrder> materialOrderList = materialOrderRepository.findAll();
         for (MaterialOrder e : materialOrderList) {

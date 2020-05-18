@@ -19,7 +19,7 @@ public class OperationRecord implements Serializable {
     //primary key
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "operationId")
+    @Column(name = "operationId", insertable = false)
     private Integer operationID;
 
     @Column(name = "staffId", nullable = false, insertable = false, updatable = false)
@@ -41,19 +41,19 @@ public class OperationRecord implements Serializable {
     private Boolean willSendUpdateMessage;
     /********************************************************/
     //operation record foreign key
-    @ManyToOne(targetEntity = Staff.class, optional = false, cascade = {CascadeType.REFRESH, CascadeType.MERGE})
+    @ManyToOne(targetEntity = Staff.class, optional = false, cascade = {CascadeType.REFRESH})
     @JoinColumn(name = "staffId", referencedColumnName = "staff_Id")
     private Staff staff;
 
     //material order foreign key
-    @OneToOne(mappedBy = "orderRecord", cascade = {CascadeType.REFRESH, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REMOVE})
+    @OneToOne(mappedBy = "orderRecord", cascade = {CascadeType.REFRESH, CascadeType.REMOVE})
     private MaterialOrder orderedMaterialRecord;
 
     //material order foreign key
-    @OneToOne(mappedBy = "storageRecord", cascade = {CascadeType.MERGE, CascadeType.REFRESH})
+    @OneToOne(mappedBy = "storageRecord", cascade = {CascadeType.REFRESH})
     private MaterialOrder storageMaterialRecord;
 
     //schedule record foreign key
-    @OneToOne(mappedBy = "operationRecord", cascade = {CascadeType.REFRESH, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REMOVE})
+    @OneToOne(mappedBy = "operationRecord", cascade = {CascadeType.REFRESH, CascadeType.REMOVE})
     private ScheduleRecord scheduleRecord;
 }

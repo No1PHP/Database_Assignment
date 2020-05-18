@@ -38,16 +38,16 @@ public class MaterialUsage implements Serializable {
     private Float amount;
     /********************************************************/
     //recipeUsage foreign key
-    @ManyToOne(targetEntity = Stall.class, optional = false, cascade = {CascadeType.REFRESH, CascadeType.MERGE})
+    @ManyToOne(targetEntity = Stall.class, optional = false, cascade = {CascadeType.REFRESH})
     @JoinColumn(name = "stall_name", referencedColumnName = "stall_name")
     private Stall stall;
 
     //recipeUsage foreign key
-    @ManyToOne(targetEntity = Material.class, optional = false, cascade = {CascadeType.REFRESH, CascadeType.MERGE})
+    @ManyToOne(targetEntity = Material.class, optional = false, cascade = {CascadeType.REFRESH})
     @JoinColumn(name = "material_name", referencedColumnName = "name")
     private Material material;
 
-    @ManyToOne(targetEntity = MaterialOrder.class, optional = false, cascade = {CascadeType.REFRESH, CascadeType.MERGE})
+    @ManyToOne(targetEntity = MaterialOrder.class, optional = false, cascade = {CascadeType.REFRESH})
     @JoinColumn(name = "storageID", referencedColumnName = "op_storageID")
     private MaterialOrder materialOrder;
 }

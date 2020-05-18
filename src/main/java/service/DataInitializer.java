@@ -233,57 +233,53 @@ public abstract class DataInitializer {
     }
 
     private static void addScheduleRecord() {
-        try{
-            ScheduleRecordRepository scheduleRecordRepository = (ScheduleRecordRepository) DAO_Type.SCHEDULE_RECORD.getTableRepository();
-            scheduleRecordMap.put(0,EntityFactor.getScheduleRecord(
-                    Timestamp.valueOf("2020-03-12 08:00:00"),
-                    Timestamp.valueOf("2020-03-12 13:00:00"),
-                    staffMap.get("storeroomClerk4"),staffMap.get("manager1"),"checkListOfPotato"));
-//            scheduleRecordMap.put(1,EntityFactor.getScheduleRecord(
-//                    Timestamp.valueOf("2020-03-13 09:00:00"),
-//                    Timestamp.valueOf("2020-03-13 15:00:00"),
-//                    staffMap.get("storeroomClerk2"),staffMap.get("manager1"),"assign food to stall"));
-//            scheduleRecordMap.put(2,EntityFactor.getScheduleRecord(
-//                    Timestamp.valueOf("2020-03-14 13:00:00"),
-//                    Timestamp.valueOf("2020-03-14 15:00:00"),
-//                    staffMap.get("storeroomClerk2"),staffMap.get("manager1"),"assign food to stall"));
+        ScheduleRecordRepository scheduleRecordRepository = (ScheduleRecordRepository) DAO_Type.SCHEDULE_RECORD.getTableRepository();
+        scheduleRecordMap.put(0,EntityFactor.getScheduleRecord(
+                Timestamp.valueOf("2020-03-12 08:00:00"),
+                Timestamp.valueOf("2020-03-12 13:00:00"),
+                staffMap.get("storeroomClerk4"),staffMap.get("manager1"),"checkListOfPotato"));
+            scheduleRecordMap.put(1,EntityFactor.getScheduleRecord(
+                    Timestamp.valueOf("2020-03-13 09:00:00"),
+                    Timestamp.valueOf("2020-03-13 15:00:00"),
+                    staffMap.get("storeroomClerk2"),staffMap.get("manager1"),"assign food to stall"));
+            scheduleRecordMap.put(2,EntityFactor.getScheduleRecord(
+                    Timestamp.valueOf("2020-03-14 13:00:00"),
+                    Timestamp.valueOf("2020-03-14 15:00:00"),
+                    staffMap.get("storeroomClerk2"),staffMap.get("manager1"),"assign food to stall"));
 
-//            scheduleRecordRepository.saveAndFlush(EntityFactor.getScheduleRecord(
-//                    Timestamp.valueOf("2020-03-12 07:00:00"),
-//                    Timestamp.valueOf("2020-03-12 08:30:00"),
-//                    staffMap.get("cleaner2"),staffMap.get("manager1"),"clean floor 2"));
-//            scheduleRecordRepository.saveAndFlush(EntityFactor.getScheduleRecord(
-//                    Timestamp.valueOf("2020-03-12 12:30:00"),
-//                    Timestamp.valueOf("2020-03-12 13:00:00"),
-//                    staffMap.get("cleaner1"),staffMap.get("manager1"),"clean floor 1"));
-//            scheduleRecordRepository.saveAndFlush(EntityFactor.getScheduleRecord(
-//                    Timestamp.valueOf("2020-03-12 11:00:00"),
-//                    Timestamp.valueOf("2020-03-12 12:30:00"),
-//                    staffMap.get("storeroomClerk3"),staffMap.get("manager1"),"checkListOfPotato"));
-//            scheduleRecordRepository.saveAndFlush(EntityFactor.getScheduleRecord(
-//                    Timestamp.valueOf("2020-03-12 08:00:00"),
-//                    Timestamp.valueOf("2020-03-12 09:00:00"),
-//                    staffMap.get("storeroomClerk3"),staffMap.get("manager1"),"buySomeThing"));
-//            scheduleRecordRepository.saveAndFlush(EntityFactor.getScheduleRecord(
-//                    Timestamp.valueOf("2020-03-12 17:00:00"),
-//                    Timestamp.valueOf("2020-03-12 18:00:00"),
-//                    staffMap.get("cleaner1"),staffMap.get("manager1"),"Meeting"));
-//            scheduleRecordRepository.saveAndFlush(EntityFactor.getScheduleRecord(
-//                    Timestamp.valueOf("2020-03-12 17:00:00"),
-//                    Timestamp.valueOf("2020-03-12 18:00:00"),
-//                    staffMap.get("cleaner2"),staffMap.get("manager1"),"Meeting"));
-//            scheduleRecordRepository.saveAndFlush(EntityFactor.getScheduleRecord(
-//                    Timestamp.valueOf("2020-03-12 17:00:00"),
-//                    Timestamp.valueOf("2020-03-12 18:00:00"),
-//                    staffMap.get("cleaner3"),staffMap.get("manager1"),"Meeting"));
-//            scheduleRecordRepository.saveAndFlush(EntityFactor.getScheduleRecord(
-//                    Timestamp.valueOf("2020-03-12 17:00:00"),
-//                    Timestamp.valueOf("2020-03-12 18:00:00"),
-//                    staffMap.get("cleaner4"),staffMap.get("manager1"),"Meeting"));
-            scheduleRecordRepository.saveAll(scheduleRecordMap.values());
-            scheduleRecordRepository.flush();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+            scheduleRecordRepository.saveAndFlush(EntityFactor.getScheduleRecord(
+                    Timestamp.valueOf("2020-03-12 07:00:00"),
+                    Timestamp.valueOf("2020-03-12 08:30:00"),
+                    staffMap.get("cleaner2"),staffMap.get("manager1"),"clean floor 2"));
+            scheduleRecordRepository.saveAndFlush(EntityFactor.getScheduleRecord(
+                    Timestamp.valueOf("2020-03-12 12:30:00"),
+                    Timestamp.valueOf("2020-03-12 13:00:00"),
+                    staffMap.get("cleaner1"),staffMap.get("manager1"),"clean floor 1"));
+            scheduleRecordRepository.saveAndFlush(EntityFactor.getScheduleRecord(
+                    Timestamp.valueOf("2020-03-12 11:00:00"),
+                    Timestamp.valueOf("2020-03-12 12:30:00"),
+                    staffMap.get("storeroomClerk3"),staffMap.get("manager1"),"checkListOfPotato"));
+            scheduleRecordRepository.saveAndFlush(EntityFactor.getScheduleRecord(
+                    Timestamp.valueOf("2020-03-12 08:00:00"),
+                    Timestamp.valueOf("2020-03-12 09:00:00"),
+                    staffMap.get("storeroomClerk3"),staffMap.get("manager1"),"buySomeThing"));
+            scheduleRecordRepository.saveAndFlush(EntityFactor.getScheduleRecord(
+                    Timestamp.valueOf("2020-03-12 17:00:00"),
+                    Timestamp.valueOf("2020-03-12 18:00:00"),
+                    staffMap.get("cleaner1"),staffMap.get("manager1"),"Meeting"));
+            scheduleRecordRepository.saveAndFlush(EntityFactor.getScheduleRecord(
+                    Timestamp.valueOf("2020-03-12 17:00:00"),
+                    Timestamp.valueOf("2020-03-12 18:00:00"),
+                    staffMap.get("cleaner2"),staffMap.get("manager1"),"Meeting"));
+            scheduleRecordRepository.saveAndFlush(EntityFactor.getScheduleRecord(
+                    Timestamp.valueOf("2020-03-12 17:00:00"),
+                    Timestamp.valueOf("2020-03-12 18:00:00"),
+                    staffMap.get("cleaner3"),staffMap.get("manager1"),"Meeting"));
+            scheduleRecordRepository.saveAndFlush(EntityFactor.getScheduleRecord(
+                    Timestamp.valueOf("2020-03-12 17:00:00"),
+                    Timestamp.valueOf("2020-03-12 18:00:00"),
+                    staffMap.get("cleaner4"),staffMap.get("manager1"),"Meeting"));
+        scheduleRecordRepository.saveAll(scheduleRecordMap.values());
+        scheduleRecordRepository.flush();
     }
 }

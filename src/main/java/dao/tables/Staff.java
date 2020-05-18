@@ -17,7 +17,7 @@ public class Staff implements Serializable {
     private static final long serialVersionUID = 8L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "staff_id")
+    @Column(name = "staff_id", updatable = false)
     private Integer staffID;
 
     @Column(name = "staff_name", length = 30, nullable = false, updatable = false)
@@ -35,14 +35,14 @@ public class Staff implements Serializable {
     private Time timeEndWorking;
     /********************************************************/
     //account foreign key
-    @OneToOne(mappedBy = "staff", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "staff", cascade = {CascadeType.REFRESH, CascadeType.REMOVE})
     private Account account;
 
     //schedule record foreign key
-    @OneToMany(mappedBy = "staff", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "staff", cascade = {CascadeType.REFRESH, CascadeType.REMOVE})
     private Set<ScheduleRecord> scheduleRecords = new HashSet<>();
 
     //operation record foreign key
-    @OneToMany(mappedBy = "staff", cascade = {CascadeType.REFRESH, CascadeType.MERGE, CascadeType.PERSIST})
+    @OneToMany(mappedBy = "staff", cascade = {CascadeType.REFRESH, CascadeType.REMOVE})
     private Set<OperationRecord> operationRecords = new HashSet<>();
 }

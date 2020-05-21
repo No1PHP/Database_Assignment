@@ -19,7 +19,6 @@ public abstract class DataInitializer {
     private static Map<String, Recipe> recipeMap = new HashMap<>();
     private static Map<String, Stall> stallMap = new HashMap<>();
     private static Map<String,MaterialOrder> materialOrderMap = new HashMap<>();
-    private static Map<Integer,TransactionRecord> transactionRecordMap = new HashMap<>();
     private static Map<Integer,ScheduleRecord> scheduleRecordMap = new HashMap<>();
     public static void run() {
         addAccessInfo();
@@ -145,6 +144,9 @@ public abstract class DataInitializer {
         recipeMap.put("鱼香肉丝",EntityFactor.getRecipe("鱼香肉丝",10.f,materialMap.get("carrot"),materialMap.get("pork"),materialMap.get("chicken")));
         recipeMap.put("牛肉酱",EntityFactor.getRecipe("牛肉酱",10.f,materialMap.get("beef")));
         recipeMap.put("腊肠饭",EntityFactor.getRecipe("腊肠饭",10.f,materialMap.get("beef"),materialMap.get("carrot"),materialMap.get("sausage"),materialMap.get("rice")));
+        recipeMap.put("土豆烧牛腩",EntityFactor.getRecipe("土豆烧牛腩",12.5f,materialMap.get("potato"),materialMap.get("Sirloin")));
+        recipeMap.put("鸡肉洋葱披萨",EntityFactor.getRecipe("鸡肉洋葱披萨",15.0f,
+                materialMap.get("chicken"),materialMap.get("onion"),materialMap.get("flower")));
         recipeRepository.saveAll(recipeMap.values());
         recipeRepository.flush();
     }
@@ -159,7 +161,12 @@ public abstract class DataInitializer {
                 recipeMap.get("小笼包"), recipeMap.get("馄饨")));
         stallMap.put("兰州拉面", EntityFactor.getStallWithRecipes("兰州拉面", 4, 3000,
                 recipeMap.get("兰州拉面")));
-        stallMap.put("家常菜",EntityFactor.getStallWithRecipes("家常菜",5,3000,recipeMap.get("鱼香肉丝"),recipeMap.get("牛肉酱"),recipeMap.get("腊肠饭")));
+        stallMap.put("家常菜",EntityFactor.getStallWithRecipes("家常菜",5,3000,
+                recipeMap.get("鱼香肉丝"),recipeMap.get("牛肉酱"),recipeMap.get("腊肠饭"),recipeMap.get("土豆烧牛腩")));
+        stallMap.put("川菜", EntityFactor.getStallWithRecipes("川菜", 6, 3000,
+                recipeMap.get("麻辣烫")));
+        stallMap.put("披萨",EntityFactor.getStallWithRecipes("披萨",7,3000,
+                recipeMap.get("鸡肉洋葱披萨")));
         stallRepository.saveAll(stallMap.values());
         stallRepository.flush();
     }
@@ -175,35 +182,51 @@ public abstract class DataInitializer {
                 materialMap.get("potato"),materialOrderRepository.findByOperationStorageID(materialOrderMap.get("potato1").getStorageRecord().getOperationID()),(float)(20*Math.random())));
         materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("广东风味"),
                 materialMap.get("egg"),materialOrderRepository.findByOperationStorageID(materialOrderMap.get("egg0").getStorageRecord().getOperationID()),(float)(20*Math.random())));
-//        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("自选美食"), materialMap.get("potato"), (float) (20*Math.random())));
-//        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("自选美食"), materialMap.get("chicken"), (float) (20*Math.random())));
-//        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("自选美食"), materialMap.get("carrot"), (float) (20*Math.random())));
-//        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("自选美食"), materialMap.get("pork"), (float) (20*Math.random())));
-//        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("自选美食"), materialMap.get("carrot"), (float) (20*Math.random())));
-//        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("自选美食"), materialMap.get("rice"), (float) (20*Math.random())));
-//        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("广东风味"), materialMap.get("rice"), (float) (20*Math.random())));
-//        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("广东风味"), materialMap.get("chicken"), (float) (20*Math.random())));
-//        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("广东风味"), materialMap.get("egg"), (float) (20*Math.random())));
-//        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("广东风味"), materialMap.get("pork"), (float) (20*Math.random())));
-//        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("广东风味"), materialMap.get("rice"), (float) (20*Math.random())));
-//        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("广东风味"), materialMap.get("chicken"), (float) (20*Math.random())));
-//        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("包子铺"), materialMap.get("flower"), (float) (20*Math.random())));
-//        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("包子铺"), materialMap.get("beef"), (float) (20*Math.random())));
-//        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("包子铺"), materialMap.get("cabbage"), (float) (20*Math.random())));
-//        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("包子铺"), materialMap.get("flower"), (float) (20*Math.random())));
-//        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("包子铺"), materialMap.get("flower"), (float) (20*Math.random())));
-//        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("兰州拉面"), materialMap.get("noodle"), (float) (20*Math.random())));
-//        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("兰州拉面"), materialMap.get("pork"), (float) (20*Math.random())));
-//        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("兰州拉面"), materialMap.get("noodle"), (float) (20*Math.random())));
-//        materialUsageRepository.flush();
+        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("家常菜"),
+                materialMap.get("potato"),materialOrderRepository.findByOperationStorageID(materialOrderMap.get("potato0").getStorageRecord().getOperationID()),(float)(10*Math.random())));
+        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("家常菜"),
+                materialMap.get("Sirloin"),materialOrderRepository.findByOperationStorageID(materialOrderMap.get("Sirloin0").getStorageRecord().getOperationID()),(float)(5*Math.random())));
+        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("兰州拉面"),
+                materialMap.get("pork"),materialOrderRepository.findByOperationStorageID(materialOrderMap.get("pork0").getStorageRecord().getOperationID()),(float)(5)));
+        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("兰州拉面"),
+                materialMap.get("noodle"),materialOrderRepository.findByOperationStorageID(materialOrderMap.get("noodle0").getStorageRecord().getOperationID()),(float)(7)));
+        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("兰州拉面"),
+                materialMap.get("pork"),materialOrderRepository.findByOperationStorageID(materialOrderMap.get("pork0").getStorageRecord().getOperationID()),(float)(5*2)));
+        materialUsageRepository.save(EntityFactor.getMaterialUsage(stallMap.get("兰州拉面"),
+                materialMap.get("noodle"),materialOrderRepository.findByOperationStorageID(materialOrderMap.get("noodle0").getStorageRecord().getOperationID()),(float)(7*2)));
+
     }
 
     private static void addTransactionRecord() {
         TransactionRecordRepository transactionRecordRepository = (TransactionRecordRepository) DAO_Type.TRANSACTION_RECORD.getTableRepository();
-        TransactionRecord temp_transactionRecord = EntityFactor.getTransactionRecord(1, recipeMap.get("小笼包").getPrice(),recipeMap.get("小笼包"),stallMap.get("包子铺"));
-        transactionRecordMap.put(temp_transactionRecord.getTransactionID(),temp_transactionRecord);
-        transactionRecordRepository.saveAll(transactionRecordMap.values());
-        transactionRecordRepository.flush();
+        transactionRecordRepository.saveAndFlush(EntityFactor.getTransactionRecord(1,
+                recipeMap.get("小笼包").getPrice(),
+                recipeMap.get("小笼包"),
+                stallMap.get("包子铺")));
+        transactionRecordRepository.saveAndFlush(EntityFactor.getTransactionRecord(1,
+                recipeMap.get("小笼包").getPrice(),
+                recipeMap.get("小笼包"),
+                stallMap.get("包子铺")));
+        transactionRecordRepository.saveAndFlush(EntityFactor.getTransactionRecord(2,
+                recipeMap.get("土豆鸡块").getPrice(),
+                recipeMap.get("土豆鸡块"),
+                stallMap.get("自选美食")));
+        transactionRecordRepository.saveAndFlush(EntityFactor.getTransactionRecord(1,
+                recipeMap.get("麻辣烫").getPrice(),
+                recipeMap.get("麻辣烫"),
+                stallMap.get("川菜")));
+        transactionRecordRepository.saveAndFlush(EntityFactor.getTransactionRecord(1,
+                recipeMap.get("土豆烧牛腩").getPrice(),
+                recipeMap.get("土豆烧牛腩"),
+                stallMap.get("家常菜")));
+        transactionRecordRepository.saveAndFlush(EntityFactor.getTransactionRecord(1,
+                recipeMap.get("兰州拉面").getPrice(),
+                recipeMap.get("兰州拉面"),
+                stallMap.get("兰州拉面")));
+        transactionRecordRepository.saveAndFlush(EntityFactor.getTransactionRecord(1,
+                recipeMap.get("兰州拉面").getPrice(),
+                recipeMap.get("兰州拉面"),
+                stallMap.get("兰州拉面")));
     }
 
     private static void addOperationRecord() {
@@ -222,63 +245,82 @@ public abstract class DataInitializer {
                 materialMap.get("egg"),(float)(450*Math.random())));
         materialOrderMap.put("potato1",EntityFactor.getMaterialOrder(staffMap.get("admin"),"potato1",
                 materialMap.get("potato"),(float)(100*Math.random())));
+        materialOrderMap.put("pork0",EntityFactor.getMaterialOrder(staffMap.get("admin"),"pork0",
+                materialMap.get("pork"),(float)(200*Math.random())));
+
+        materialOrderMap.put("egg1",EntityFactor.getMaterialOrder(staffMap.get("admin"),"egg1",
+                materialMap.get("egg"),(float)(100*Math.random())));
+        materialOrderMap.put("noodle0",EntityFactor.getMaterialOrder(staffMap.get("admin"),"noodle0",
+                materialMap.get("noodle"),(float)(200*Math.random())));
+        materialOrderMap.put("sausage0",EntityFactor.getMaterialOrder(staffMap.get("storeroomClerk1"),"sausage0",
+                materialMap.get("sausage"),(float)(300*Math.random())));
+        materialOrderMap.put("onion0",EntityFactor.getMaterialOrder(staffMap.get("storeroomClerk1"),"onion0",
+                materialMap.get("onion"),(float)(450*Math.random())));
+        materialOrderMap.put("Sirloin0",EntityFactor.getMaterialOrder(staffMap.get("admin"),"Sirloin0",
+                materialMap.get("Sirloin"),(float)(100*Math.random())));
+
 
         EntityFactor.confirmMaterialOrder(staffMap.get("admin"), "C_potato0",materialOrderMap.get("potato0"));
         EntityFactor.confirmMaterialOrder(staffMap.get("admin"), "C_rice0",materialOrderMap.get("rice0"));
         EntityFactor.confirmMaterialOrder(staffMap.get("storeroomClerk1"), "C_chicken0",materialOrderMap.get("chicken0"));
         EntityFactor.confirmMaterialOrder(staffMap.get("storeroomClerk1"), "C_egg0",materialOrderMap.get("egg0"));
         EntityFactor.confirmMaterialOrder(staffMap.get("admin"), "C_potato1",materialOrderMap.get("potato1"));
+        EntityFactor.confirmMaterialOrder(staffMap.get("storeroomClerk1"), "C_egg1",materialOrderMap.get("egg1"));
+        EntityFactor.confirmMaterialOrder(staffMap.get("storeroomClerk1"), "C_noodle0",materialOrderMap.get("noodle0"));
+        EntityFactor.confirmMaterialOrder(staffMap.get("storeroomClerk1"), "C_sausage0",materialOrderMap.get("sausage0"));
+        EntityFactor.confirmMaterialOrder(staffMap.get("storeroomClerk1"), "C_onion0",materialOrderMap.get("onion0"));
+        EntityFactor.confirmMaterialOrder(staffMap.get("storeroomClerk1"), "C_Sirloin0",materialOrderMap.get("Sirloin0"));
+        EntityFactor.confirmMaterialOrder(staffMap.get("storeroomClerk1"), "C_pork0",materialOrderMap.get("pork0"));
         materialOrderRepository.saveAll(materialOrderMap.values());
         materialOrderRepository.flush();
     }
 
     private static void addScheduleRecord() {
         ScheduleRecordRepository scheduleRecordRepository = (ScheduleRecordRepository) DAO_Type.SCHEDULE_RECORD.getTableRepository();
-        scheduleRecordMap.put(0,EntityFactor.getScheduleRecord(
+        scheduleRecordRepository.saveAndFlush(EntityFactor.getScheduleRecord(
                 Timestamp.valueOf("2020-03-12 08:00:00"),
                 Timestamp.valueOf("2020-03-12 13:00:00"),
                 staffMap.get("storeroomClerk4"),staffMap.get("manager1"),"checkListOfPotato"));
-            scheduleRecordMap.put(1,EntityFactor.getScheduleRecord(
-                    Timestamp.valueOf("2020-03-13 09:00:00"),
-                    Timestamp.valueOf("2020-03-13 15:00:00"),
-                    staffMap.get("storeroomClerk2"),staffMap.get("manager1"),"assign food to stall"));
-            scheduleRecordMap.put(2,EntityFactor.getScheduleRecord(
-                    Timestamp.valueOf("2020-03-14 13:00:00"),
-                    Timestamp.valueOf("2020-03-14 15:00:00"),
-                    staffMap.get("storeroomClerk2"),staffMap.get("manager1"),"assign food to stall"));
-
-            scheduleRecordRepository.saveAndFlush(EntityFactor.getScheduleRecord(
-                    Timestamp.valueOf("2020-03-12 07:00:00"),
-                    Timestamp.valueOf("2020-03-12 08:30:00"),
-                    staffMap.get("cleaner2"),staffMap.get("manager1"),"clean floor 2"));
-            scheduleRecordRepository.saveAndFlush(EntityFactor.getScheduleRecord(
-                    Timestamp.valueOf("2020-03-12 12:30:00"),
-                    Timestamp.valueOf("2020-03-12 13:00:00"),
-                    staffMap.get("cleaner1"),staffMap.get("manager1"),"clean floor 1"));
-            scheduleRecordRepository.saveAndFlush(EntityFactor.getScheduleRecord(
-                    Timestamp.valueOf("2020-03-12 11:00:00"),
-                    Timestamp.valueOf("2020-03-12 12:30:00"),
-                    staffMap.get("storeroomClerk3"),staffMap.get("manager1"),"checkListOfPotato"));
-            scheduleRecordRepository.saveAndFlush(EntityFactor.getScheduleRecord(
-                    Timestamp.valueOf("2020-03-12 08:00:00"),
-                    Timestamp.valueOf("2020-03-12 09:00:00"),
-                    staffMap.get("storeroomClerk3"),staffMap.get("manager1"),"buySomeThing"));
-            scheduleRecordRepository.saveAndFlush(EntityFactor.getScheduleRecord(
-                    Timestamp.valueOf("2020-03-12 17:00:00"),
-                    Timestamp.valueOf("2020-03-12 18:00:00"),
-                    staffMap.get("cleaner1"),staffMap.get("manager1"),"Meeting"));
-            scheduleRecordRepository.saveAndFlush(EntityFactor.getScheduleRecord(
-                    Timestamp.valueOf("2020-03-12 17:00:00"),
-                    Timestamp.valueOf("2020-03-12 18:00:00"),
-                    staffMap.get("cleaner2"),staffMap.get("manager1"),"Meeting"));
-            scheduleRecordRepository.saveAndFlush(EntityFactor.getScheduleRecord(
-                    Timestamp.valueOf("2020-03-12 17:00:00"),
-                    Timestamp.valueOf("2020-03-12 18:00:00"),
-                    staffMap.get("cleaner3"),staffMap.get("manager1"),"Meeting"));
-            scheduleRecordRepository.saveAndFlush(EntityFactor.getScheduleRecord(
-                    Timestamp.valueOf("2020-03-12 17:00:00"),
-                    Timestamp.valueOf("2020-03-12 18:00:00"),
-                    staffMap.get("cleaner4"),staffMap.get("manager1"),"Meeting"));
+        scheduleRecordRepository.saveAndFlush(EntityFactor.getScheduleRecord(
+                Timestamp.valueOf("2020-03-13 09:00:00"),
+                Timestamp.valueOf("2020-03-13 15:00:00"),
+                staffMap.get("storeroomClerk2"),staffMap.get("manager1"),"assign food to stall"));
+        scheduleRecordRepository.saveAndFlush(EntityFactor.getScheduleRecord(
+                Timestamp.valueOf("2020-03-14 13:00:00"),
+                Timestamp.valueOf("2020-03-14 15:00:00"),
+                staffMap.get("storeroomClerk2"),staffMap.get("manager1"),"assign food to stall"));
+        scheduleRecordRepository.saveAndFlush(EntityFactor.getScheduleRecord(
+                Timestamp.valueOf("2020-03-12 07:00:00"),
+                Timestamp.valueOf("2020-03-12 08:30:00"),
+                staffMap.get("cleaner2"),staffMap.get("manager1"),"clean floor 2"));
+        scheduleRecordRepository.saveAndFlush(EntityFactor.getScheduleRecord(
+                Timestamp.valueOf("2020-03-12 12:30:00"),
+                Timestamp.valueOf("2020-03-12 13:00:00"),
+                staffMap.get("cleaner1"),staffMap.get("manager1"),"clean floor 1"));
+        scheduleRecordRepository.saveAndFlush(EntityFactor.getScheduleRecord(
+                Timestamp.valueOf("2020-03-12 11:00:00"),
+                Timestamp.valueOf("2020-03-12 12:30:00"),
+                staffMap.get("storeroomClerk3"),staffMap.get("manager1"),"checkListOfPotato"));
+        scheduleRecordRepository.saveAndFlush(EntityFactor.getScheduleRecord(
+                Timestamp.valueOf("2020-03-12 08:00:00"),
+                Timestamp.valueOf("2020-03-12 09:00:00"),
+                staffMap.get("storeroomClerk3"),staffMap.get("manager1"),"buySomeThing"));
+        scheduleRecordRepository.saveAndFlush(EntityFactor.getScheduleRecord(
+                Timestamp.valueOf("2020-03-12 17:00:00"),
+                Timestamp.valueOf("2020-03-12 18:00:00"),
+                staffMap.get("cleaner1"),staffMap.get("manager1"),"Meeting"));
+        scheduleRecordRepository.saveAndFlush(EntityFactor.getScheduleRecord(
+                Timestamp.valueOf("2020-03-12 17:00:00"),
+                Timestamp.valueOf("2020-03-12 18:00:00"),
+                staffMap.get("cleaner2"),staffMap.get("manager1"),"Meeting"));
+        scheduleRecordRepository.saveAndFlush(EntityFactor.getScheduleRecord(
+                Timestamp.valueOf("2020-03-12 17:00:00"),
+                Timestamp.valueOf("2020-03-12 18:00:00"),
+                staffMap.get("cleaner3"),staffMap.get("manager1"),"Meeting"));
+        scheduleRecordRepository.saveAndFlush(EntityFactor.getScheduleRecord(
+                Timestamp.valueOf("2020-03-12 17:00:00"),
+                Timestamp.valueOf("2020-03-12 18:00:00"),
+                staffMap.get("cleaner4"),staffMap.get("manager1"),"Meeting"));
         scheduleRecordRepository.saveAll(scheduleRecordMap.values());
         scheduleRecordRepository.flush();
     }

@@ -46,12 +46,12 @@ public class TransactionRecord implements Serializable {
     private Float transactionPrice;
     /********************************************************/
     //transaction record foreign key
-    @ManyToOne(targetEntity = Recipe.class, cascade = {CascadeType.REFRESH, CascadeType.MERGE})
+    @ManyToOne(targetEntity = Recipe.class, cascade = {CascadeType.REFRESH})
     @JoinColumn(name = "recipeName", referencedColumnName = "recipeName")
     private Recipe recipe;
 
     //transaction record foreign key
-    @ManyToOne(targetEntity = Stall.class, optional = false, cascade = {CascadeType.REFRESH, CascadeType.MERGE})
+    @ManyToOne(targetEntity = Stall.class, optional = false, cascade = {CascadeType.REFRESH})
     @JoinColumn(name = "stall_name", referencedColumnName = "stall_name")
     private Stall stall;
 }

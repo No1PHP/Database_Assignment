@@ -34,12 +34,12 @@ public class ScheduleRecord implements Serializable {
     private Timestamp timeScheduledToEndWorking;
     /********************************************************/
     //schedule record foreign key
-    @ManyToOne(targetEntity = Staff.class, optional = false, cascade = {CascadeType.MERGE, CascadeType.REFRESH})
+    @ManyToOne(targetEntity = Staff.class, optional = false, cascade = {CascadeType.REFRESH})
     @JoinColumn(name = "staff_id", referencedColumnName = "staff_id")
     private Staff staff;
 
     //schedule record foreign key
-    @OneToOne(targetEntity = OperationRecord.class, optional = false, cascade = {CascadeType.REFRESH, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REMOVE})
+    @OneToOne(targetEntity = OperationRecord.class, optional = false, cascade = {CascadeType.REFRESH, CascadeType.MERGE, CascadeType.REMOVE})
     @JoinColumn(name = "op_ID", referencedColumnName = "operationId")
     private OperationRecord operationRecord;
 }

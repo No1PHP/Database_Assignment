@@ -15,6 +15,12 @@ public interface RecipeRepository extends JpaRepository<Recipe, Integer>, JpaSpe
 
     List<Recipe> findALLByPriceBetween(float min, float max);
 
-    @Query(value = "select r, sum(t.numbers) from Recipe r left join TransactionRecord t with r.recipeName = t.recipeName where t.transactionTime >= ?1 and t.transactionTime <= ?2 group by r.recipeName order by sum(t.numbers)")
+    @Query(value = "select r, sum(t.numbers) " +
+            "from Recipe r " +
+            "left join TransactionRecord t with r.recipeName = t.recipeName " +
+            "where t.transactionTime >= ?1 " +
+            "and t.transactionTime <= ?2 " +
+            "group by r.recipeName " +
+            "order by sum(t.numbers) desc")
     List<Object[]> findSalesOrderDuring(Timestamp from, Timestamp to);
 }

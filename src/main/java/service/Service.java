@@ -10,11 +10,11 @@ import service.exceptions.IllegalRequestException;
 import service.exceptions.RestrictedOperationException;
 
 import javax.persistence.criteria.*;
-import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.*;
 
+@org.springframework.stereotype.Service
 public class Service {
     private static final ScheduleRecordRepository scheduleRecordRepository = (ScheduleRecordRepository) DAO_Type.SCHEDULE_RECORD.getTableRepository();
     private static final MaterialOrderRepository materialOrderRepository = (MaterialOrderRepository) DAO_Type.MATERIAL_ORDER.getTableRepository();
@@ -125,10 +125,6 @@ public class Service {
         if (!account.getAccessInfo().getPosition().equals("admin")) throw new IllegalRequestException();
 
         Stall stall = stallRepository.findByStallName(name);
-        Set<Recipe> recipes = stall.getRecipes();
-        for (Recipe e : recipes)
-            e.getStalls().remove(stall);
-        recipeRepository.saveAll(recipes);
         stall.getRecipes().clear();
         stallRepository.saveAndFlush(stall);
         stallRepository.delete(stall);
@@ -240,7 +236,7 @@ public class Service {
      * @throws RestrictedOperationException current operation cannot be applied
      */
     public AccessInfo saveAccessInfo(String position, boolean accessToMaterial, boolean accessToStaff, boolean accessToStall) throws IllegalRequestException, RestrictedOperationException {
-        if (account.getAccessInfo().getPosition().equals("admin")) throw new IllegalRequestException();
+        if (!account.getAccessInfo().getPosition().equals("admin")) throw new IllegalRequestException();
         if (position.equals("none") || position.equals("admin")) throw new RestrictedOperationException("cannot update this access info!");
 
         AccessInfo accessInfo = accessInfoRepository.findByPosition(position);
@@ -261,11 +257,11 @@ public class Service {
      * @throws RestrictedOperationException current operation cannot be applied
      */
     public void removeAccessInfo(String position) throws IllegalRequestException, RestrictedOperationException {
-        if (account.getAccessInfo().getPosition().equals("admin")) throw new IllegalRequestException();
+        if (!account.getAccessInfo().getPosition().equals("admin")) throw new IllegalRequestException();
         if (position.equals("none") || position.equals("admin")) throw new RestrictedOperationException("cannot remove this access info!");
 
         AccessInfo accessInfo = accessInfoRepository.findByPosition(position);
-        if (accessInfo != null) {
+        if (accessInfo != null && accessInfo.getAccounts().size() == 0) {
             accessInfoRepository.delete(accessInfo);
             accessInfoRepository.flush();
         }
@@ -282,8 +278,10 @@ public class Service {
     public float getMaterialAvailableAmount(String materialName) throws IllegalRequestException {
         if (!account.getAccessInfo().getAccessToMaterial()) throw new IllegalRequestException();
 
-        Material material = materialRepository.findByName(materialName);
-        return (material == null)? 0 : material.getAvailableAmount();
+        Timestamp limit = getTimeLimit(materialRepository.findByName(materialName), 0);
+        Float ordered = materialOrderRepository.findAvailableByName(materialName, limit);
+        Float used = materialUsageRepository.getUsageOf(materialName, limit);
+        return (ordered == null || used == null)? 0 : ordered - used;
     }
 
     /**
@@ -316,7 +314,8 @@ public class Service {
         if (!account.getAccessInfo().getAccessToMaterial()) throw new IllegalRequestException();
 
         Material material = materialRepository.findByName(materialName);
-        return materialUsageRepository.getTotalUsageByTimeBetween(material.getName(), from, until);
+        Float result = materialUsageRepository.getTotalUsageByTimeBetween(material.getName(), from, until);
+        return (result == null)? 0 : result;
     }
 
     /**
@@ -338,7 +337,7 @@ public class Service {
     public float getMaterialUsagePrediction(String materialName) throws IllegalRequestException {
         if (!account.getAccessInfo().getAccessToMaterial()) throw new IllegalRequestException();
 
-        return getMaterialUsageBetween(materialName, new Timestamp(System.currentTimeMillis() - 2592000000L),  new Timestamp(System.currentTimeMillis()));
+        return getMaterialUsageBetween(materialName, new Timestamp(System.currentTimeMillis() - 2592000000L),  new Timestamp(System.currentTimeMillis()+1000));
     }
 
     /**
@@ -349,10 +348,10 @@ public class Service {
     public Map<String, Float> getALLMaterialBelow(float amount) throws IllegalRequestException {
         if (!account.getAccessInfo().getAccessToMaterial()) throw new IllegalRequestException();
 
-        List<Material> materials = materialRepository.findALLByAvailableAmountBetween(0, amount);
-        Map<String, Float> result = new HashMap<>(materials.size());
+        Map<String, Float> result = new HashMap<>();
+        List<Material> materials = materialRepository.findAll();
         for (Material e : materials) {
-            result.put(e.getName(), e.getAvailableAmount());
+            result.put(e.getName(), getMaterialAvailableAmount(e.getName()));
         }
         return result;
     }
@@ -456,24 +455,12 @@ public class Service {
     public List<MaterialOrder> findMaterialOrderOutOfDate(Material material, int limit) throws IllegalRequestException {
         if (!account.getAccessInfo().getAccessToMaterial() || material == null) throw new IllegalRequestException();
 
-        LinkedList<MaterialOrder> result = new LinkedList<>();
-        Set<MaterialOrder> orders = material.getMaterialOrders();
-        for (MaterialOrder e : orders) {
-            if (e.getStorageRecord() == null) continue;
-            if (usedUp(e)) continue;
-            Timestamp earliest = new Timestamp((long) (System.currentTimeMillis() - 86400000L * (material.getAvailablePeriod() - limit)));
-            if (e.getStorageRecord().getOperationTime().after(earliest)) continue;
-            result.addLast(e);
-        }
-        return result;
+        Timestamp timeLimit = getTimeLimit(material, limit);
+        return materialOrderRepository.findAllOutOfDate(material.getName(), timeLimit);
     }
 
-    private boolean usedUp(MaterialOrder materialOrder) {
-        float used = 0;
-        for (MaterialUsage e : materialOrder.getMaterialUsages()) {
-            used += e.getAmount();
-        }
-        return used >= materialOrder.getMaterialAmount();
+    private Timestamp getTimeLimit(Material material, int limit) {
+        return new Timestamp((long) (System.currentTimeMillis() - 86400000L * (material.getAvailablePeriod() - limit)));
     }
     /* ****************************************************** */
     //stall services
@@ -491,27 +478,27 @@ public class Service {
         Stall stall = stallRepository.findByStallName(stallName);
         if (stall == null) throw new RestrictedOperationException("no such stall!");
 
-        for (String e : recipes) {
-            Recipe recipe = recipeRepository.findByRecipeName(e);
-            stall.getRecipes().add(recipe);
-            recipe.getStalls().add(stall);
-        }
+        for (String e : recipes)
+            stall.getRecipes().add(recipeRepository.findByRecipeName(e));
         stallRepository.saveAndFlush(stall);
         return stall;
     }
+    public Stall addRecipeForStall(String stallName, String... recipes) throws IllegalRequestException, RestrictedOperationException {
+        return addRecipeForStall(stallName, Arrays.asList(recipes));
+    }
 
-    public Stall removeRecipeFromStall(String stallName, Iterable<String> recipes) throws IllegalRequestException, RestrictedOperationException  {
+    public Stall removeRecipeFromStall(String stallName, Collection<String> recipes) throws IllegalRequestException, RestrictedOperationException  {
         if (!account.getAccessInfo().getAccessToStall()) throw new IllegalRequestException();
         Stall stall = stallRepository.findByStallName(stallName);
         if (stall == null) throw new RestrictedOperationException("no such stall!");
 
-        for (String e : recipes) {
-            Recipe recipe = recipeRepository.findByRecipeName(e);
-            stall.getRecipes().remove(recipe);
-            recipe.getStalls().remove(stall);
-        }
+        stall.getRecipes().removeIf(recipe -> recipes.contains(recipe.getRecipeName()));
         stallRepository.saveAndFlush(stall);
         return stall;
+    }
+
+    public Stall removeRecipeFromStall(String stallName, String... recipes) throws IllegalRequestException, RestrictedOperationException  {
+        return removeRecipeFromStall(stallName, Arrays.asList(recipes));
     }
 
     /**
@@ -602,7 +589,8 @@ public class Service {
         if (!account.getAccessInfo().getAccessToStall()) throw new IllegalRequestException();
         if (stallRepository.findByStallName(stallName) == null) throw new RestrictedOperationException("no such stall!");
 
-        return transactionRecordRepository.getProfitOfStallDuring(stallName, from, to);
+        Float result = transactionRecordRepository.getProfitOfStallDuring(stallName, from, to);
+        return (result == null)? 0 : result;
     }
 
     /**
@@ -629,11 +617,11 @@ public class Service {
      * @throws IllegalRequestException current account doesn't have the permission
      * @throws RestrictedOperationException current operation cannot be applied
      */
-    public Set<TransactionRecord> getTransactionRecordDuring(String stallName, Date from, Date to) throws IllegalRequestException, RestrictedOperationException {
+    public List<TransactionRecord> getTransactionRecordDuring(String stallName, Timestamp from, Timestamp to) throws IllegalRequestException, RestrictedOperationException {
         if (!account.getAccessInfo().getAccessToStall()) throw new IllegalRequestException();
         Stall stall = stallRepository.findByStallName(stallName);
         if (stall == null) throw new RestrictedOperationException("no such stall!");
-        return stall.getTransactionRecords();
+        return transactionRecordRepository.findALLByStallNameAndTransactionTimeBetween(stallName, from, to);
     }
     /* ****************************************************** */
     //staff services
@@ -671,7 +659,7 @@ public class Service {
     public List<ScheduleRecord> getScheduleRecord(int id, Timestamp before) throws IllegalRequestException {
         if (!account.getAccessInfo().getAccessToStaff()) throw new IllegalRequestException();
 
-        return scheduleRecordRepository.findByOperationIDAndTimeScheduledToStartWorkingAfterOrderByTimeScheduledToStartWorkingDesc(id, before);
+        return scheduleRecordRepository.findByStaffIDAndTimeScheduledToStartWorkingAfterOrderByTimeScheduledToStartWorkingDesc(id, before);
     }
 
     /**

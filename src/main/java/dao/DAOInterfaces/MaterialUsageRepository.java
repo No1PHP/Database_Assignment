@@ -28,4 +28,10 @@ public interface MaterialUsageRepository extends JpaRepository<MaterialUsage, In
 
     @Query(value = "select SUM(amount) from MaterialUsage where materialName = ?1 and time >= ?2 and time <= ?3")
     Float getTotalUsageByTimeBetween(String materialName, Timestamp from, Timestamp to);
+
+    @Query(value = "select sum(u.amount) from MaterialUsage u " +
+            "join MaterialOrder o with u.storageID = o.operationStorageID " +
+            "join OperationRecord r with o.operationStorageID = r.operationID " +
+            "where u.materialName = ?1 and u.time >= ?2")
+    Float getUsageOf(String materialName, Timestamp after);
 }

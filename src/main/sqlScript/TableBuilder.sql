@@ -21,7 +21,6 @@ CREATE TABLE Material (
     `name`                  CHAR(30) PRIMARY KEY,
     `type`                  TINYINT NOT NULL,
     `unit_price`            FLOAT NOT NULL,
-    `availableAmount`       FLOAT NOT NULL DEFAULT 0,
     `availableTime`         FLOAT NOT NULL
 ) ENGINE = InnoDB DEFAULT CHARSET=utf8;
 

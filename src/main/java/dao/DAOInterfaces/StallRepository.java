@@ -27,6 +27,12 @@ public interface StallRepository extends JpaRepository<Stall, Integer>, JpaSpeci
 
     List<Stall> findALLByAveSalesIncomeBetween(float min, float max);
 
-    @Query(value = "select s, sum(t.numbers) from Stall s left join TransactionRecord t with s.stallName = t.stallName where t.transactionTime >= ?1 and t.transactionTime <= ?2 group by t.stallName order by sum(t.numbers)")
+    @Query(value = "select s, sum(t.numbers) " +
+            "from Stall s " +
+            "left join TransactionRecord t with s.stallName = t.stallName " +
+            "where t.transactionTime >= ?1 " +
+            "and t.transactionTime <= ?2 " +
+            "group by t.stallName " +
+            "order by sum(t.numbers) desc")
     List<Object[]> findSalesDuring(Timestamp from, Timestamp to);
 }

@@ -26,9 +26,6 @@ public class Material implements Serializable {
     @Column(name = "unit_price", nullable = false)
     private Float unitPrice;
 
-    @Column(name = "availableAmount")
-    private Float availableAmount = 0.0F;
-
     //fresh period
     @Column(name = "availableTime", nullable = false)
     private Float availablePeriod;

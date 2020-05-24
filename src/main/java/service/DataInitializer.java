@@ -46,15 +46,6 @@ public abstract class DataInitializer {
         addMaterialUsage();
         addTransactionRecord();
         addScheduleRecord();
-
-        accessInfoMap = null;
-        staffMap = null;
-        accountMap = null;
-        materialMap = null;
-        recipeMap = null;
-        stallMap = null;
-        materialOrderMap = null;
-        scheduleRecordMap = null;
     }
 
     private static void addAccessInfo() {

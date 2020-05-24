@@ -20,6 +20,8 @@ public interface TransactionRecordRepository extends JpaRepository<TransactionRe
 
     List<TransactionRecord> findALLByTransactionTimeBetween(Timestamp from, Timestamp to);
 
+    List<TransactionRecord> findALLByStallNameAndTransactionTimeBetween(String name, Timestamp from, Timestamp to);
+
     @Query(value = "select SUM(numbers) from TransactionRecord where transactionTime >= ?1 and transactionTime <= ?2")
     Integer findALLTotalSalesByTransactionTimeBetween(Timestamp from, Timestamp to);
 

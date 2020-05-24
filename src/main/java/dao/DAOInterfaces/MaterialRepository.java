@@ -15,7 +15,5 @@ public interface MaterialRepository extends JpaRepository<Material, Integer>, Jp
 
     List<Material> findALLByUnitPriceBetween(float min, float max);
 
-    List<Material> findALLByAvailableAmountBetween(float min, float max);
-
     Material removeByName(String name);
 }

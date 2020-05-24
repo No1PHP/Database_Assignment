@@ -33,6 +33,6 @@ public class AccessInfo implements Serializable {
     private Boolean accessToStall;
     /********************************************************/
     //account foreign key
-    @OneToMany(mappedBy = "accessInfo", cascade = {CascadeType.MERGE, CascadeType.REFRESH})
+    @OneToMany(mappedBy = "accessInfo", cascade = {CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.EAGER)
     private Set<Account> accounts = new HashSet<>();
 }

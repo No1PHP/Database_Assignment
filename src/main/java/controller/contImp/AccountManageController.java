@@ -19,6 +19,7 @@ import static constants.globalConstants.SERVICE;
 
 /**
  * @description Login Operation Management
+ * 包括：登录，登出，修改密码
  * @note !!!post 请求直接url访问会405，
  * 要配合表单提交或其他action---如：index.html中<form action ="/loginPage",method="post"></form>
  * @create 2020-04-29-18-17
@@ -26,7 +27,6 @@ import static constants.globalConstants.SERVICE;
 @Controller
 @RequestMapping(value = "./")//访问路径 未定
 public class AccountManageController {
-
 
     /**
     * @author Zhining
@@ -57,14 +57,16 @@ public class AccountManageController {
         if(loginSucceeded) {
             SERVICE = Service.connect(log.getAccountName(),log.getPasswordValue());
         }
+
         String statusMessage = loginSucceeded?"login success":"login failed";
         LOGIN_STATUS = loginSucceeded;
         map.put("status",statusMessage);
-
+        //前端检查response.data.statusMessage是否为success
 
         //3 接受service返回的对象，return
         return map;
     }
+
 
 
 
@@ -78,7 +80,7 @@ public class AccountManageController {
      * @return map
      * @create 2020/5/1 1:25 上午
      **/
-    @RequestMapping(value = "/loginPage",method = RequestMethod.POST)
+    @RequestMapping(value = "/passwordChanging",method = RequestMethod.POST)
     @ResponseBody
     private Map<String,Object> passwordChanging(HttpServletRequest request){
         Map<String, Object> map = new HashMap<String, Object>();

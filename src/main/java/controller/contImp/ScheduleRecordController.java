@@ -6,6 +6,7 @@ import controller.contImp.controllerProperties.PageTurningFunction;
 import controller.model.Operation;
 import controller.model.PageInfo;
 import dao.tables.ScheduleRecord;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,13 +23,15 @@ import static constants.globalConstants.SERVICE;
  * @description
  * @create 2020-05-12-15-01
  **/
+@RequestMapping(value = "./Schedule")
+@Controller
 public class ScheduleRecordController implements PageTurningFunction {
 
     /**
      * @param request
      * @return Map
      * @author Zhining
-     * @description 处理增删改菜谱信息的请求
+     * @description 处理增删改职工排期信息的请求
      * @RequestJson {operationID:'',staffID:'',
      * operationType:'',note:'',
      * operationTime:'',willSendUpdateMessage:''}
@@ -127,7 +130,7 @@ public class ScheduleRecordController implements PageTurningFunction {
         }
 
         //打包
-
+        //TODO:调用service
 
         return map;
     }

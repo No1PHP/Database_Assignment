@@ -1,5 +1,6 @@
 package service;
 
+import com.sun.tools.corba.se.idl.constExpr.Times;
 import dao.DAOInterfaces.*;
 import dao.DAO_Type;
 import dao.enums.MaterialTypes;
@@ -691,45 +692,36 @@ public class Service {
     }
 
     public List<OperationRecord> getOwnOperationRecord() {
-        List<OperationRecord> OwnOperationRecord = operationRecordRepository.findALLByStaffID(account.getStaffID());
-        return OwnOperationRecord;
+        return operationRecordRepository.findALLByStaffID(account.getStaffID());
     }
 
     public List<ScheduleRecord> getOwnScheduleRecord(boolean showFinished) {
-        if(showFinished){
-            List<ScheduleRecord> OwnScheduleRecord = scheduleRecordRepository.findByStaffIDAndTimeScheduledToStartWorkingAfterOrderByTimeScheduledToStartWorkingDesc(account.getStaffID());
-            return OwnScheduleRecord;
-        }
-       else{
-            List<ScheduleRecord> OwnScheduleRecordStartWorking = scheduleRecordRepository.findFirst20ByStaffIDOrderByTimeScheduledToStartWorkingDesc(account.getStaffID());
-            List<ScheduleRecord> OwnScheduleRecord = scheduleRecordRepository.findFirst20ByStaffIDOrderByTimeScheduledToEndWorkingDesc(account.getStaffID());
-            OwnScheduleRecord.addAll(OwnScheduleRecordStartWorking);
-            return OwnScheduleRecord;
-       }
+        Timestamp time = (showFinished)?  new Timestamp(0) : new Timestamp(System.currentTimeMillis());
+        return scheduleRecordRepository.findByStaffIDAndTimeScheduledToStartWorkingAfterOrderByTimeScheduledToStartWorkingDesc(account.getStaffID(), time);
     }
 
-    public boolean getMaterialForStall(String materialName, String stallName, float amount) {
-        List<MaterialUsage> Material = materialUsageRepository.findALLByMaterialName(materialName);
-        for(MaterialUsage materialUsage : Material){
-            if(materialUsage.getStall().getStallName() == stallName){
-               if(materialUsage.getAmount() >= amount){
-                   MaterialUsage newMaterial = EntityFactor.getMaterialUsage(materialUsage.getStall(),materialUsage.getMaterial(),materialUsage.getMaterialOrder(),materialUsage.getAmount() - amount);
-                   materialUsageRepository.delete(materialUsage);
-                   materialUsageRepository.save(newMaterial);
-                   return true;
-               }
-               else{
-                   System.out.println("Don't have so much material!");
-                   return false;
-               }
-            }
-            else {
-                System.out.println("Don't have such material!");
-                return false;
+    public MaterialUsage getMaterialForStall(String materialName, String stallName, float amount) {
+        Material material = materialRepository.findByName(materialName);
+        Stall stall = stallRepository.findByStallName(stallName);
+        if (material == null || stall == null) throw new RestrictedOperationException("no such material or stall!");
+
+        Timestamp limit = getTimeLimit(material, 0);
+        MaterialUsage materialUsage = null;
+        List<MaterialOrder> materialOrders = materialOrderRepository.findAllUpToDate(materialName, limit);
+        for (MaterialOrder e : materialOrders) {
+            Float used = materialOrderRepository.getUsedAmount(e.getOperationStorageID());
+            used = (used == null)? 0 : used;
+            if (e.getMaterialAmount() - used - amount >= 0) {
+                materialUsage = EntityFactor.getMaterialUsage(stall, material, e, amount);
+                materialUsageRepository.saveAndFlush(materialUsage);
+                break;
+            } else {
+                materialUsage = EntityFactor.getMaterialUsage(stall, material, e, e.getMaterialAmount() - used);
+                materialUsageRepository.saveAndFlush(materialUsage);
+                amount = amount - (e.getMaterialAmount() - used);
             }
         }
-        System.out.println("Don't have such material!");
-        return false;
+        return materialUsage;
     }
 
     public TransactionRecord stallSell(String recipeName, String stallName, int amount, float price) {

@@ -80,13 +80,14 @@ public class Service {
      * @param name material name
      * @throws IllegalRequestException current account doesn't have the permission
      */
-    public void removeMaterial(String name) throws IllegalRequestException, RestrictedOperationException {
+    public Material removeMaterial(String name) throws IllegalRequestException, RestrictedOperationException {
         if (!account.getAccessInfo().getPosition().equals("admin")) throw new IllegalRequestException();
         Material material = materialRepository.findByName(name);
         if (material.getRecipes().size() >= 1) throw new RestrictedOperationException("material "+name+" still has relevant recipe!");
 
-        materialRepository.deleteByName(name);
+        materialRepository.delete(material);
         materialRepository.flush();
+        return material;
     }
 
     /**
@@ -184,7 +185,7 @@ public class Service {
         if (staff.getStaffName().equals("none") || staff.getStaffCategory() == StaffCategoryTypes.ADMIN.ordinal())
             throw new RestrictedOperationException("cannot delete this staff!");
 
-        Set<OperationRecord> operationRecords = staff.getOperationRecords();
+        List<OperationRecord> operationRecords = operationRecordRepository.findALLByStaffID(staff.getStaffID());
         Staff none = staffRepository.findALLByStaffName("none").get(0);
         for (OperationRecord e : operationRecords) {
             e.setStaff(none);

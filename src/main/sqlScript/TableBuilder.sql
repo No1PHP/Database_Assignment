@@ -96,7 +96,7 @@ CREATE TABLE MaterialOrder (
     PRIMARY KEY (`op_OrderID`),
     FOREIGN KEY(`material_name`) REFERENCES Material(`name`) ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY(`op_OrderID`) REFERENCES OperationRecord(`operationId`) ON UPDATE CASCADE ON DELETE CASCADE ,
-    FOREIGN KEY(`op_StorageID`) REFERENCES OperationRecord(`operationId`) ON UPDATE CASCADE ON DELETE RESTRICT
+    FOREIGN KEY(`op_StorageID`) REFERENCES OperationRecord(`operationId`) ON UPDATE CASCADE ON DELETE CASCADE
 ) ENGINE = InnoDB DEFAULT CHARSET=utf8;
 
 -- 有时间

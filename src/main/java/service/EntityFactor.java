@@ -6,6 +6,7 @@ import dao.enums.MaterialTypes;
 import dao.enums.OperationType;
 import dao.enums.StaffCategoryTypes;
 import dao.tables.*;
+import org.springframework.stereotype.Service;
 
 import java.sql.Time;
 import java.sql.Timestamp;
@@ -16,6 +17,7 @@ import java.util.Collection;
 /**
  * provide useful methods to generate table entities
  */
+@Service
 public abstract class EntityFactor {
     private static final ScheduleRecordRepository scheduleRecordRepository = (ScheduleRecordRepository) DAO_Type.SCHEDULE_RECORD.getTableRepository();
     private static final MaterialOrderRepository materialOrderRepository = (MaterialOrderRepository) DAO_Type.MATERIAL_ORDER.getTableRepository();
@@ -65,9 +67,7 @@ public abstract class EntityFactor {
         account.setPasswordHashValue(passwordHashValue);
         account.setStaffID(staff.getStaffID());
         account.setStaff(staff);
-        staff.setAccount(account);
         account.setAccessInfo(accessInfo);
-        accessInfo.getAccounts().add(account);
         return account;
     }
 
@@ -112,7 +112,6 @@ public abstract class EntityFactor {
         MaterialOrder materialOrder = new MaterialOrder();
         materialOrder.setOperationOrderID(operationRecord.getOperationID());
         materialOrder.setMaterial(material);
-        material.getMaterialOrders().add(materialOrder);
         materialOrder.setMaterialAmount(materialAmount);
         materialOrder.setOrderRecord(operationRecord);
         operationRecord.setOrderedMaterialRecord(materialOrder);
@@ -136,7 +135,6 @@ public abstract class EntityFactor {
         operationRecordRepository.saveAndFlush(operationRecord);
 
         materialOrder.setStorageRecord(operationRecord);
-        operationRecord.setStorageMaterialRecord(materialOrder);
         return materialOrder;
     }
 
@@ -158,7 +156,6 @@ public abstract class EntityFactor {
         operationRecord.setStaff(staff);
         operationRecord.setWillSendUpdateMessage(sendMessage);
         operationRecord.setNote(note);
-        staff.getOperationRecords().add(operationRecord);
         return operationRecord;
     }
 
@@ -177,9 +174,6 @@ public abstract class EntityFactor {
         recipe.setRecipeName(recipeName);
         recipe.setPrice(price);
         recipe.getMaterials().addAll(materials);
-        for (Material e : materials) {
-            e.getRecipes().add(recipe);
-        }
         return recipe;
     }
 
@@ -209,7 +203,6 @@ public abstract class EntityFactor {
         scheduleRecord.setTimeScheduledToStartWorking(start);
         scheduleRecord.setTimeScheduledToEndWorking(end);
         scheduleRecord.setStaff(targetStaff);
-        targetStaff.getScheduleRecords().add(scheduleRecord);
         scheduleRecord.setOperationRecord(operationRecord);
         scheduleRecord.setOperationID(operationRecord.getOperationID());
 //        scheduleRecord.setStaffID(manager.getStaffID());
@@ -292,9 +285,6 @@ public abstract class EntityFactor {
     protected static Stall getStallWithRecipes(String stallName, int stallLocation, float stallRent, Collection<Recipe> recipes) {
         Stall stall = getStall(stallName, stallLocation, stallRent);
         stall.getRecipes().addAll(recipes);
-        for (Recipe e : recipes) {
-            e.getStalls().add(stall);
-        }
         return stall;
     }
 
@@ -319,9 +309,7 @@ public abstract class EntityFactor {
         transactionRecord.setNumbers(amount);
         transactionRecord.setTransactionPrice(price);
         transactionRecord.setRecipe(recipe);
-        recipe.getTransactionRecords().add(transactionRecord);
         transactionRecord.setStall(stall);
-        stall.getTransactionRecords().add(transactionRecord);
         return transactionRecord;
     }
 
@@ -336,11 +324,8 @@ public abstract class EntityFactor {
         MaterialUsage materialUsage = new MaterialUsage();
         materialUsage.setAmount(amount);
         materialUsage.setStall(stall);
-        stall.getMaterialUsages().add(materialUsage);
         materialUsage.setMaterial(material);
-        material.getMaterialUsages().add(materialUsage);
         materialUsage.setMaterialOrder(materialOrder);
-        materialOrder.getMaterialUsages().add(materialUsage);
         return materialUsage;
     }
 }

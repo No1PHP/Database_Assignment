@@ -50,10 +50,10 @@ public class OperationRecord implements Serializable {
     private MaterialOrder orderedMaterialRecord;
 
     //material order foreign key
-    @OneToOne(mappedBy = "storageRecord", cascade = {CascadeType.REFRESH})
+    @OneToOne(mappedBy = "storageRecord", cascade = {CascadeType.REFRESH, CascadeType.REMOVE})
     private MaterialOrder storageMaterialRecord;
 
     //schedule record foreign key
-    @OneToOne(mappedBy = "operationRecord", cascade = {CascadeType.REFRESH, CascadeType.REMOVE})
+    @OneToOne(mappedBy = "operationRecord", cascade = {CascadeType.REFRESH, CascadeType.REMOVE}, fetch = FetchType.LAZY)
     private ScheduleRecord scheduleRecord;
 }

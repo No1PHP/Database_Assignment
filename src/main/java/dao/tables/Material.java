@@ -37,7 +37,7 @@ public class Material implements Serializable {
     @OneToMany(mappedBy = "material", cascade = CascadeType.ALL)
     private Set<MaterialOrder> materialOrders = new HashSet<>();
 
-    @ManyToMany(mappedBy = "materials", cascade = {CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "materials", cascade = {CascadeType.MERGE, CascadeType.REFRESH})
     private Set<Recipe> recipes = new HashSet<>();
 
     //recipeUsage foreign key

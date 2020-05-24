@@ -46,6 +46,6 @@ public class MaterialOrder implements Serializable {
     @JoinColumn(name = "op_storageID", referencedColumnName = "operationId")
     private OperationRecord storageRecord;
 
-    @OneToMany(mappedBy = "materialOrder", cascade = {CascadeType.REFRESH, CascadeType.REMOVE})
+    @OneToMany(mappedBy = "materialOrder", cascade = {CascadeType.REFRESH, CascadeType.REMOVE}, fetch = FetchType.LAZY)
     private Set<MaterialUsage> materialUsages = new HashSet<>();
 }

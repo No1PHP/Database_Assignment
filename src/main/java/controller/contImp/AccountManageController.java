@@ -78,6 +78,7 @@ public class AccountManageController {
      * @return map
      * @create 2020/5/1 1:25 上午
      **/
+/*
     @RequestMapping(value = "/loginPage",method = RequestMethod.POST)
     @ResponseBody
     private Map<String,Object> passwordChanging(HttpServletRequest request){
@@ -107,6 +108,7 @@ public class AccountManageController {
         //return
         return map;
     }
+*/
 
 
     /**

@@ -3,6 +3,7 @@ package service;
 import dao.DAOInterfaces.*;
 import dao.DAO_Type;
 import dao.enums.MaterialTypes;
+import dao.enums.OperationType;
 import dao.enums.StaffCategoryTypes;
 import dao.tables.*;
 import org.springframework.data.jpa.domain.Specification;
@@ -682,22 +683,52 @@ public class Service {
     //general services
 
     public int getOwnID() {
-        return 0;
+        return account.getStaffID();
     }
 
     public StaffCategoryTypes getOwnCategoryType() {
-        return null;
+        return StaffCategoryTypes.getByIndex(account.getStaff().getStaffCategory());
     }
 
     public List<OperationRecord> getOwnOperationRecord() {
-        return null;
+        List<OperationRecord> OwnOperationRecord = operationRecordRepository.findALLByStaffID(account.getStaffID());
+        return OwnOperationRecord;
     }
 
     public List<ScheduleRecord> getOwnScheduleRecord(boolean showFinished) {
-        return null;
+        if(showFinished){
+            List<ScheduleRecord> OwnScheduleRecord = scheduleRecordRepository.findByStaffIDAndTimeScheduledToStartWorkingAfterOrderByTimeScheduledToStartWorkingDesc(account.getStaffID());
+            return OwnScheduleRecord;
+        }
+       else{
+            List<ScheduleRecord> OwnScheduleRecordStartWorking = scheduleRecordRepository.findFirst20ByStaffIDOrderByTimeScheduledToStartWorkingDesc(account.getStaffID());
+            List<ScheduleRecord> OwnScheduleRecord = scheduleRecordRepository.findFirst20ByStaffIDOrderByTimeScheduledToEndWorkingDesc(account.getStaffID());
+            OwnScheduleRecord.addAll(OwnScheduleRecordStartWorking);
+            return OwnScheduleRecord;
+       }
     }
 
     public boolean getMaterialForStall(String materialName, String stallName, float amount) {
+        List<MaterialUsage> Material = materialUsageRepository.findALLByMaterialName(materialName);
+        for(MaterialUsage materialUsage : Material){
+            if(materialUsage.getStall().getStallName() == stallName){
+               if(materialUsage.getAmount() >= amount){
+                   MaterialUsage newMaterial = EntityFactor.getMaterialUsage(materialUsage.getStall(),materialUsage.getMaterial(),materialUsage.getMaterialOrder(),materialUsage.getAmount() - amount);
+                   materialUsageRepository.delete(materialUsage);
+                   materialUsageRepository.save(newMaterial);
+                   return true;
+               }
+               else{
+                   System.out.println("Don't have so much material!");
+                   return false;
+               }
+            }
+            else {
+                System.out.println("Don't have such material!");
+                return false;
+            }
+        }
+        System.out.println("Don't have such material!");
         return false;
     }
 

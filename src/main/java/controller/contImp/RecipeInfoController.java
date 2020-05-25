@@ -29,50 +29,43 @@ import static constants.globalConstants.SERVICE;
  **/
 
 //类域名代表：此类都是localhost:8080/Recipe前缀
-@RequestMapping(value = "/Recipe")
 @Controller
+@RequestMapping(value = "/Recipe")
 public class RecipeInfoController {
-
-
     /**
      * @author Zhining
      * @description 处理增删改菜谱信息的请求
      * @param request
      * @RequestJson
-     * {recipeID:'',recipeName:'',
-     * relevantIngredient:'',price:'[Float]',
+     * {recipeName:'',
+     * relevantIngredient:['material1', 'material2',...],price:'Float',
      * operationName:''}
      *
      * @return Map
      * @create 2020/5/2 11:25 下午
      **/
-    @RequestMapping(value = "./",method = RequestMethod.POST)
+    @RequestMapping(value = "/modify",method = RequestMethod.POST)
     @ResponseBody
     public Map<String, Object> RecipeInfoOperation(HttpServletRequest request){
         Map<String, Object> map = new HashMap<String, Object>();
-        String recipeRequestString = HttpServletRequestUtils.getString(request, "recipeRequestString");
-        ObjectMapper mapper = new ObjectMapper();
-        Recipe recipeReq;
         try{
-            recipeReq = mapper.readValue(recipeRequestString, Recipe.class);
+            Recipe recipeReq = HttpServletRequestUtils.getModel(request, "recipeRequestString", Recipe.class);
+            //增删改服务
+            if(LOGIN_STATUS) {
+                if (recipeReq.getOperationName().equals("AddRecipe")){
+                    SERVICE.saveRecipe(recipeReq.getRecipeName(),recipeReq.getPrice(),recipeReq.getRelevantIngredient());
+                } else if (recipeReq.getOperationName().equals("ModifyRecipe")){
+                    SERVICE.modifyRecipe(recipeReq.getRecipeName(),recipeReq.getPrice(),recipeReq.getRelevantIngredient());
+                } else if (recipeReq.operationName.equals("DeleteRecipe")){
+                    SERVICE.removeRecipe(recipeReq.getRecipeName());
+                }
+                map.put("message","success");
+            }else{
+                map.put("message","Please login first");
+            }
         }catch (Exception e){
             map.put("succeed", false);
             map.put("message: ", e.getMessage());
-            return map;
-        }
-        //增删改服务
-        if(LOGIN_STATUS) {
-            if (recipeReq.getOperationName().equals("addRecipe")){
-                SERVICE.saveRecipe(recipeReq.getRecipeID(),recipeReq.getRecipeName(),recipeReq.getRelevantIngredient(),recipeReq.getPrice());
-            }
-            if (recipeReq.getOperationName().equals("ModifyRecipe")){
-                SERVICE.saveRecipe(recipeReq.getRecipeID(),recipeReq.getRecipeName(),recipeReq.getRelevantIngredient(),recipeReq.getPrice());
-            }
-            if (recipeReq.operationName.equals("DeleteRecipe")){
-                SERVICE.removeRecipe(recipeReq.getRecipeID(),recipeReq.getRecipeName(),recipeReq.getRelevantIngredient(),recipeReq.getPrice());
-            }
-        }else{
-            map.put("message","Please login first");
         }
         //return
         return map;

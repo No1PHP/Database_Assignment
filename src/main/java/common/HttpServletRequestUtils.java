@@ -1,12 +1,16 @@
 package common;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import javax.servlet.http.HttpServletRequest;
 
 /**
  * @description common uilt class for request handling from webpage
  * @create 2020-04-30-03-06
  **/
-public class HttpServletRequestUtils {
+public abstract class HttpServletRequestUtils {
     /**
     * @author Zhining
     * @description Convert the Integer to int type, based on the key of request to extract the int value
@@ -58,5 +62,18 @@ public class HttpServletRequestUtils {
         }catch (Exception e){
             return null;
         }
+    }
+
+    /**
+     * @author LASTiMP
+     * @param request
+     * @param cType
+     * @param <T>
+     * @return
+     */
+    public static <T> T getModel(HttpServletRequest request, String key, Class<T> cType) throws JsonProcessingException {
+        String accountInfoString = HttpServletRequestUtils.getString(request, key);
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.readValue(accountInfoString, cType);
     }
 }

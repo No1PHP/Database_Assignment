@@ -8,6 +8,7 @@ import dao.enums.OperationType;
 import dao.enums.StaffCategoryTypes;
 import dao.tables.*;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.transaction.annotation.Transactional;
 import service.exceptions.IllegalRequestException;
 import service.exceptions.RestrictedOperationException;
 
@@ -625,6 +626,38 @@ public class Service {
         if (stall == null) throw new RestrictedOperationException("no such stall!");
         return transactionRecordRepository.findALLByStallNameAndTransactionTimeBetween(stallName, from, to);
     }
+
+    public Recipe saveRecipe(String recipeName, float price, String... materials) throws IllegalRequestException, RestrictedOperationException {
+        if (!account.getAccessInfo().getAccessToStall()) throw new IllegalRequestException();
+        if (recipeRepository.findByRecipeName(recipeName) != null) throw new RestrictedOperationException("recipe already exist");
+        List<Material> materialList = new LinkedList<>();
+        for (String e : materials) {
+            Material material = materialRepository.findByName(e);
+            if (material != null) materialList.add(material);
+        }
+        Recipe recipe = EntityFactor.getRecipe(recipeName, price, materialList);
+        return recipeRepository.saveAndFlush(recipe);
+    }
+
+    public Recipe modifyRecipe(String recipeName, float price, String... materials) throws IllegalRequestException, RestrictedOperationException {
+        if (!account.getAccessInfo().getAccessToStall()) throw new IllegalRequestException();
+        Recipe recipe = recipeRepository.findByRecipeName(recipeName);
+        if (recipe == null) throw new RestrictedOperationException("recipe doesn't exist");
+        recipe.getMaterials().clear();
+        recipe.setPrice(price);
+        for (String e : materials) {
+            Material material = materialRepository.findByName(e);
+            if (material != null) recipe.getMaterials().add(material);
+        }
+        return recipeRepository.saveAndFlush(recipe);
+    }
+
+    public void removeRecipe(String recipeName) throws IllegalRequestException, RestrictedOperationException {
+        if (!account.getAccessInfo().getAccessToStall()) throw new IllegalRequestException();
+        Recipe recipe = recipeRepository.findByRecipeName(recipeName);
+        if (recipe == null) throw new RestrictedOperationException("no such recipe");
+        recipeRepository.delete(recipe);
+    }
     /* ****************************************************** */
     //staff services
 
@@ -727,30 +760,15 @@ public class Service {
     public TransactionRecord stallSell(String recipeName, String stallName, int amount, float price) {
         return null;
     }
-
-
-    public Map<String,Object> addRecipe(Integer recipeID, String recipeName, String relevantIngredient, float price){
-        return null;
-    }
-
-    public Recipe saveRecipe(Integer recipeID, String recipeName, String relevantIngredient, float price){
-        return null;
-    }
-
-    public Recipe removeRecipe(Integer recipeID, String recipeName, String relevantIngredient, float price){
-        return null;
-    }
     /**
      * @author Zhining
      * @description
      * @param newPassword
-     * @return
      * @create 2020/5/12 8:59 上午
-     * @throws IllegalRequestException
      **/
-    public String changePassword(String newPassword){
+    public void changePassword(String newPassword){
+        Account account = accountRepository.findByStaffID(this.account.getStaffID());
         account.setPasswordHashValue(newPassword);
-        return String.valueOf(accountRepository.saveAndFlush(account));
+        accountRepository.saveAndFlush(account);
     }
-
 }

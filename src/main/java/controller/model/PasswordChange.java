@@ -1,5 +1,6 @@
 package controller.model;
 
+import com.alibaba.fastjson.JSONObject;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,5 +17,11 @@ public class PasswordChange {
     private String passwordValue;
     private String newPassword;
 
-
+    //{account:'',currentPassword;'',newPassword:''}
+    public PasswordChange(String json) {
+        JSONObject jsonObject = JSONObject.parseObject(json);
+        accountName = jsonObject.getString("account");
+        passwordValue = jsonObject.getString("currentPassword");
+        newPassword = jsonObject.getString("newPassword");
+    }
 }

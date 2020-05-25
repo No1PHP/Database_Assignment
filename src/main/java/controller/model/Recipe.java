@@ -1,5 +1,6 @@
 package controller.model;
 
+import com.alibaba.fastjson.JSONObject;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,10 +12,17 @@ import lombok.Setter;
 @Setter
 public class Recipe {
 
-     public Integer recipeID;
      public String recipeName;
-     public String relevantIngredient;
+     public String[] relevantIngredient;
      public float price;
      public String operationName;
-     public String stallName;
+
+     //{recipeName:'', relevantIngredient:['material1', 'material2',...],price:'Float', operationName:''}
+     public Recipe(String json) {
+          JSONObject jsonObject = JSONObject.parseObject(json);
+          recipeName = jsonObject.getString("recipeName");
+          price = jsonObject.getFloat("price");
+          operationName = jsonObject.getString("operationName");
+          relevantIngredient = (String[]) jsonObject.getJSONArray("relevantIngredient").toArray();
+     }
 }

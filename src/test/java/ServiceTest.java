@@ -11,7 +11,10 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import service.DataInitializer;
+import service.EntityFactor;
 import service.Service;
+import service.exceptions.IllegalRequestException;
+import service.exceptions.RestrictedOperationException;
 
 import javax.transaction.Transactional;
 
@@ -115,6 +118,11 @@ public class ServiceTest {
         assertEquals("clerk", account.getPosition());
         assertEquals("cleaner1test", account.getAccountName());
         assertEquals("passwordTest", account.getPasswordHashValue());
+        service.saveAccount(staff.getStaffID(), "clerk", "cleaner1test", "newPassword");
+        account = staffRepository.findByStaffID(staff.getStaffID()).getAccount();
+        assertEquals("clerk", account.getPosition());
+        assertEquals("cleaner1test", account.getAccountName());
+        assertEquals("newPassword", account.getPasswordHashValue());
     }
 
     @Test
@@ -256,6 +264,27 @@ public class ServiceTest {
     public void getTransactionRecordDuring() {
         Collection<TransactionRecord> records = service.getTransactionRecordDuring("包子铺", Timestamp.valueOf("2000-01-01 00:00:00"), Timestamp.valueOf("2020-12-01 00:00:00"));
         assertEquals(2, records.size());
+    }
+
+    @Test
+    public void saveRecipe() {
+        service.saveRecipe("测试菜谱", 10, "beef", "blood");
+        assertNotNull(recipeRepository.findByRecipeName("测试菜谱"));
+    }
+
+    @Test
+    public void modifyRecipe() {
+        service.saveRecipe("测试菜谱", 10, "beef", "blood");
+        service.modifyRecipe("测试菜谱", 11, "beef", "blood", "cabbage");
+        assertEquals(3, recipeRepository.findByRecipeName("测试菜谱").getMaterials().size());
+    }
+
+    @Test
+    public void removeRecipe() {
+        service.saveRecipe("测试菜谱", 10, "beef", "blood");
+        service.removeRecipe("测试菜谱");
+        assertNull(recipeRepository.findByRecipeName("测试菜谱"));
+        assertNotNull(materialRepository.findByName("beef"));
     }
 
     @Test

@@ -8,6 +8,7 @@ import java.util.Date;
  * @description Common main.Utils methods
  * @create 2020-04-23-03-02
  **/
+@Deprecated
 public class UtilsImpl{
 
     /**

@@ -1,10 +1,12 @@
 package controller.contImp;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import common.HttpServletRequestUtils;
 import controller.model.LoginAccount;
 import controller.model.PasswordChange;
 import org.springframework.stereotype.Controller;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import service.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 import java.util.HashMap;
 import java.util.Map;
 import static constants.globalConstants.LOGIN_STATUS;
@@ -25,9 +28,14 @@ import static constants.globalConstants.SERVICE;
  * @create 2020-04-29-18-17
  **/
 @Controller
-@RequestMapping(value = "./")//访问路径 未定
+@RequestMapping(value = "/account")
 public class AccountManageController {
 
+    @ResponseBody
+    @RequestMapping(value = "/hello")
+    public String test() {
+        return "hello";
+    }
     /**
     * @author Zhining
     * @description login account
@@ -39,32 +47,22 @@ public class AccountManageController {
     @RequestMapping(value = "/loginPage",method = RequestMethod.POST)
     @ResponseBody
     public Map<String,Object> login(HttpServletRequest request){
-        Map<String, Object> map = new HashMap<String, Object>();
-        //1 receive and parse the request parameter
-        String accountInfoString = HttpServletRequestUtils.getString(request, "accountString");
-        ObjectMapper mapper = new ObjectMapper();
-        LoginAccount log = null;
+        Map<String, Object> reply = new HashMap<String, Object>();
         try{
-            log = mapper.readValue(accountInfoString, LoginAccount.class);
-        }catch (Exception e){
-            map.put("convert succeed", false);
-            map.put("error message: ", e.getMessage());
-            return map;
-        }
-
-        //2 打包给service
-        boolean loginSucceeded = (Service.connect(log.getAccountName(),log.getPasswordValue()))!=null;
-        if(loginSucceeded) {
+            //1 receive and parse the request parameter
+            LoginAccount log = HttpServletRequestUtils.getModel(request, "accountString", LoginAccount.class);
+            //2 打包给service
             SERVICE = Service.connect(log.getAccountName(),log.getPasswordValue());
+            LOGIN_STATUS = (SERVICE != null);
+
+            String statusMessage = (LOGIN_STATUS)?"login success":"login failed";
+            reply.put("status",statusMessage);
+            //前端检查response.data.statusMessage是否为success
+        } catch (Exception e) {
+            reply.put("convert succeed", false);
+            reply.put("error message: ", e.getMessage());
         }
-
-        String statusMessage = loginSucceeded?"login success":"login failed";
-        LOGIN_STATUS = loginSucceeded;
-        map.put("status",statusMessage);
-        //前端检查response.data.statusMessage是否为success
-
-        //3 接受service返回的对象，return
-        return map;
+        return reply;
     }
 
     /**
@@ -80,29 +78,19 @@ public class AccountManageController {
     @ResponseBody
     private Map<String,Object> passwordChanging(HttpServletRequest request){
         Map<String, Object> map = new HashMap<String, Object>();
-        String accountInfoString = HttpServletRequestUtils.getString(request, "passwordChangeString");
-        ObjectMapper mapper = new ObjectMapper();
-        PasswordChange changeInfo = null;
         try{
-            changeInfo = mapper.readValue(accountInfoString, PasswordChange.class);
-        }catch (Exception e){
+            PasswordChange changeInfo = HttpServletRequestUtils.getModel(request, "passwordChangeString", PasswordChange.class);
+            Service service = (Service.connect(changeInfo.getAccountName(),changeInfo.getPasswordValue()));
+            if(service != null) {
+                service.changePassword(changeInfo.getNewPassword());
+                map.put("message","password successfully changed");
+            }else{
+                map.put("message","password doesn't match username, try again");
+            }
+        }catch (JsonProcessingException e){
             map.put("succeed", false);
             map.put("message: ", e.getMessage());
-            return map;
         }
-
-        Service service = (Service.connect(changeInfo.getAccountName(),changeInfo.getPasswordValue()));
-        boolean loginVerify = (service!=null);
-
-        if(loginVerify) {
-            service.changePassword(changeInfo.getPasswordValue());
-            map.put("message","password successfully changed");
-        }else{
-            map.put("message","password doesn't match username, try again");
-        }
-
-
-        //return
         return map;
     }
 
@@ -122,7 +110,7 @@ public class AccountManageController {
             LOGIN_STATUS = false;
             SERVICE = null;
         }
-        map.put("logout:",(LOGIN_STATUS==false)?"succeed":"failed, try again");
+        map.put("logout:",(!LOGIN_STATUS)?"succeed":"failed, try again");
         return map;
     }
 

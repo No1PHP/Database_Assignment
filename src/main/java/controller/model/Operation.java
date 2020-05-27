@@ -1,5 +1,7 @@
 package controller.model;
 
+import com.alibaba.fastjson.JSONObject;
+import dao.enums.OperationType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,11 +15,14 @@ import java.sql.Timestamp;
 @Getter
 @Setter
 public class Operation {
-    private Integer operationID;
-    private Integer staffID;
-    private Byte operationType;
+    private OperationType operationType;
     private String note;
-    private Timestamp operationTime = new Timestamp(System.currentTimeMillis());
-    private Boolean willSendUpdateMessage;
+    private JSONObject body;
 
+    public Operation (String para) {
+        JSONObject json = JSONObject.parseObject(para);
+        operationType = OperationType.getByIndex(json.getInteger("operationType"));
+        note = json.getString("note");
+        body = json.getJSONObject("body");
+    }
 }

@@ -7,6 +7,10 @@ import dao.enums.MaterialTypes;
 import dao.enums.OperationType;
 import dao.enums.StaffCategoryTypes;
 import dao.tables.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
 import service.exceptions.IllegalRequestException;
@@ -657,6 +661,10 @@ public class Service {
         Recipe recipe = recipeRepository.findByRecipeName(recipeName);
         if (recipe == null) throw new RestrictedOperationException("no such recipe");
         recipeRepository.delete(recipe);
+    }
+
+    public Page<Recipe> getRecipeByPage(int limit, int page) {
+        return recipeRepository.findAll(PageRequest.of(page, limit));
     }
     /* ****************************************************** */
     //staff services

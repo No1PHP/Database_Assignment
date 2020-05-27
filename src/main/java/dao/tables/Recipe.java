@@ -42,4 +42,23 @@ public class Recipe implements Serializable {
             inverseJoinColumns = {@JoinColumn(name = "material_name", referencedColumnName = "name")}
     )
     private Set<Material> materials = new HashSet<>();
+    /********************************************************/
+    @Override
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder("{recipeName='");
+        stringBuilder.append(recipeName);
+        stringBuilder.append("', price=");
+        stringBuilder.append(price);
+        stringBuilder.append(", materials=[");
+        int count = 0;
+        for (Material e : materials) {
+            stringBuilder.append('\'');
+            stringBuilder.append(e.getName());
+            stringBuilder.append('\'');
+            if (++count < materials.size())
+                stringBuilder.append(',');
+        }
+        stringBuilder.append("]}");
+        return stringBuilder.toString();
+    }
 }

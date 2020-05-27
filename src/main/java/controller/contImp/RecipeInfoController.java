@@ -1,8 +1,10 @@
 package controller.contImp;
 
+import com.alibaba.fastjson.JSONArray;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import common.HttpServletRequestUtils;
 import controller.model.Recipe;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -67,16 +70,14 @@ public class RecipeInfoController {
             map.put("succeed", false);
             map.put("message: ", e.getMessage());
         }
-        //return
         return map;
-
     }
 
 
     /**
      * @author Zhining
      * @description 得到所有菜谱(本页面的)
-     * @param currentPage,size
+     * @param pageNo,size
      * @RequestJson
     * 前端的请求：localhost:8000/Recipes？'+'pageNo='+pageNo+'&'+'size='+size
      *
@@ -84,57 +85,16 @@ public class RecipeInfoController {
      * @return Map
      * @create 2020/5/2 11:25 下午
      **/
-    @RequestMapping(value = "/{currentPage}&{size}",method = RequestMethod.GET)
+    @RequestMapping(value = "/show",method = RequestMethod.GET)
     @ResponseBody //返回一个list
-    public List<String> getRecipesPerPage(@RequestParam int currentPage, @RequestParam  int size){
+    public List<String> getRecipesPerPage(@RequestParam(name = "pageNo") int pageNo, @RequestParam(name = "size") int size){
         //根据页数和长度获取本页的recipe信息
-        //service里没看到这个方法
-        return null;
-    }
-
-
-
-
-    /**
-    * @author Zhining
-    * @description
-    * @param
-    * @return
-     * 问题：这个service是个啥意思？stallLocation还是int？
-     * 暂时把请求数据格式定为下面这样了
-     * {stallName:'',stallLocation:'',stallRent:'',recipes:['','',......]}
-    * @create 2020/5/24 11:14 下午
-    **/
-    @RequestMapping(value = "/saveStallWithRecipes",method = RequestMethod.POST)
-    @ResponseBody
-    public Map<String, Object> saveStallWithRecipes(HttpServletRequest request){
-        Map<String, Object> map = new HashMap<String, Object>();
-
-        String saveStallWithRecipesString = HttpServletRequestUtils.getString(request, "saveStallWithRecipesString");
-        ObjectMapper mapper = new ObjectMapper();
-        //建一个新model，model里有什么数参考上面注释里写的数据格式
-        try{
-            //用objectmapper，json转model对象
-
-        }catch (Exception e){
-            map.put("succeed", false);
-            map.put("message: ", e.getMessage());
-            return map;
+        List<String> result = new LinkedList<>();
+        if (!LOGIN_STATUS) return result;
+        Page<dao.tables.Recipe> page = SERVICE.getRecipeByPage(size, pageNo);
+        for (dao.tables.Recipe e : page) {
+            result.add(e.toString());
         }
-
-
-        if(LOGIN_STATUS) {
-            //调用服务（SERVICE）,参数是model.啥啥啥（参数对应service中的对应方法的parameter）
-        }else{
-            map.put("message","Please login first");
-        }
-
-        //return
-        //上面的@response注释说明默认http响应就是这里return的东西，即：response的数据由service的返回值决定
-        return map;
-
+        return result;
     }
-
-
-
 }

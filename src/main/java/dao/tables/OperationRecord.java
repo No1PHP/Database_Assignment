@@ -56,4 +56,15 @@ public class OperationRecord implements Serializable {
     //schedule record foreign key
     @OneToOne(mappedBy = "operationRecord", cascade = {CascadeType.REFRESH, CascadeType.REMOVE}, fetch = FetchType.LAZY)
     private ScheduleRecord scheduleRecord;
+    /********************************************************/
+    @Override
+    public String toString() {
+        return "{operationID=" + operationID +
+                ", staffID=" + staffID +
+                ", operationType=" + operationType +
+                ", note='" + note + '\'' +
+                ", operationTime=" + operationTime +
+                ", willSendUpdateMessage=" + willSendUpdateMessage +
+                '}';
+    }
 }

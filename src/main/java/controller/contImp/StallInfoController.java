@@ -3,12 +3,16 @@ package controller.contImp;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import common.HttpServletRequestUtils;
 import controller.model.Stall;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
 import static constants.globalConstants.LOGIN_STATUS;
+import static constants.globalConstants.SERVICE;
 
 /**
  * @description
@@ -58,5 +62,43 @@ public class StallInfoController {
         //return
         return map;
 
+    }
+
+
+
+
+    /**
+     * @author Zhining
+     * @description
+     * @param
+     * @return
+     * 问题：这个service是个啥意思？stallLocation还是int？
+     * 暂时把请求数据格式定为下面这样了
+     * {stallName:'',stallLocation:'',stallRent:'',recipes:['','',......]}
+     * @create 2020/5/24 11:14 下午
+     **/
+    @RequestMapping(value = "/saveStallWithRecipes",method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String, Object> saveStallWithRecipes(HttpServletRequest request){
+        Map<String, Object> map = new HashMap<String, Object>();
+
+        String saveStallWithRecipesString = HttpServletRequestUtils.getString(request, "saveStallWithRecipesString");
+        ObjectMapper mapper = new ObjectMapper();
+        //建一个新model，model里有什么数参考上面注释里写的数据格式
+        try{
+            //用objectmapper，json转model对象
+        }catch (Exception e){
+            map.put("succeed", false);
+            map.put("message: ", e.getMessage());
+            return map;
+        }
+        if(LOGIN_STATUS) {
+//            SERVICE;
+        }else{
+            map.put("message","Please login first");
+        }
+        //return
+        //上面的@response注释说明默认http响应就是这里return的东西，即：response的数据由service的返回值决定
+        return map;
     }
 }

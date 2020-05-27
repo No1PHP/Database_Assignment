@@ -1,8 +1,11 @@
 package controller.model;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.Arrays;
 
 /**
  * @description
@@ -23,6 +26,8 @@ public class Recipe {
           recipeName = jsonObject.getString("recipeName");
           price = jsonObject.getFloat("price");
           operationName = jsonObject.getString("operationName");
-          relevantIngredient = (String[]) jsonObject.getJSONArray("relevantIngredient").toArray();
+          JSONArray jsonArray = jsonObject.getJSONArray("relevantIngredient");
+          relevantIngredient = new String[jsonArray.size()];
+          relevantIngredient = jsonArray.toArray(relevantIngredient);
      }
 }

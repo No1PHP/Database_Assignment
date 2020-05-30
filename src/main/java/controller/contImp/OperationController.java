@@ -26,6 +26,7 @@ import static constants.globalConstants.SERVICE;
  * @description
  * @create 2020-05-12-15-01
  **/
+@CrossOrigin(allowCredentials = "true")
 @RequestMapping(value = "/operate")
 @Controller
 public class OperationController implements PageTurningFunction {

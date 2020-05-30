@@ -7,10 +7,7 @@ import controller.model.LoginAccount;
 import controller.model.PasswordChange;
 import org.springframework.stereotype.Controller;
 import org.springframework.test.annotation.Rollback;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import service.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,15 +24,10 @@ import static constants.globalConstants.SERVICE;
  * 要配合表单提交或其他action---如：index.html中<form action ="/loginPage",method="post"></form>
  * @create 2020-04-29-18-17
  **/
+@CrossOrigin(allowCredentials = "true")
 @Controller
 @RequestMapping(value = "/account")
 public class AccountManageController {
-
-    @ResponseBody
-    @RequestMapping(value = "/hello")
-    public String test() {
-        return "hello";
-    }
     /**
     * @author Zhining
     * @description login account

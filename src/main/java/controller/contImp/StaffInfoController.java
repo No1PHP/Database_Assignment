@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import common.HttpServletRequestUtils;
 import controller.model.Staff;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -19,62 +20,57 @@ import static constants.globalConstants.SERVICE;
  * @description Set of controller of staff information handling request
  * @create 2020-05-01-01-11
  **/
+@CrossOrigin(allowCredentials = "true")
 @RequestMapping(value = "/Staff") //此类url前缀
 @Controller
 public class StaffInfoController{
-
     /**
     * @author Zhining
     * @description 处理增删改职工先关信息的请求
     * @param request
     * @RequestJson
     * {staffID:'',staffName:'',
-    * staffCategoryTypes:'',timeStartWorking:'[DATETIME]',
-    * timeEndWorking:'[DATETIME]',account:'[AccountJsonForm]',
-    * scheduleRecords:'',OperationRecord:'',
+    * staffCategoryTypes:'',timeStartWorking:'DATETIME',
+    * timeEndWorking:'DATETIME',
     * operationName:''}
-     *
     * @return Map
     * @create 2020/5/2 11:25 下午
     **/
-    @RequestMapping(value = "/staff",method = RequestMethod.POST)
+    @RequestMapping(value = "/operate",method = RequestMethod.POST)
     @ResponseBody
     public Map<String, Object> StaffInfoOperation(HttpServletRequest request){
         Map<String, Object> map = new HashMap<String, Object>();
-        String staffRequestString = HttpServletRequestUtils.getString(request, "staffRequestString");
-        ObjectMapper mapper = new ObjectMapper();
-        Staff staffReq;
-        try{
-            staffReq = mapper.readValue(staffRequestString, Staff.class);
-        }catch (Exception e){
-            map.put("succeed", false);
-            map.put("message: ", e.getMessage());
-            return map;
-        }
-
-        // 请求含条件，打包给不同方法
-        //TO-DO: 外部接口 空值判断
         if(LOGIN_STATUS) {
-            if (staffReq.getOperationName().equals("AddStaff")) {
-                SERVICE.insertStaff(staffReq.getStaffName(),staffReq.getStaffCategory(),staffReq.getTimeStartWorking(),staffReq.getTimeEndWorking());
-            }
-            if (staffReq.getOperationName().equals("ModifyStaff")){
-                SERVICE.updateStaff(staffReq.getStaffID(),staffReq.getStaffCategory(),staffReq.getTimeStartWorking(),staffReq.getTimeEndWorking());
-            }
-            if (staffReq.getOperationName().equals("DeleteStaff")){
-                SERVICE.removeStaff(staffReq.getStaffID());
+            try{
+                Staff staffReq = HttpServletRequestUtils.getModel(request, "staffRequestString", Staff.class);
+                switch (staffReq.getOperationName()) {
+                    case "AddStaff": {
+                        SERVICE.insertStaff(staffReq.getStaffName(),staffReq.getStaffCategory(),staffReq.getTimeStartWorking(),staffReq.getTimeEndWorking());
+                        map.put("succeed", true);
+                        break;
+                    }
+                    case "ModifyStaff": {
+                        SERVICE.updateStaff(staffReq.getStaffID(),staffReq.getStaffCategory(),staffReq.getTimeStartWorking(),staffReq.getTimeEndWorking());
+                        map.put("succeed", true);
+                        break;
+                    }
+                    case "DeleteStaff": {
+                        SERVICE.removeStaff(staffReq.getStaffID());
+                        map.put("succeed", true);
+                        break;
+                    }
+                    default: {
+                        map.put("succeed", false);
+                        map.put("message: ", "no such operation!");
+                    }
+                }
+            }catch (Exception e){
+                map.put("succeed", false);
+                map.put("message: ", e.getMessage());
             }
         }else {
             map.put("message","Please login first");
         }
-        //return
         return map;
-
     }
-
-
-
-
-
-
 }

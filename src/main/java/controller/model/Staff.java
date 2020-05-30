@@ -1,5 +1,6 @@
 package controller.model;
 
+import com.alibaba.fastjson.JSONObject;
 import dao.enums.StaffCategoryTypes;
 import dao.tables.Account;
 import dao.tables.OperationRecord;
@@ -19,20 +20,22 @@ import java.util.Set;
 @Setter
 public class Staff {
     private Integer staffID;
-
     private String staffName;
-
     private StaffCategoryTypes staffCategory;
-
     private Time timeStartWorking;
-
     private Time timeEndWorking;
-
-    private Account account;
-
-    private Set<ScheduleRecord> scheduleRecords = new HashSet<>();
-
-    private Set<OperationRecord> operationRecords = new HashSet<>();
-
     private String operationName;
+    //{staffID:'',staffName:'',
+    //    * staffCategoryTypes:'',timeStartWorking:'[DATETIME]',
+    //    * timeEndWorking:'[DATETIME]',
+    //    * operationName:''}
+    public Staff(String para) {
+        JSONObject json = JSONObject.parseObject(para);
+        this.staffID = json.getInteger("staffID");
+        this.staffName = json.getString("staffName");
+        this.staffCategory = StaffCategoryTypes.getByIndex(json.getInteger("staffCategoryTypes"));
+        this.timeStartWorking = Time.valueOf(json.getString("timeStartWorking"));
+        this.timeEndWorking = Time.valueOf(json.getString("timeEndWorking"));
+        this.operationName = json.getString("operationName");
+    }
 }

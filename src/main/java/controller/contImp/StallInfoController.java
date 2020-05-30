@@ -3,6 +3,8 @@ package controller.contImp;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import common.HttpServletRequestUtils;
 import controller.model.Stall;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -18,9 +20,10 @@ import static constants.globalConstants.SERVICE;
  * @description
  * @create 2020-05-12-21-34
  **/
+@CrossOrigin(allowCredentials = "true")
+@RequestMapping(value = "/Stall") //此类url前缀
+@Controller
 public class StallInfoController {
-
-
     /**
     * @author Zhining
     * @description
@@ -34,6 +37,8 @@ public class StallInfoController {
      *
      * @create 2020/5/13 3:19
     **/
+    @RequestMapping(value = "/saveStallWithRecipes",method = RequestMethod.POST)
+    @ResponseBody
     public Map<String, Object> StallInfoOperation(HttpServletRequest request){
         Map<String, Object> map = new HashMap<String, Object>();
         String staffRequestString = HttpServletRequestUtils.getString(request, "staffRequestString");
@@ -59,13 +64,8 @@ public class StallInfoController {
         }else {
             map.put("message","Please login first");
         }
-        //return
         return map;
-
     }
-
-
-
 
     /**
      * @author Zhining

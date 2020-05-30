@@ -6,10 +6,7 @@ import common.HttpServletRequestUtils;
 import controller.model.Recipe;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -30,8 +27,7 @@ import static constants.globalConstants.SERVICE;
  * post的方法中参数： 要先提取request中的数据，然后json转对象（通过ObjectMapper，写法和在下面，网上有文档可以参考），例：HttpServletRequest request
  * @create 2020-05-01-01-12
  **/
-
-//类域名代表：此类都是localhost:8080/Recipe前缀
+@CrossOrigin(allowCredentials = "true")
 @Controller
 @RequestMapping(value = "/Recipe")
 public class RecipeInfoController {

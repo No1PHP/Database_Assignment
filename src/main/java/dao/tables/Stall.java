@@ -14,8 +14,7 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "Stall")
-public class Stall implements Serializable {
-    private static final long serialVersionUID = 9L;
+public class Stall {
     @Id
     @Column(name = "stall_name", length = 30)
     private String stallName;
@@ -53,4 +52,28 @@ public class Stall implements Serializable {
     //recipeUsage foreign key
     @OneToMany(mappedBy = "stall", cascade = CascadeType.ALL)
     private Set<MaterialUsage> materialUsages = new HashSet<>();
+
+    @Override
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder(", materials=[");
+        int count = 0;
+        for (Recipe e : recipes) {
+            stringBuilder.append('\'');
+            stringBuilder.append(e.getRecipeName());
+            stringBuilder.append('\'');
+            if (++count < recipes.size())
+                stringBuilder.append(',');
+        }
+        stringBuilder.append("]}");
+        return "{" +
+                "stallName='" + stallName + '\'' +
+                ", stallLocation=" + stallLocation +
+                ", stallRent=" + stallRent +
+                ", costLastMonth=" + costLastMonth +
+                ", manageTimeSoFar=" + manageTimeSoFar +
+                ", aveMonthlySalesAmount=" + aveMonthlySalesAmount +
+                ", aveSalesIncome=" + aveSalesIncome +
+                ", recipes=" + stringBuilder +
+                '}';
+    }
 }

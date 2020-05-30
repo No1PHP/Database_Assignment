@@ -13,8 +13,7 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "AccessInfo")
-public class AccessInfo implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class AccessInfo {
     //primary key
     @Id
     @Column(name = "position")

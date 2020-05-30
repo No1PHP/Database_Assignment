@@ -41,9 +41,7 @@ public class AccountManageController {
     public Map<String,Object> login(HttpServletRequest request){
         Map<String, Object> reply = new HashMap<String, Object>();
         try{
-            //1 receive and parse the request parameter
             LoginAccount log = HttpServletRequestUtils.getModel(request, "accountString", LoginAccount.class);
-            //2 打包给service
             SERVICE = Service.connect(log.getAccountName(),log.getPasswordValue());
             LOGIN_STATUS = (SERVICE != null);
 
@@ -86,7 +84,6 @@ public class AccountManageController {
         return map;
     }
 
-
     /**
     * @author Zhining
     * @description 登出，清空service与登录状态
@@ -105,7 +102,4 @@ public class AccountManageController {
         map.put("logout:",(!LOGIN_STATUS)?"succeed":"failed, try again");
         return map;
     }
-
-
-
 }

@@ -1,5 +1,6 @@
 package dao.tables;
 
+import dao.enums.MaterialTypes;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,8 +15,7 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "Material")
-public class Material implements Serializable {
-    private static final long serialVersionUID = 3L;
+public class Material {
     @Id
     @Column(name = "name")
     private String name;
@@ -40,4 +40,14 @@ public class Material implements Serializable {
     //recipeUsage foreign key
     @OneToMany(mappedBy = "material", cascade = CascadeType.ALL)
     private Set<MaterialUsage> materialUsages = new HashSet<>();
+
+    @Override
+    public String toString() {
+        return "{" +
+                "name='" + name + '\'' +
+                ", type=" + MaterialTypes.getByIndex(type) +
+                ", unitPrice=" + unitPrice +
+                ", availablePeriod=" + availablePeriod +
+                '}';
+    }
 }

@@ -13,7 +13,7 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "Staff")
-public class Staff implements Serializable {
+public class Staff {
     private static final long serialVersionUID = 8L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,4 +45,15 @@ public class Staff implements Serializable {
     //operation record foreign key
     @OneToMany(mappedBy = "staff", cascade = {CascadeType.REFRESH, CascadeType.REMOVE})
     private Set<OperationRecord> operationRecords = new HashSet<>();
+
+    @Override
+    public String toString() {
+        return "{" +
+                "staffID=" + staffID +
+                ", staffName='" + staffName + '\'' +
+                ", staffCategory=" + staffCategory +
+                ", timeStartWorking=" + timeStartWorking +
+                ", timeEndWorking=" + timeEndWorking +
+                '}';
+    }
 }

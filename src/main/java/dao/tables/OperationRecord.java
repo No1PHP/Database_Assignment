@@ -14,9 +14,7 @@ import java.sql.Timestamp;
 @Setter
 @Entity
 @Table(name = "OperationRecord")
-public class OperationRecord implements Serializable {
-    private static final long serialVersionUID = 5L;
-    //primary key
+public class OperationRecord {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "operationId", insertable = false)

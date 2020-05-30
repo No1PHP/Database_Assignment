@@ -18,8 +18,7 @@ import javax.persistence.*;
 @Setter
 @Entity
 @Table(name = "Recipe")
-public class Recipe implements Serializable {
-    private static final long serialVersionUID = 6L;
+public class Recipe {
     @Id
     @Column(name = "recipeName", length = 30)
     private String recipeName;

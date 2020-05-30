@@ -12,10 +12,7 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "MaterialOrder")
-public class MaterialOrder implements Serializable {
-    private static final long serialVersionUID = 4L;
-     //primary key
-     //corresponds to the operationRecord table, foreign key
+public class MaterialOrder {
     @Id
     @Column(name = "op_OrderID", updatable = false)
      private Integer operationOrderID;
@@ -48,4 +45,14 @@ public class MaterialOrder implements Serializable {
 
     @OneToMany(mappedBy = "materialOrder", cascade = {CascadeType.REFRESH, CascadeType.REMOVE}, fetch = FetchType.LAZY)
     private Set<MaterialUsage> materialUsages = new HashSet<>();
+
+    @Override
+    public String toString() {
+        return "{" +
+                "operationOrderID=" + operationOrderID +
+                ", operationStorageID=" + operationStorageID +
+                ", materialName='" + materialName + '\'' +
+                ", materialAmount=" + materialAmount +
+                '}';
+    }
 }

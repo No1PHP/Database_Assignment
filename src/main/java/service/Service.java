@@ -747,6 +747,49 @@ public class Service {
     /* ****************************************************** */
     //general services
 
+    public List<String> getALL(String key) {
+        List<Object> queryResult;
+        List<String> result = new LinkedList<>();
+        switch (key) {
+            case "Account":
+                queryResult = Collections.singletonList(accountRepository.findAll());
+                break;
+            case "Material":
+                queryResult = Collections.singletonList(materialRepository.findAll());
+                break;
+            case "MaterialOrder":
+                queryResult = Collections.singletonList(materialOrderRepository.findAll());
+                break;
+            case "MaterialUsage":
+                queryResult = Collections.singletonList(materialUsageRepository.findAll());
+                break;
+            case "OperationRecord":
+                queryResult = Collections.singletonList(operationRecordRepository.findAll());
+                break;
+            case "Recipe":
+                queryResult = Collections.singletonList(recipeRepository.findAll());
+                break;
+            case "ScheduleRecord":
+                queryResult = Collections.singletonList(scheduleRecordRepository.findAll());
+                break;
+            case "Staff":
+                queryResult = Collections.singletonList(staffRepository.findAll());
+                break;
+            case "Stall":
+                queryResult = Collections.singletonList(stallRepository.findAll());
+                break;
+            case "Transaction":
+                queryResult = Collections.singletonList(transactionRecordRepository.findAll());
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + key);
+        }
+        for (Object e: queryResult) {
+            result.add(e.toString());
+        }
+        return result;
+    }
+
     public int getOwnID() {
         return account.getStaffID();
     }

@@ -10,8 +10,7 @@ import java.io.Serializable;
 @Setter
 @Entity
 @Table(name = "Account")
-public class Account implements Serializable {
-    private static final long serialVersionUID = 2L;
+public class Account {
     //primary key
     @Id
     @Column(name = "staffId")
@@ -36,4 +35,13 @@ public class Account implements Serializable {
     @ManyToOne(targetEntity = AccessInfo.class, optional = false, cascade = {CascadeType.MERGE, CascadeType.REFRESH})
     @JoinColumn(name = "position", referencedColumnName = "position")
     private AccessInfo accessInfo;
+
+    @Override
+    public String toString() {
+        return "{" +
+                "staffID=" + staffID +
+                ", position='" + position + '\'' +
+                ", accountName='" + accountName + '\'' +
+                '}';
+    }
 }

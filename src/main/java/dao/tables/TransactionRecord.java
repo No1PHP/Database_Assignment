@@ -17,9 +17,7 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "TransactionRecord")
-public class TransactionRecord implements Serializable {
-    private static final long serialVersionUID = 10L;
-    //id, auto primary key
+public class TransactionRecord {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "TransactionID", updatable = false)
@@ -54,4 +52,16 @@ public class TransactionRecord implements Serializable {
     @ManyToOne(targetEntity = Stall.class, optional = false, cascade = {CascadeType.REFRESH})
     @JoinColumn(name = "stall_name", referencedColumnName = "stall_name")
     private Stall stall;
+
+    @Override
+    public String toString() {
+        return "{" +
+                "transactionID=" + transactionID +
+                ", stallName='" + stallName + '\'' +
+                ", recipeName='" + recipeName + '\'' +
+                ", transactionTime=" + transactionTime +
+                ", numbers=" + numbers +
+                ", transactionPrice=" + transactionPrice +
+                '}';
+    }
 }

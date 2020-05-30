@@ -16,10 +16,7 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "Schedule_record")
-public class ScheduleRecord implements Serializable {
-    private static final long serialVersionUID = 7L;
-    //primary key
-    //corresponds to operationRecords table
+public class ScheduleRecord {
     @Id
     @Column(name = "op_ID")
     private Integer operationID;
@@ -42,4 +39,14 @@ public class ScheduleRecord implements Serializable {
     @OneToOne(targetEntity = OperationRecord.class, optional = false, cascade = {CascadeType.REFRESH, CascadeType.MERGE, CascadeType.REMOVE})
     @JoinColumn(name = "op_ID", referencedColumnName = "operationId")
     private OperationRecord operationRecord;
+
+    @Override
+    public String toString() {
+        return "{" +
+                "operationID=" + operationID +
+                ", staffID=" + staffID +
+                ", timeScheduledToStartWorking=" + timeScheduledToStartWorking +
+                ", timeScheduledToEndWorking=" + timeScheduledToEndWorking +
+                '}';
+    }
 }

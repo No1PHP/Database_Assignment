@@ -15,8 +15,7 @@ import java.sql.Timestamp;
 @Setter
 @Entity
 @Table(name = "MaterialUsage")
-public class MaterialUsage implements Serializable {
-    private static final long serialVersionUID = 11L;
+public class MaterialUsage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "usage_id")
@@ -50,4 +49,16 @@ public class MaterialUsage implements Serializable {
     @ManyToOne(targetEntity = MaterialOrder.class, optional = false, cascade = {CascadeType.REFRESH})
     @JoinColumn(name = "storageID", referencedColumnName = "op_storageID")
     private MaterialOrder materialOrder;
+
+    @Override
+    public String toString() {
+        return "{" +
+                "usageId=" + usageId +
+                ", stallName='" + stallName + '\'' +
+                ", materialName='" + materialName + '\'' +
+                ", storageID=" + storageID +
+                ", time=" + time +
+                ", amount=" + amount +
+                '}';
+    }
 }

@@ -117,11 +117,34 @@ public class Service {
             return stallRepository.saveAndFlush(stall);
         }
     }
-
-    public Stall saveStallWithRecipes(String stallName, int stallLocation, float stallRent, Collection<Recipe> recipes) throws IllegalRequestException {
+    public Stall saveStall(String stallName, int stallLocation, float stallRent, float costLastMonth) throws IllegalRequestException {
         if (!account.getAccessInfo().getPosition().equals("admin")) throw new IllegalRequestException();
 
-        return stallRepository.saveAndFlush(EntityFactor.getStallWithRecipes(stallName, stallLocation, stallRent, recipes));
+        Stall stall = stallRepository.findByStallName(stallName);
+        if (stall == null)
+            return stallRepository.saveAndFlush(EntityFactor.getStall(stallName, stallLocation, stallRent));
+        else {
+            stall.setStallLocation(stallLocation);
+            stall.setStallRent(stallRent);
+            stall.setCostLastMonth(costLastMonth);
+            return stallRepository.saveAndFlush(stall);
+        }
+    }
+
+    public Stall saveStallWithRecipes(String stallName, int stallLocation, float stallRent, String... recipes) throws IllegalRequestException {
+        if (!account.getAccessInfo().getPosition().equals("admin")) throw new IllegalRequestException();
+
+        Stall stall = stallRepository.findByStallName(stallName);
+        if (stall == null)
+            stall = stallRepository.saveAndFlush(EntityFactor.getStall(stallName, stallLocation, stallRent));
+        Collection<Recipe> recipeCollection = new LinkedList<>();
+        for (String e : recipes) {
+            recipeCollection.add(recipeRepository.findByRecipeName(e));
+        }
+        stall.setStallLocation(stallLocation);
+        stall.setStallRent(stallRent);
+        stall.getRecipes().addAll(recipeCollection);
+        return stallRepository.saveAndFlush(stall);
     }
 
     /**

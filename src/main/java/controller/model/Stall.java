@@ -1,5 +1,7 @@
 package controller.model;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,21 +12,34 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Stall {
-    public Integer stallID;
+    private String stallName;
 
-    public String stallName;
+    private Integer stallLocation;
 
-    public String stallLocation;
+    private Float stallRent;
 
-    public Float stallRent;
+    private Float costLastMonth;
 
-    public Float costLastMonth;
+    private String operationName;
 
-    public Integer manageTimeSoFar;
-
-    public Float aveMonthlySalesAmount;
-
-    public String operationName;
-
-
+    private String[] recipes;
+//{stallName:'',
+//     *     * stallLocation:'',stallRent:'Float',
+//     *     * costLastMonth:'Float',
+//     *     * operationName:''}
+    public Stall(String para) {
+        JSONObject json = JSONObject.parseObject(para);
+        stallName = json.getString("stallName");
+        stallLocation = json.getInteger("stallLocation");
+        stallRent = json.getFloat("stallRent");
+        costLastMonth = json.getFloat("costLastMonth");
+        operationName = json.getString("operationName");
+        try {
+            JSONArray array = json.getJSONArray("recipes");
+            recipes = new String[array.size()];
+            recipes = array.toArray(recipes);
+        } catch (Exception e) {
+            recipes = new String[0];
+        }
+    }
 }

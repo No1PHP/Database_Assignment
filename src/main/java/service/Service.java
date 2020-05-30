@@ -638,6 +638,15 @@ public class Service {
         return stall.getStallRent();
     }
 
+    public TransactionRecord saveTransactionRecord(int amount, float price, String recipeName, String stallName) throws IllegalRequestException, RestrictedOperationException {
+        if (!account.getAccessInfo().getAccessToStall()) throw new IllegalRequestException();
+        Stall stall = stallRepository.findByStallName(stallName);
+        Recipe recipe = recipeRepository.findByRecipeName(recipeName);
+        if (stall == null || recipe == null) throw new RestrictedOperationException("no such stall or recipe!");
+        TransactionRecord transactionRecord = EntityFactor.getTransactionRecord(amount, price, recipe, stall);
+        return transactionRecordRepository.save(transactionRecord);
+    }
+
     /**
      * get all transaction record of a stall during a period of time
      * @param stallName stall name
@@ -652,6 +661,11 @@ public class Service {
         Stall stall = stallRepository.findByStallName(stallName);
         if (stall == null) throw new RestrictedOperationException("no such stall!");
         return transactionRecordRepository.findALLByStallNameAndTransactionTimeBetween(stallName, from, to);
+    }
+
+    public void removeTransactionRecord(int id) throws IllegalRequestException, RestrictedOperationException {
+        if (!account.getAccessInfo().getAccessToStall()) throw new IllegalRequestException();
+        transactionRecordRepository.deleteById(id);
     }
 
     public Recipe saveRecipe(String recipeName, float price, String... materials) throws IllegalRequestException, RestrictedOperationException {

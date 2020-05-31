@@ -762,39 +762,39 @@ public class Service {
     //general services
 
     public List<String> getALL(String key, int page, int size) {
-        List<Object> queryResult;
+        Iterable queryResult;
         List<String> result = new LinkedList<>();
         PageRequest pageRequest = PageRequest.of(page, size);
         switch (key) {
             case "Account":
-                queryResult = Collections.singletonList(accountRepository.findAll(pageRequest));
+                queryResult = accountRepository.findAll(pageRequest);
                 break;
             case "Material":
-                queryResult = Collections.singletonList(materialRepository.findAll(pageRequest));
+                queryResult = materialRepository.findAll(pageRequest);
                 break;
             case "MaterialOrder":
-                queryResult = Collections.singletonList(materialOrderRepository.findAll(pageRequest));
+                queryResult = materialOrderRepository.findAll(pageRequest);
                 break;
             case "MaterialUsage":
-                queryResult = Collections.singletonList(materialUsageRepository.findAll(pageRequest));
+                queryResult = materialUsageRepository.findAll(pageRequest);
                 break;
             case "OperationRecord":
-                queryResult = Collections.singletonList(operationRecordRepository.findAll(pageRequest));
+                queryResult = operationRecordRepository.findAll(pageRequest);
                 break;
             case "Recipe":
-                queryResult = Collections.singletonList(recipeRepository.findAll(pageRequest));
+                queryResult = recipeRepository.findAll(pageRequest);
                 break;
             case "ScheduleRecord":
-                queryResult = Collections.singletonList(scheduleRecordRepository.findAll(pageRequest));
+                queryResult = scheduleRecordRepository.findAll(pageRequest);
                 break;
             case "Staff":
-                queryResult = Collections.singletonList(staffRepository.findAll(pageRequest));
+                queryResult = staffRepository.findAll(pageRequest);
                 break;
             case "Stall":
-                queryResult = Collections.singletonList(stallRepository.findAll(pageRequest));
+                queryResult = stallRepository.findAll(pageRequest);
                 break;
             case "Transaction":
-                queryResult = Collections.singletonList(transactionRecordRepository.findAll(pageRequest));
+                queryResult = transactionRecordRepository.findAll(pageRequest);
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + key);

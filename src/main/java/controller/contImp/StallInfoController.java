@@ -49,12 +49,10 @@ public class StallInfoController {
                     case "ModifyStall":
                         SERVICE.saveStall(stallReq.getStallName(), stallReq.getStallLocation(), stallReq.getStallRent(), stallReq.getCostLastMonth());
                         break;
-                    case "DeleteStall":
-                        SERVICE.removeStall(stallReq.getStallName());
-                        break;
                     case "AddRecipeForStall":
                         SERVICE.saveStallWithRecipes(stallReq.getStallName(), stallReq.getStallLocation(), stallReq.getStallRent(), stallReq.getRecipes());
                         break;
+                    default: throw new Exception("wrong operation type code!");
                 }
             }catch (Exception e){
                 map.put("succeed", false);

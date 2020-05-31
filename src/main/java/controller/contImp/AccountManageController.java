@@ -47,7 +47,6 @@ public class AccountManageController {
 
             String statusMessage = (LOGIN_STATUS)?"login success":"login failed";
             reply.put("status",statusMessage);
-            //前端检查response.data.statusMessage是否为success
         } catch (Exception e) {
             reply.put("convert succeed", false);
             reply.put("error message: ", e.getMessage());

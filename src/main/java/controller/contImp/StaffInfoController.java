@@ -54,15 +54,7 @@ public class StaffInfoController{
                         map.put("succeed", true);
                         break;
                     }
-                    case "DeleteStaff": {
-                        SERVICE.removeStaff(staffReq.getStaffID());
-                        map.put("succeed", true);
-                        break;
-                    }
-                    default: {
-                        map.put("succeed", false);
-                        map.put("message: ", "no such operation!");
-                    }
+                    default: throw new Exception("wrong operation type code!");
                 }
             }catch (Exception e){
                 map.put("succeed", false);

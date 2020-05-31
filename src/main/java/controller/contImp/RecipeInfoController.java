@@ -55,11 +55,12 @@ public class RecipeInfoController {
                     SERVICE.saveRecipe(recipeReq.getRecipeName(),recipeReq.getPrice(),recipeReq.getRelevantIngredient());
                 } else if (recipeReq.getOperationName().equals("ModifyRecipe")){
                     SERVICE.modifyRecipe(recipeReq.getRecipeName(),recipeReq.getPrice(),recipeReq.getRelevantIngredient());
-                } else if (recipeReq.operationName.equals("DeleteRecipe")){
-                    SERVICE.removeRecipe(recipeReq.getRecipeName());
+                } else {
+                    throw new Exception("wrong operation type code!");
                 }
-                map.put("message","success");
+                map.put("succeed", true);
             }else{
+                map.put("succeed", false);
                 map.put("message","Please login first");
             }
         }catch (Exception e){

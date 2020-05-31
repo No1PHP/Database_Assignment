@@ -805,6 +805,40 @@ public class Service {
         return result;
     }
 
+    public void removeByID(Object id, String key) {
+        switch (key) {
+            case "Material":
+                materialRepository.removeByName((String) id);
+                break;
+            case "MaterialOrder":
+                materialOrderRepository.deleteById((Integer) id);
+                break;
+            case "MaterialUsage":
+                materialUsageRepository.deleteById((Integer) id);
+                break;
+            case "OperationRecord":
+                operationRecordRepository.deleteById((Integer) id);
+                break;
+            case "Recipe":
+                this.removeRecipe((String) id);
+                break;
+            case "ScheduleRecord":
+                scheduleRecordRepository.deleteById((Integer) id);
+                break;
+            case "Staff":
+                this.removeStaff((Integer) id);
+                break;
+            case "Stall":
+                this.removeStall((String) id);
+                break;
+            case "Transaction":
+                this.removeTransactionRecord((Integer) id);
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + key);
+        }
+    }
+
     public int getOwnID() {
         return account.getStaffID();
     }

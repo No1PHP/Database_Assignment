@@ -38,11 +38,6 @@ public class MaterialController {
                     case "Modify":
                         SERVICE.saveMaterial(material.getName(), MaterialTypes.valueOf(material.getType()), material.getUnitPrice(), material.getAvailablePeriod());
                         break;
-                    case "Delete":
-                        SERVICE.removeMaterial(material.getName());
-                        break;
-                    case "FindAll":
-                        map.put("result", SERVICE.getALL("Material"));
                     default: throw new Exception("wrong operation type code!");
                 }
                 map.put("succeed", true);

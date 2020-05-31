@@ -42,11 +42,6 @@ public class TransactionRecordController {
                     case "Modify":
                         SERVICE.saveTransactionRecord(transaction.getNumbers(), transaction.getTransactionPrice(), transaction.getRecipeName(), transaction.getStallName());
                         break;
-                    case "Delete":
-                        SERVICE.removeTransactionRecord(transaction.getTransactionID());
-                        break;
-                    case "FindAll":
-                        map.put("result", SERVICE.getALL("Transaction"));
                     default: throw new Exception("wrong operation type code!");
                 }
                 map.put("succeed", true);

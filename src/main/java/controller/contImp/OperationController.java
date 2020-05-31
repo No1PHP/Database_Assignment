@@ -1,14 +1,9 @@
 package controller.contImp;
 
 import com.alibaba.fastjson.JSONObject;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import common.HttpServletRequestUtils;
-import controller.contImp.controllerProperties.PageTurningFunction;
 import controller.model.Operation;
-import controller.model.PageInfo;
 import dao.tables.OperationRecord;
-import dao.tables.ScheduleRecord;
-import dao.tables.Stall;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,7 +24,7 @@ import static constants.globalConstants.SERVICE;
 @CrossOrigin(allowCredentials = "true")
 @RequestMapping(value = "/operate")
 @Controller
-public class OperationController implements PageTurningFunction {
+public class OperationController{
     /**
      * @param request
      * @return Map
@@ -104,33 +99,5 @@ public class OperationController implements PageTurningFunction {
             list.add(null);
         }
         return list;
-    }
-
-
-    /**
-     * @param currentPage,size,
-     * @return String
-     * @author Zhining
-     * @description Get Method  /staff?cur=1&size=10
-     * @RequestJson {currentPageNo:'',size:''} 页数；每页显示数量
-     * @create 2020/5/2 9:44 下午
-     **/
-    @RequestMapping(value = "/{currentPage}&{size}", method = RequestMethod.GET)
-    @ResponseBody
-    public Map<String, Object> pageTurning(@RequestParam(value = "pageNo", defaultValue = "1") int currentPage, @RequestParam(value = "pageSize", defaultValue = "10") int size) {
-        Map<String, Object> map = new HashMap<String, Object>();
-
-        try {
-            PageInfo pageInfo = new PageInfo(currentPage, size);
-        } catch (Exception e) {
-            map.put("succeed", false);
-            map.put("message: ", e.getMessage());
-            return map;
-        }
-
-        //打包
-        //TODO:调用service
-
-        return map;
     }
 }

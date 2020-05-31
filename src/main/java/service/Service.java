@@ -761,39 +761,40 @@ public class Service {
     /* ****************************************************** */
     //general services
 
-    public List<String> getALL(String key) {
+    public List<String> getALL(String key, int page, int size) {
         List<Object> queryResult;
         List<String> result = new LinkedList<>();
+        PageRequest pageRequest = PageRequest.of(page, size);
         switch (key) {
             case "Account":
-                queryResult = Collections.singletonList(accountRepository.findAll());
+                queryResult = Collections.singletonList(accountRepository.findAll(pageRequest));
                 break;
             case "Material":
-                queryResult = Collections.singletonList(materialRepository.findAll());
+                queryResult = Collections.singletonList(materialRepository.findAll(pageRequest));
                 break;
             case "MaterialOrder":
-                queryResult = Collections.singletonList(materialOrderRepository.findAll());
+                queryResult = Collections.singletonList(materialOrderRepository.findAll(pageRequest));
                 break;
             case "MaterialUsage":
-                queryResult = Collections.singletonList(materialUsageRepository.findAll());
+                queryResult = Collections.singletonList(materialUsageRepository.findAll(pageRequest));
                 break;
             case "OperationRecord":
-                queryResult = Collections.singletonList(operationRecordRepository.findAll());
+                queryResult = Collections.singletonList(operationRecordRepository.findAll(pageRequest));
                 break;
             case "Recipe":
-                queryResult = Collections.singletonList(recipeRepository.findAll());
+                queryResult = Collections.singletonList(recipeRepository.findAll(pageRequest));
                 break;
             case "ScheduleRecord":
-                queryResult = Collections.singletonList(scheduleRecordRepository.findAll());
+                queryResult = Collections.singletonList(scheduleRecordRepository.findAll(pageRequest));
                 break;
             case "Staff":
-                queryResult = Collections.singletonList(staffRepository.findAll());
+                queryResult = Collections.singletonList(staffRepository.findAll(pageRequest));
                 break;
             case "Stall":
-                queryResult = Collections.singletonList(stallRepository.findAll());
+                queryResult = Collections.singletonList(stallRepository.findAll(pageRequest));
                 break;
             case "Transaction":
-                queryResult = Collections.singletonList(transactionRecordRepository.findAll());
+                queryResult = Collections.singletonList(transactionRecordRepository.findAll(pageRequest));
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + key);

@@ -12,7 +12,7 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "MaterialOrder")
-public class MaterialOrder {
+public class MaterialOrder implements Serializable {
     @Id
     @Column(name = "op_OrderID", updatable = false)
      private Integer operationOrderID;

@@ -52,6 +52,9 @@ public class StallInfoController {
                     case "AddRecipeForStall":
                         SERVICE.saveStallWithRecipes(stallReq.getStallName(), stallReq.getStallLocation(), stallReq.getStallRent(), stallReq.getRecipes());
                         break;
+                    case "removeRecipeForStall":
+                        SERVICE.removeRecipeFromStall(stallReq.getStallName(), stallReq.getRecipes());
+                        break;
                     default: throw new Exception("wrong operation type code!");
                 }
             }catch (Exception e){

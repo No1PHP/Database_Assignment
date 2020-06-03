@@ -55,7 +55,7 @@ public class Stall {
 
     @Override
     public String toString() {
-        StringBuilder stringBuilder = new StringBuilder(", materials=[");
+        StringBuilder stringBuilder = new StringBuilder("[");
         int count = 0;
         for (Recipe e : recipes) {
             stringBuilder.append('\'');

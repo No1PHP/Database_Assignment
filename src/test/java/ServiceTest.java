@@ -77,6 +77,7 @@ public class ServiceTest {
 
         service.saveStallWithRecipes("testStall", stallList.get(0).getStallLocation()+1, 1000, "小笼包", "馄饨", "蛋炒饭");
         Stall stall = stallRepository.findByStallName("testStall");
+        System.out.println(stall);
         assertNotNull(stall);
         assertEquals(stall.getRecipes().size(), 3);
     }

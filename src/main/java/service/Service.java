@@ -381,7 +381,8 @@ public class Service {
         Map<String, Float> result = new HashMap<>();
         List<Material> materials = materialRepository.findAll();
         for (Material e : materials) {
-            result.put(e.getName(), getMaterialAvailableAmount(e.getName()));
+            float available = getMaterialAvailableAmount(e.getName());
+            if (available < amount) result.put(e.getName(), available);
         }
         return result;
     }

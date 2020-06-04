@@ -69,29 +69,4 @@ public class RecipeInfoController {
         }
         return map;
     }
-
-
-    /**
-     * @author Zhining
-     * @description 得到所有菜谱(本页面的)
-     * @param pageNo,size
-     * @RequestJson
-    * 前端的请求：localhost:8000/Recipes？'+'pageNo='+pageNo+'&'+'size='+size
-     *
-     *{page:'',size:''}
-     * @return Map
-     * @create 2020/5/2 11:25 下午
-     **/
-    @RequestMapping(value = "/show",method = RequestMethod.GET)
-    @ResponseBody //返回一个list
-    public List<String> getRecipesPerPage(@RequestParam(name = "pageNo") int pageNo, @RequestParam(name = "size") int size){
-        //根据页数和长度获取本页的recipe信息
-        List<String> result = new LinkedList<>();
-        if (!LOGIN_STATUS) return result;
-        Page<dao.tables.Recipe> page = SERVICE.getRecipeByPage(size, pageNo);
-        for (dao.tables.Recipe e : page) {
-            result.add(e.toString());
-        }
-        return result;
-    }
 }

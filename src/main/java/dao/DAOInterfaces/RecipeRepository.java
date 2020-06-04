@@ -1,5 +1,6 @@
 package dao.DAOInterfaces;
 
+import dao.tables.Material;
 import dao.tables.Recipe;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -23,4 +24,6 @@ public interface RecipeRepository extends JpaRepository<Recipe, Integer>, JpaSpe
             "group by r.recipeName " +
             "order by sum(t.numbers) desc")
     List<Object[]> findSalesOrderDuring(Timestamp from, Timestamp to);
+
+    List<Recipe> findALLByMaterialsContains(Material material);
 }

@@ -301,21 +301,6 @@ public class Service {
     //material services
 
     /**
-     * get available amount of one material
-     * @param materialName material name
-     * @return available amount
-     * @throws IllegalRequestException current account doesn't have the permission
-     */
-    public float getMaterialAvailableAmount(String materialName) throws IllegalRequestException {
-        if (!account.getAccessInfo().getAccessToMaterial()) throw new IllegalRequestException();
-
-        Timestamp limit = getTimeLimit(materialRepository.findByName(materialName), 0);
-        Float ordered = materialOrderRepository.findAvailableByName(materialName, limit);
-        Float used = materialUsageRepository.getUsageOf(materialName, limit);
-        return (ordered == null || used == null)? 0 : ordered - used;
-    }
-
-    /**
      * get the material usage between a period of time
      * @param from begging time
      * @param until ending time
@@ -331,22 +316,6 @@ public class Service {
             result.put(e.getName(), materialUsageRepository.getTotalUsageByTimeBetween(e.getName(), from, until));
         }
         return result;
-    }
-
-    /**
-     * get one kinds of material usage between a period of time
-     * @param materialName name of material
-     * @param from begging time
-     * @param until ending time
-     * @return material usage
-     * @throws IllegalRequestException current account doesn't have the permission
-     */
-    public float getMaterialUsageBetween(String materialName, Timestamp from, Timestamp until) throws IllegalRequestException {
-        if (!account.getAccessInfo().getAccessToMaterial()) throw new IllegalRequestException();
-
-        Material material = materialRepository.findByName(materialName);
-        Float result = materialUsageRepository.getTotalUsageByTimeBetween(material.getName(), from, until);
-        return (result == null)? 0 : result;
     }
 
     /**
@@ -701,10 +670,6 @@ public class Service {
         if (recipe == null) throw new RestrictedOperationException("no such recipe");
         recipeRepository.delete(recipe);
     }
-
-    public Page<Recipe> getRecipeByPage(int limit, int page) {
-        return recipeRepository.findAll(PageRequest.of(page, limit));
-    }
     /* ****************************************************** */
     //staff services
 
@@ -763,6 +728,33 @@ public class Service {
     /* ****************************************************** */
     //general services
 
+    /**
+     * get one kinds of material usage between a period of time
+     * @param materialName name of material
+     * @param from begging time
+     * @param until ending time
+     * @return material usage
+     * @throws IllegalRequestException current account doesn't have the permission
+     */
+    public float getMaterialUsageBetween(String materialName, Timestamp from, Timestamp until) throws IllegalRequestException {
+        Material material = materialRepository.findByName(materialName);
+        Float result = materialUsageRepository.getTotalUsageByTimeBetween(material.getName(), from, until);
+        return (result == null)? 0 : result;
+    }
+
+    /**
+     * get available amount of one material
+     * @param materialName material name
+     * @return available amount
+     * @throws IllegalRequestException current account doesn't have the permission
+     */
+    public float getMaterialAvailableAmount(String materialName) throws IllegalRequestException {
+        Timestamp limit = getTimeLimit(materialRepository.findByName(materialName), 0);
+        Float ordered = materialOrderRepository.findAvailableByName(materialName, limit);
+        Float used = materialUsageRepository.getUsageOf(materialName, limit);
+        return (ordered == null || used == null)? 0 : ordered - used;
+    }
+
     public JSONArray getALL(String key, int page, int size) {
         Iterable queryResult;
         JSONArray array = new JSONArray();
@@ -805,6 +797,14 @@ public class Service {
             JSONObject json = ((JSONAble)e).getJson();
             if ("Material".equals(key)) {
                 json.put("availableAmount", this.getMaterialAvailableAmount(json.getString("name")));
+                json.put("materialUsages", this.getMaterialUsageBetween(json.getString("name"), new Timestamp(0), new Timestamp(System.currentTimeMillis())));
+                Collection<Recipe> recipes = recipeRepository.findALLByMaterialsContains((Material) e);
+                StringBuilder stringBuilder = new StringBuilder("");
+                for (Recipe r : recipes) {
+                    stringBuilder.append(r.getRecipeName());
+                    stringBuilder.append(" ");
+                }
+                json.put("recipes", stringBuilder.toString());
             }
             array.add(json);
         }

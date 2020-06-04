@@ -72,7 +72,7 @@ public abstract class HttpServletRequestUtils {
      * @return
      */
     public static <T> T getModel(HttpServletRequest request, String key, Class<T> cType) throws JsonProcessingException {
-        String accountInfoString = HttpServletRequestUtils.getString(request, key);
+        String accountInfoString = "\""+HttpServletRequestUtils.getString(request, key).replaceAll("\"", "'")+"\"";
         ObjectMapper mapper = new ObjectMapper();
         return mapper.readValue(accountInfoString, cType);
     }

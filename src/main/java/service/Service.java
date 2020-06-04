@@ -218,11 +218,9 @@ public class Service {
         Staff none = staffRepository.findALLByStaffName("none").get(0);
         for (OperationRecord e : operationRecords) {
             e.setStaff(none);
-            none.getOperationRecords().add(e);
         }
         operationRecordRepository.saveAll(operationRecords);
         operationRecordRepository.flush();
-        staffRepository.saveAndFlush(none);
         staffRepository.delete(staff);
         staffRepository.flush();
     }
@@ -813,34 +811,73 @@ public class Service {
         return array;
     }
 
-    public void removeByID(Object id, String key) {
+    public long getTotalPage(String key, int size) {
+        long count = 0;
         switch (key) {
+            case "Account":
+                count = accountRepository.count();
+                break;
             case "Material":
-                materialRepository.removeByName((String) id);
+                count = materialRepository.count();
                 break;
             case "MaterialOrder":
-                materialOrderRepository.deleteById((Integer) id);
+                count = materialOrderRepository.count();
                 break;
             case "MaterialUsage":
-                materialUsageRepository.deleteById((Integer) id);
+                count = materialUsageRepository.count();
                 break;
             case "OperationRecord":
-                operationRecordRepository.deleteById((Integer) id);
+                count = operationRecordRepository.count();
                 break;
             case "Recipe":
-                this.removeRecipe((String) id);
+                count = recipeRepository.count();
                 break;
             case "ScheduleRecord":
-                scheduleRecordRepository.deleteById((Integer) id);
+                count = scheduleRecordRepository.count();
                 break;
             case "Staff":
-                this.removeStaff((Integer) id);
+                count = staffRepository.count();
                 break;
             case "Stall":
-                this.removeStall((String) id);
+                count = stallRepository.count();
                 break;
             case "Transaction":
-                this.removeTransactionRecord((Integer) id);
+                count = transactionRecordRepository.count();
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + key);
+        }
+        return count/size + ((count%size == 0)? 0 : 1);
+    }
+
+    public void removeByID(String id, String key) {
+        switch (key) {
+            case "Material":
+                materialRepository.removeByName(id);
+                break;
+            case "MaterialOrder":
+                materialOrderRepository.deleteById(Integer.parseInt(id));
+                break;
+            case "MaterialUsage":
+                materialUsageRepository.deleteById(Integer.parseInt(id));
+                break;
+            case "OperationRecord":
+                operationRecordRepository.deleteById(Integer.parseInt(id));
+                break;
+            case "Recipe":
+                this.removeRecipe(id);
+                break;
+            case "ScheduleRecord":
+                scheduleRecordRepository.deleteById(Integer.parseInt(id));
+                break;
+            case "Staff":
+                this.removeStaff(Integer.parseInt(id));
+                break;
+            case "Stall":
+                this.removeStall(id);
+                break;
+            case "Transaction":
+                this.removeTransactionRecord(Integer.parseInt(id) );
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + key);

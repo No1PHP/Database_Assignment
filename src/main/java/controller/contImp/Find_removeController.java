@@ -20,6 +20,7 @@ public class Find_removeController {
         if (LOGIN_STATUS) {
             try {
                 map.put("result", SERVICE.getALL(name, pageNo, size));
+                map.put("totalPage", SERVICE.getTotalPage(name, size));
                 map.put("succeed", true);
             } catch (Exception e) {
                 map.put("succeed", false);
@@ -34,7 +35,7 @@ public class Find_removeController {
 
     @RequestMapping(value = "/delete", method = RequestMethod.GET)
     @ResponseBody
-    public Map<String, Object> removeByID(@RequestParam("id") Object id, @RequestParam("name") String name) {
+    public Map<String, Object> removeByID(@RequestParam("id") String id, @RequestParam("name") String name) {
         Map<String, Object> map = new HashMap<>();
         if (LOGIN_STATUS) {
             try {

@@ -31,7 +31,7 @@ public class Recipe implements JSONAble {
     private Float price;
     /********************************************************/
     //transaction record foreign key
-    @OneToMany(mappedBy = "recipe", cascade = {CascadeType.REFRESH, CascadeType.MERGE})
+    @OneToMany(mappedBy = "recipe", cascade = {CascadeType.REFRESH, CascadeType.MERGE, CascadeType.REMOVE})
     private Set<TransactionRecord> transactionRecords = new HashSet<>();
 
     @ManyToMany(mappedBy = "recipes", cascade = {CascadeType.MERGE, CascadeType.REFRESH})

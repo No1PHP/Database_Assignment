@@ -1,5 +1,7 @@
 package dao.tables;
 
+import com.alibaba.fastjson.JSONObject;
+import dao.JSONAble;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,7 +16,7 @@ import java.sql.Timestamp;
 @Setter
 @Entity
 @Table(name = "OperationRecord")
-public class OperationRecord {
+public class OperationRecord implements JSONAble {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "operationId", insertable = false)
@@ -55,14 +57,15 @@ public class OperationRecord {
     @OneToOne(mappedBy = "operationRecord", cascade = {CascadeType.REFRESH, CascadeType.REMOVE}, fetch = FetchType.LAZY)
     private ScheduleRecord scheduleRecord;
     /********************************************************/
-    @Override
-    public String toString() {
-        return "{operationID=" + operationID +
-                ", staffID=" + staffID +
-                ", operationType=" + operationType +
-                ", note='" + note + '\'' +
-                ", operationTime=" + operationTime +
-                ", willSendUpdateMessage=" + willSendUpdateMessage +
-                '}';
+
+    public JSONObject getJson() {
+        JSONObject json = new JSONObject();
+        json.put("operationID", operationID);
+        json.put("staffID", staffID);
+        json.put("operationType", operationType);
+        json.put("note", note);
+        json.put("operationTime", operationTime);
+        json.put("willSendUpdateMessage", willSendUpdateMessage);
+        return json;
     }
 }

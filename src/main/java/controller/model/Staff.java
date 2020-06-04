@@ -33,7 +33,7 @@ public class Staff {
         JSONObject json = JSONObject.parseObject(para);
         this.staffID = json.getInteger("staffID");
         this.staffName = json.getString("staffName");
-        this.staffCategory = StaffCategoryTypes.getByIndex(json.getInteger("staffCategoryTypes"));
+        this.staffCategory = StaffCategoryTypes.valueOf(json.getString("staffCategoryTypes"));
         this.timeStartWorking = Time.valueOf(json.getString("timeStartWorking"));
         this.timeEndWorking = Time.valueOf(json.getString("timeEndWorking"));
         this.operationName = json.getString("operationName");

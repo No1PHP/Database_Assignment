@@ -1,8 +1,11 @@
 package service;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.sun.tools.corba.se.idl.constExpr.Times;
 import dao.DAOInterfaces.*;
 import dao.DAO_Type;
+import dao.JSONAble;
 import dao.enums.MaterialTypes;
 import dao.enums.OperationType;
 import dao.enums.StaffCategoryTypes;
@@ -762,10 +765,10 @@ public class Service {
     /* ****************************************************** */
     //general services
 
-    public List<String> getALL(String key, int page, int size) {
+    public JSONArray getALL(String key, int page, int size) {
         Iterable queryResult;
-        List<String> result = new LinkedList<>();
-        PageRequest pageRequest = PageRequest.of(page, size);
+        JSONArray array = new JSONArray();
+        PageRequest pageRequest = PageRequest.of(page-1, size);
         switch (key) {
             case "Account":
                 queryResult = accountRepository.findAll(pageRequest);
@@ -801,9 +804,13 @@ public class Service {
                 throw new IllegalStateException("Unexpected value: " + key);
         }
         for (Object e: queryResult) {
-            result.add(e.toString());
+            JSONObject json = ((JSONAble)e).getJson();
+            if ("Material".equals(key)) {
+                json.put("availableAmount", this.getMaterialAvailableAmount(json.getString("name")));
+            }
+            array.add(json);
         }
-        return result;
+        return array;
     }
 
     public void removeByID(Object id, String key) {

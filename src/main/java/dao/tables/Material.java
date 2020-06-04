@@ -1,5 +1,7 @@
 package dao.tables;
 
+import com.alibaba.fastjson.JSONObject;
+import dao.JSONAble;
 import dao.enums.MaterialTypes;
 import lombok.Data;
 import lombok.Getter;
@@ -15,7 +17,7 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "Material")
-public class Material {
+public class Material implements JSONAble {
     @Id
     @Column(name = "name")
     private String name;
@@ -41,13 +43,12 @@ public class Material {
     @OneToMany(mappedBy = "material", cascade = CascadeType.ALL)
     private Set<MaterialUsage> materialUsages = new HashSet<>();
 
-    @Override
-    public String toString() {
-        return "{" +
-                "name='" + name + '\'' +
-                ", type=" + MaterialTypes.getByIndex(type) +
-                ", unitPrice=" + unitPrice +
-                ", availablePeriod=" + availablePeriod +
-                '}';
+    public JSONObject getJson() {
+        JSONObject json = new JSONObject();
+        json.put("name", name);
+        json.put("type", MaterialTypes.getByIndex(type));
+        json.put("unitPrice", unitPrice);
+        json.put("availablePeriod", availablePeriod);
+        return json;
     }
 }

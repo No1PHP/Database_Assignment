@@ -1,5 +1,7 @@
 package dao.tables;
 
+import com.alibaba.fastjson.JSONObject;
+import dao.JSONAble;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,7 +18,7 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "Schedule_record")
-public class ScheduleRecord {
+public class ScheduleRecord implements JSONAble {
     @Id
     @Column(name = "op_ID")
     private Integer operationID;
@@ -40,13 +42,12 @@ public class ScheduleRecord {
     @JoinColumn(name = "op_ID", referencedColumnName = "operationId")
     private OperationRecord operationRecord;
 
-    @Override
-    public String toString() {
-        return "{" +
-                "operationID=" + operationID +
-                ", staffID=" + staffID +
-                ", timeScheduledToStartWorking=" + timeScheduledToStartWorking +
-                ", timeScheduledToEndWorking=" + timeScheduledToEndWorking +
-                '}';
+    public JSONObject getJson() {
+        JSONObject json = new JSONObject();
+        json.put("operationID", operationID);
+        json.put("staffID", staffID);
+        json.put("timeScheduledToStartWorking", timeScheduledToStartWorking);
+        json.put("timeScheduledToEndWorking", timeScheduledToEndWorking);
+        return json;
     }
 }

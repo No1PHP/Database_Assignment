@@ -1,5 +1,8 @@
 package dao.tables;
 
+import com.alibaba.fastjson.JSONObject;
+import dao.JSONAble;
+import dao.enums.StaffCategoryTypes;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,7 +16,7 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "Staff")
-public class Staff {
+public class Staff implements JSONAble {
     private static final long serialVersionUID = 8L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,14 +49,13 @@ public class Staff {
     @OneToMany(mappedBy = "staff", cascade = {CascadeType.REFRESH, CascadeType.REMOVE})
     private Set<OperationRecord> operationRecords = new HashSet<>();
 
-    @Override
-    public String toString() {
-        return "{" +
-                "staffID=" + staffID +
-                ", staffName='" + staffName + '\'' +
-                ", staffCategory=" + staffCategory +
-                ", timeStartWorking=" + timeStartWorking +
-                ", timeEndWorking=" + timeEndWorking +
-                '}';
+    public JSONObject getJson() {
+        JSONObject json = new JSONObject();
+        json.put("staffID", staffID);
+        json.put("staffName", staffName);
+        json.put("staffCategoryTypes", StaffCategoryTypes.getByIndex(staffCategory));
+        json.put("timeStartWorking", timeStartWorking);
+        json.put("timeEndWorking", timeEndWorking);
+        return json;
     }
 }

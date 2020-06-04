@@ -19,7 +19,7 @@ public class Find_removeController {
         Map<String, Object> map = new HashMap<>();
         if (LOGIN_STATUS) {
             try {
-                map.put("result", SERVICE.getALL(name, size, pageNo));
+                map.put("result", SERVICE.getALL(name, pageNo, size));
                 map.put("succeed", true);
             } catch (Exception e) {
                 map.put("succeed", false);

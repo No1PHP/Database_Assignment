@@ -1,5 +1,8 @@
 package dao.tables;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import dao.JSONAble;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,7 +17,7 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "Stall")
-public class Stall {
+public class Stall implements JSONAble {
     @Id
     @Column(name = "stall_name", length = 30)
     private String stallName;
@@ -53,27 +56,21 @@ public class Stall {
     @OneToMany(mappedBy = "stall", cascade = CascadeType.ALL)
     private Set<MaterialUsage> materialUsages = new HashSet<>();
 
-    @Override
-    public String toString() {
-        StringBuilder stringBuilder = new StringBuilder("[");
-        int count = 0;
+    public JSONObject getJson() {
+        JSONObject json = new JSONObject();
+        json.put("stallName", stallName);
+        json.put("stallLocation", stallLocation);
+        json.put("stallRent", stallRent);
+        json.put("costLastMonth", costLastMonth);
+        json.put("manageTimeSoFar", manageTimeSoFar);
+        json.put("aveMonthlySalesAmount", aveMonthlySalesAmount);
+        json.put("aveSalesIncome", aveSalesIncome);
+        StringBuilder array = new StringBuilder();
         for (Recipe e : recipes) {
-            stringBuilder.append('\'');
-            stringBuilder.append(e.getRecipeName());
-            stringBuilder.append('\'');
-            if (++count < recipes.size())
-                stringBuilder.append(',');
+            array.append(e.getRecipeName());
+            array.append(" ");
         }
-        stringBuilder.append("]}");
-        return "{" +
-                "stallName='" + stallName + '\'' +
-                ", stallLocation=" + stallLocation +
-                ", stallRent=" + stallRent +
-                ", costLastMonth=" + costLastMonth +
-                ", manageTimeSoFar=" + manageTimeSoFar +
-                ", aveMonthlySalesAmount=" + aveMonthlySalesAmount +
-                ", aveSalesIncome=" + aveSalesIncome +
-                ", recipes=" + stringBuilder +
-                '}';
+        json.put("recipes", array.toString());
+        return json;
     }
 }

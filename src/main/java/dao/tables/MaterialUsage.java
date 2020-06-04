@@ -1,5 +1,7 @@
 package dao.tables;
 
+import com.alibaba.fastjson.JSONObject;
+import dao.JSONAble;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,7 +17,7 @@ import java.sql.Timestamp;
 @Setter
 @Entity
 @Table(name = "MaterialUsage")
-public class MaterialUsage {
+public class MaterialUsage implements JSONAble {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "usage_id")
@@ -50,15 +52,14 @@ public class MaterialUsage {
     @JoinColumn(name = "storageID", referencedColumnName = "op_storageID")
     private MaterialOrder materialOrder;
 
-    @Override
-    public String toString() {
-        return "{" +
-                "usageId=" + usageId +
-                ", stallName='" + stallName + '\'' +
-                ", materialName='" + materialName + '\'' +
-                ", storageID=" + storageID +
-                ", time=" + time +
-                ", amount=" + amount +
-                '}';
+    public JSONObject getJson() {
+        JSONObject json = new JSONObject();
+        json.put("usageId", usageId);
+        json.put("stallName", stallName);
+        json.put("materialName", materialName);
+        json.put("storageID", storageID);
+        json.put("time", time);
+        json.put("amount", amount);
+        return json;
     }
 }

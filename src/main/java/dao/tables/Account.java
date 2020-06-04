@@ -1,5 +1,7 @@
 package dao.tables;
 
+import com.alibaba.fastjson.JSONObject;
+import dao.JSONAble;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,7 +12,7 @@ import java.io.Serializable;
 @Setter
 @Entity
 @Table(name = "Account")
-public class Account {
+public class Account implements JSONAble {
     //primary key
     @Id
     @Column(name = "staffId")
@@ -36,12 +38,11 @@ public class Account {
     @JoinColumn(name = "position", referencedColumnName = "position")
     private AccessInfo accessInfo;
 
-    @Override
-    public String toString() {
-        return "{" +
-                "staffID=" + staffID +
-                ", position='" + position + '\'' +
-                ", accountName='" + accountName + '\'' +
-                '}';
+    public JSONObject getJson() {
+        JSONObject json = new JSONObject();
+        json.put("staffID", staffID);
+        json.put("position", position);
+        json.put("accountName", accountName);
+        return json;
     }
 }

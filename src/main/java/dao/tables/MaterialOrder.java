@@ -1,5 +1,8 @@
 package dao.tables;
 
+import com.alibaba.fastjson.JSONObject;
+import dao.JSONAble;
+import dao.enums.MaterialTypes;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,7 +15,7 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "MaterialOrder")
-public class MaterialOrder implements Serializable {
+public class MaterialOrder implements Serializable ,JSONAble {
     @Id
     @Column(name = "op_OrderID", updatable = false)
      private Integer operationOrderID;
@@ -46,13 +49,12 @@ public class MaterialOrder implements Serializable {
     @OneToMany(mappedBy = "materialOrder", cascade = {CascadeType.REFRESH, CascadeType.REMOVE}, fetch = FetchType.LAZY)
     private Set<MaterialUsage> materialUsages = new HashSet<>();
 
-    @Override
-    public String toString() {
-        return "{" +
-                "operationOrderID=" + operationOrderID +
-                ", operationStorageID=" + operationStorageID +
-                ", materialName='" + materialName + '\'' +
-                ", materialAmount=" + materialAmount +
-                '}';
+    public JSONObject getJson() {
+        JSONObject json = new JSONObject();
+        json.put("operationOrderID", operationOrderID);
+        json.put("operationStorageID", operationStorageID);
+        json.put("materialName", materialName);
+        json.put("materialAmount", materialAmount);
+        return json;
     }
 }

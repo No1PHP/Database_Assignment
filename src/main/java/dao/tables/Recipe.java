@@ -1,6 +1,9 @@
 package dao.tables;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.vladmihalcea.hibernate.type.json.JsonStringType;
+import dao.JSONAble;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,7 +21,7 @@ import javax.persistence.*;
 @Setter
 @Entity
 @Table(name = "Recipe")
-public class Recipe {
+public class Recipe implements JSONAble {
     @Id
     @Column(name = "recipeName", length = 30)
     private String recipeName;
@@ -42,22 +45,16 @@ public class Recipe {
     )
     private Set<Material> materials = new HashSet<>();
     /********************************************************/
-    @Override
-    public String toString() {
-        StringBuilder stringBuilder = new StringBuilder("{recipeName='");
-        stringBuilder.append(recipeName);
-        stringBuilder.append("', price=");
-        stringBuilder.append(price);
-        stringBuilder.append(", materials=[");
-        int count = 0;
+    public JSONObject getJson() {
+        JSONObject json = new JSONObject();
+        json.put("recipeName", recipeName);
+        json.put("price", price);
+        StringBuilder array = new StringBuilder();
         for (Material e : materials) {
-            stringBuilder.append('\'');
-            stringBuilder.append(e.getName());
-            stringBuilder.append('\'');
-            if (++count < materials.size())
-                stringBuilder.append(',');
+            array.append(e.getName());
+            array.append(" ");
         }
-        stringBuilder.append("]}");
-        return stringBuilder.toString();
+        json.put("relevantIngredient", array.toString());
+        return json;
     }
 }

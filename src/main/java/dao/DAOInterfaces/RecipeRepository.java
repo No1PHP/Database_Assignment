@@ -25,5 +25,13 @@ public interface RecipeRepository extends JpaRepository<Recipe, Integer>, JpaSpe
             "order by sum(t.numbers) desc")
     List<Object[]> findSalesOrderDuring(Timestamp from, Timestamp to);
 
+    @Query(value = "select sum(t.numbers) " +
+            "from Recipe r " +
+            "left join TransactionRecord t with r.recipeName = t.recipeName " +
+            "where r.recipeName = ?1 " +
+            "and t.transactionTime >= ?2 " +
+            "and t.transactionTime <= ?3")
+    Integer findSalesDuring(String name, Timestamp from, Timestamp to);
+
     List<Recipe> findALLByMaterialsContains(Material material);
 }

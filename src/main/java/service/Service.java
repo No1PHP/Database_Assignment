@@ -530,6 +530,11 @@ public class Service {
         return recipeRepository.findSalesOrderDuring(from, to);
     }
 
+    public int findSalesDuring30Day(String name) {
+        Integer result = recipeRepository.findSalesDuring(name, new Timestamp(System.currentTimeMillis() - 30*86400000L), new Timestamp(System.currentTimeMillis()));
+        return result == null ? 0 : result;
+    }
+
     /**
      * get total sales volume between a period of time
      * @param from begging time
@@ -820,6 +825,8 @@ public class Service {
                 json.put("usedAmount", materialOrderRepository.getUsedAmount(json.getInteger("operationStorageID")));
             } else if ("Stall".equals(key)) {
                 json.put("totalSales", this.getTotalSalesDuring(json.getString("stallName"), new Timestamp(System.currentTimeMillis() - 30*86400000L), new Timestamp(System.currentTimeMillis())));
+            } else if ("Recipe".equals(key)) {
+                json.put("totalSales", this.findSalesDuring30Day(json.getString("recipeName")));
             }
             array.add(json);
         }

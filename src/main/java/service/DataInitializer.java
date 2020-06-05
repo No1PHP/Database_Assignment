@@ -65,8 +65,8 @@ public abstract class DataInitializer {
         Time time18 = new Time(18,0,0);
         staffMap.put("none", EntityFactor.getStaff("none", StaffCategoryTypes.NONE, time0, time0));
         staffMap.put("admin", EntityFactor.getStaff("admin", StaffCategoryTypes.ADMIN, time8, time18));
-        staffMap.put("manager1", EntityFactor.getStaff("manager1", StaffCategoryTypes.MANAGER, time8, time18));
-        staffMap.put("manager2", EntityFactor.getStaff("manager2", StaffCategoryTypes.MANAGER, time8, time18));
+        staffMap.put("manager1", EntityFactor.getStaff("manager1", StaffCategoryTypes.STAFF_MANAGER, time8, time18));
+        staffMap.put("manager2", EntityFactor.getStaff("manager2", StaffCategoryTypes.STALL_MANAGER, time8, time18));
         staffMap.put("storeroomClerk1", EntityFactor.getStaff("storeroomClerk1", StaffCategoryTypes.STOREROOM_CLERK, time8, time18));
         staffMap.put("storeroomClerk2", EntityFactor.getStaff("storeroomClerk2", StaffCategoryTypes.STOREROOM_CLERK, time8, time18));
         staffMap.put("storeroomClerk3", EntityFactor.getStaff("storeroomClerk3", StaffCategoryTypes.STOREROOM_CLERK, time8, time18));

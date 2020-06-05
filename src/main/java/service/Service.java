@@ -2,7 +2,6 @@ package service;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.sun.tools.corba.se.idl.constExpr.Times;
 import dao.DAOInterfaces.*;
 import dao.DAO_Type;
 import dao.JSONAble;
@@ -10,12 +9,8 @@ import dao.enums.MaterialTypes;
 import dao.enums.OperationType;
 import dao.enums.StaffCategoryTypes;
 import dao.tables.*;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.transaction.annotation.Transactional;
 import service.exceptions.IllegalRequestException;
 import service.exceptions.RestrictedOperationException;
 

@@ -3,6 +3,7 @@ package controller.contImp;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import common.HttpServletRequestUtils;
 import controller.model.Staff;
+import dao.enums.StaffCategoryTypes;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,7 +46,8 @@ public class StaffInfoController{
                 Staff staffReq = HttpServletRequestUtils.getModel(request, "staffRequestString", Staff.class);
                 switch (staffReq.getOperationName()) {
                     case "AddStaff": {
-                        SERVICE.insertStaff(staffReq.getStaffName(),staffReq.getStaffCategory(),staffReq.getTimeStartWorking(),staffReq.getTimeEndWorking());
+                        dao.tables.Staff staff = SERVICE.insertStaff(staffReq.getStaffName(),staffReq.getStaffCategory(),staffReq.getTimeStartWorking(),staffReq.getTimeEndWorking());
+                        SERVICE.saveAccount(staff.getStaffID(), staffReq.getStaffCategory().getPosition(), staffReq.getStaffName(), staffReq.getStaffName());
                         map.put("succeed", true);
                         break;
                     }

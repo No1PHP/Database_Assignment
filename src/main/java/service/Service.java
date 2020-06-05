@@ -762,7 +762,7 @@ public class Service {
         Timestamp limit = getTimeLimit(materialRepository.findByName(materialName), 0);
         Float ordered = materialOrderRepository.findAvailableByName(materialName, limit);
         Float used = materialUsageRepository.getUsageOf(materialName, limit);
-        return (ordered == null || used == null)? 0 : ordered - used;
+        return (ordered == null)? 0 : ordered - ((used == null)? 0 : used);
     }
 
     public JSONArray getALL(String key, int page, int size) {

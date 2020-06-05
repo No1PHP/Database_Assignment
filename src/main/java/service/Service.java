@@ -815,8 +815,7 @@ public class Service {
                     stringBuilder.append(" ");
                 }
                 json.put("recipes", stringBuilder.toString());
-            } else if ("MaterialOrder".equals(key)) {
-                if (json.getInteger("operationStorageID") == null) continue;
+            } else if ("MaterialOrder".equals(key) && json.getInteger("operationStorageID") != null) {
                 json.put("usedAmount", materialOrderRepository.getUsedAmount(json.getInteger("operationStorageID")));
             }
             array.add(json);

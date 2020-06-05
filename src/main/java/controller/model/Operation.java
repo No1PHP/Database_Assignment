@@ -21,7 +21,7 @@ public class Operation {
 
     public Operation (String para) {
         JSONObject json = JSONObject.parseObject(para);
-        operationType = OperationType.getByIndex(json.getInteger("operationType"));
+        operationType = OperationType.valueOf(json.getString("operationType"));
         note = json.getString("note");
         body = json.getJSONObject("body");
     }

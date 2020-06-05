@@ -30,20 +30,14 @@ public class TransactionRecordController {
      * @param request
      * @return
      */
-    @RequestMapping(value = "/operate", method = RequestMethod.POST)
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
     public Map<String, Object> doOperation(HttpServletRequest request) {
         Map<String, Object> map = new HashMap<>();
         if (LOGIN_STATUS) {
             try {
                 Transaction transaction = HttpServletRequestUtils.getModel(request, "transactionRequest", Transaction.class);
-                switch (transaction.getOperation()) {
-                    case "Add":
-                    case "Modify":
-                        SERVICE.saveTransactionRecord(transaction.getNumbers(), transaction.getTransactionPrice(), transaction.getRecipeName(), transaction.getStallName());
-                        break;
-                    default: throw new Exception("wrong operation type code!");
-                }
+                SERVICE.saveTransactionRecord(transaction.getNumbers(), transaction.getTransactionPrice(), transaction.getRecipeName(), transaction.getStallName());
                 map.put("succeed", true);
             } catch (Exception e) {
                 map.put("succeed", false);

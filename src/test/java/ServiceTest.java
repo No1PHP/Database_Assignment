@@ -73,13 +73,11 @@ public class ServiceTest {
 
     @Test
     public void saveStallWithRecipes() {
-        List<Stall> stallList = stallRepository.findAll(Sort.by("stallLocation").descending());
-
-        service.saveStallWithRecipes("testStall", stallList.get(0).getStallLocation()+1, 1000, "小笼包", "馄饨", "蛋炒饭");
-        Stall stall = stallRepository.findByStallName("testStall");
+        service.saveStallWithRecipes("川菜" , "小笼包", "馄饨", "蛋炒饭");
+        Stall stall = stallRepository.findByStallName("川菜");
         System.out.println(stall);
         assertNotNull(stall);
-        assertEquals(stall.getRecipes().size(), 3);
+        assertEquals(stall.getRecipes().size(), 4);
     }
 
     @Test

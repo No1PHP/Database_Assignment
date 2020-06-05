@@ -26,6 +26,6 @@ public class Recipe {
           recipeName = jsonObject.getString("recipeName");
           price = jsonObject.getFloat("price");
           operationName = jsonObject.getString("operationName");
-          relevantIngredient = jsonObject.getString("relevantIngredient").split(",");
+          relevantIngredient = jsonObject.getString("relevantIngredient").split(" ");
      }
 }

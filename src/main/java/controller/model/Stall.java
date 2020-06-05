@@ -35,7 +35,7 @@ public class Stall {
         costLastMonth = json.getFloat("costLastMonth");
         operationName = json.getString("operationName");
         try {
-            recipes = json.getString("recipes").split(",");
+            recipes = json.getString("recipes").split(" ");
         } catch (Exception e) {
             recipes = new String[0];
         }

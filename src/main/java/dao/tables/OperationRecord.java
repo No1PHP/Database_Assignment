@@ -2,6 +2,7 @@ package dao.tables;
 
 import com.alibaba.fastjson.JSONObject;
 import dao.JSONAble;
+import dao.enums.OperationType;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -62,7 +63,7 @@ public class OperationRecord implements JSONAble {
         JSONObject json = new JSONObject();
         json.put("operationID", operationID);
         json.put("staffID", staffID);
-        json.put("operationType", operationType);
+        json.put("operationType", OperationType.getByIndex(operationType));
         json.put("note", note);
         json.put("operationTime", operationTime);
         json.put("willSendUpdateMessage", willSendUpdateMessage);

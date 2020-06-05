@@ -2,6 +2,7 @@ package controller.contImp;
 
 import common.HttpServletRequestUtils;
 import controller.model.Material;
+import controller.model.MaterialAllocate;
 import dao.enums.MaterialTypes;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -40,6 +41,31 @@ public class MaterialController {
                         break;
                     default: throw new Exception("wrong operation type code!");
                 }
+                map.put("succeed", true);
+            } catch (Exception e) {
+                map.put("succeed", false);
+                map.put("message: ", e.getMessage());
+            }
+        } else {
+            map.put("succeed", false);
+            map.put("message", "please login first!");
+        }
+        return map;
+    }
+
+    /**
+     *{materialName:'',stallName:'',amount:'Float'}
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/allocate", method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String, Object> allocate(HttpServletRequest request) {
+        Map<String, Object> map = new HashMap<>();
+        if (LOGIN_STATUS) {
+            try {
+                MaterialAllocate allocate = HttpServletRequestUtils.getModel(request, "allocateRequest", MaterialAllocate.class);
+                SERVICE.getMaterialForStall(allocate.getMaterialName(), allocate.getStallName(), allocate.getAmount());
                 map.put("succeed", true);
             } catch (Exception e) {
                 map.put("succeed", false);

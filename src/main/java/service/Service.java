@@ -120,33 +120,42 @@ public class Service {
             return stallRepository.saveAndFlush(stall);
         }
     }
-    public Stall saveStall(String stallName, int stallLocation, float stallRent, float costLastMonth) throws IllegalRequestException {
+    public Stall saveStall(String stallName, float stallRent, float costLastMonth) throws IllegalRequestException, RestrictedOperationException {
         if (!account.getAccessInfo().getPosition().equals("admin")) throw new IllegalRequestException();
 
         Stall stall = stallRepository.findByStallName(stallName);
         if (stall == null)
-            return stallRepository.saveAndFlush(EntityFactor.getStall(stallName, stallLocation, stallRent));
+            throw new RestrictedOperationException("no such stall!");
         else {
-            stall.setStallLocation(stallLocation);
             stall.setStallRent(stallRent);
             stall.setCostLastMonth(costLastMonth);
             return stallRepository.saveAndFlush(stall);
         }
     }
 
-    public Stall saveStallWithRecipes(String stallName, int stallLocation, float stallRent, String... recipes) throws IllegalRequestException {
+    public Stall saveStallWithRecipes(String stallName, String... recipes) throws IllegalRequestException, RestrictedOperationException {
         if (!account.getAccessInfo().getPosition().equals("admin")) throw new IllegalRequestException();
 
         Stall stall = stallRepository.findByStallName(stallName);
         if (stall == null)
-            stall = stallRepository.saveAndFlush(EntityFactor.getStall(stallName, stallLocation, stallRent));
+            throw new RestrictedOperationException("no such stall!");
         Collection<Recipe> recipeCollection = new LinkedList<>();
         for (String e : recipes) {
             recipeCollection.add(recipeRepository.findByRecipeName(e));
         }
-        stall.setStallLocation(stallLocation);
-        stall.setStallRent(stallRent);
         stall.getRecipes().addAll(recipeCollection);
+        return stallRepository.saveAndFlush(stall);
+    }
+
+    public Stall saveStallLocation(String stallName, int stallLocation) throws IllegalRequestException, RestrictedOperationException {
+        if (!account.getAccessInfo().getPosition().equals("admin")) throw new IllegalRequestException();
+
+        Stall stall = stallRepository.findByStallName(stallName);
+        if (stall == null)
+            throw new RestrictedOperationException("no such stall!");
+        String message = "change stall " + stallName + " from " + stall.getStallLocation() + " to " + stallLocation;
+        operationRecordRepository.saveAndFlush(EntityFactor.getOperationRecord(OperationType.STALL_CHANGE, account.getStaff(), true, message));
+        stall.setStallLocation(stallLocation);
         return stallRepository.saveAndFlush(stall);
     }
 
@@ -418,6 +427,7 @@ public class Service {
 
         MaterialOrder materialOrder = materialOrderRepository.findByOperationOrderID(orderID);
         if (materialOrder == null) throw new RestrictedOperationException("no such order!");
+        if (materialOrder.getOperationStorageID() != null) throw new RestrictedOperationException("already stored!");
 
         materialOrderRepository.saveAndFlush(EntityFactor.confirmMaterialOrder(account.getStaff(), note, materialOrder));
         return null;
@@ -805,6 +815,8 @@ public class Service {
                     stringBuilder.append(" ");
                 }
                 json.put("recipes", stringBuilder.toString());
+            } else if ("MaterialOrder".equals(key)) {
+                json.put("usedAmount", materialOrderRepository.getUsedAmount(json.getInteger("operationStorageID")));
             }
             array.add(json);
         }

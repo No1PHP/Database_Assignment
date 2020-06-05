@@ -47,10 +47,10 @@ public class StallInfoController {
                         SERVICE.saveStall(stallReq.getStallName(), stallReq.getStallLocation(), stallReq.getStallRent());
                         break;
                     case "ModifyStall":
-                        SERVICE.saveStall(stallReq.getStallName(), stallReq.getStallLocation(), stallReq.getStallRent(), stallReq.getCostLastMonth());
+                        SERVICE.saveStall(stallReq.getStallName(), stallReq.getStallRent(), stallReq.getCostLastMonth());
                         break;
                     case "AddRecipeForStall":
-                        SERVICE.saveStallWithRecipes(stallReq.getStallName(), stallReq.getStallLocation(), stallReq.getStallRent(), stallReq.getRecipes());
+                        SERVICE.saveStallWithRecipes(stallReq.getStallName(), stallReq.getRecipes());
                         break;
                     case "removeRecipeForStall":
                         SERVICE.removeRecipeFromStall(stallReq.getStallName(), stallReq.getRecipes());

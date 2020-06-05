@@ -61,8 +61,7 @@ public class OperationController{
                     }
                     //body:'{stallName:'', newLocation:''}'
                     case STALL_CHANGE: {
-                        float rent = SERVICE.getStallRent(body.getString("stallName"));
-                        SERVICE.saveStall(body.getString("stallName"), body.getInteger("newLocation"), rent);
+                        SERVICE.saveStallLocation(body.getString("stallName"), body.getInteger("newLocation"));
                         break;
                     }
                     default: throw new Exception("wrong operation type code!");

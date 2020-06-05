@@ -816,6 +816,7 @@ public class Service {
                 }
                 json.put("recipes", stringBuilder.toString());
             } else if ("MaterialOrder".equals(key)) {
+                if (json.getInteger("operationStorageID") == null) continue;
                 json.put("usedAmount", materialOrderRepository.getUsedAmount(json.getInteger("operationStorageID")));
             }
             array.add(json);
@@ -865,7 +866,7 @@ public class Service {
     public void removeByID(String id, String key) {
         switch (key) {
             case "Material":
-                materialRepository.removeByName(id);
+                this.removeMaterial(id);
                 break;
             case "MaterialOrder":
                 materialOrderRepository.deleteById(Integer.parseInt(id));

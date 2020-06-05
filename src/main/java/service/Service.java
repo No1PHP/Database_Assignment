@@ -547,7 +547,8 @@ public class Service {
         if (!account.getAccessInfo().getAccessToStall()) throw new IllegalRequestException();
         if (stallRepository.findByStallName(stallName) == null) throw new RestrictedOperationException("no such stall!");
 
-        return transactionRecordRepository.findALLTotalSalesByStallNameAndTransactionTimeBetween(stallName, from, until);
+        Integer result = transactionRecordRepository.findALLTotalSalesByStallNameAndTransactionTimeBetween(stallName, from, until);
+        return (result == null)? 0 : result;
     }
 
     /**
@@ -817,6 +818,8 @@ public class Service {
                 json.put("recipes", stringBuilder.toString());
             } else if ("MaterialOrder".equals(key) && json.getInteger("operationStorageID") != null) {
                 json.put("usedAmount", materialOrderRepository.getUsedAmount(json.getInteger("operationStorageID")));
+            } else if ("Stall".equals(key)) {
+                json.put("totalSales", this.getTotalSalesDuring(json.getString("stallName"), new Timestamp(System.currentTimeMillis() - 30*86400000L), new Timestamp(System.currentTimeMillis())));
             }
             array.add(json);
         }

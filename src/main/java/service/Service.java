@@ -849,7 +849,10 @@ public class Service {
         JSONArray array = new JSONArray();
         for (Object e: queryResult) {
             JSONObject json = ((JSONAble)e).getJson();
-            json.put("usedAmount", materialOrderRepository.getUsedAmount(json.getInteger("operationStorageID")));
+            Float result = 0f;
+            if (json.getInteger("operationStorageID") != null)
+                 result = materialOrderRepository.getUsedAmount(json.getInteger("operationStorageID"));
+            json.put("usedAmount", result == null ? 0 : result);
             array.add(json);
         }
         return array;

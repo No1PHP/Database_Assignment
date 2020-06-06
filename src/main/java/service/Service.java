@@ -88,7 +88,8 @@ public class Service {
     public Material removeMaterial(String name) throws IllegalRequestException, RestrictedOperationException {
         if (!account.getAccessInfo().getPosition().equals("admin")) throw new IllegalRequestException();
         Material material = materialRepository.findByName(name);
-        if (material.getRecipes().size() >= 1) throw new RestrictedOperationException("material "+name+" still has relevant recipe!");
+        Collection<Recipe> recipes = recipeRepository.findALLByMaterialsContains(material);
+        if (recipes.size() >= 1) throw new RestrictedOperationException("material "+name+" still has relevant recipe!");
 
         materialRepository.delete(material);
         materialRepository.flush();
@@ -773,56 +774,110 @@ public class Service {
         switch (key) {
             case "Account":
                 queryResult = accountRepository.findAll(pageRequest);
+                array = handle(queryResult);
                 break;
             case "Material":
                 queryResult = materialRepository.findAll(pageRequest);
+                array = handleMaterial(queryResult);
                 break;
             case "MaterialOrder":
                 queryResult = materialOrderRepository.findAll(pageRequest);
+                array = handleMaterialOrder(queryResult);
                 break;
             case "MaterialUsage":
                 queryResult = materialUsageRepository.findAll(pageRequest);
+                array = handle(queryResult);
                 break;
             case "OperationRecord":
                 queryResult = operationRecordRepository.findAll(pageRequest);
+                array = handle(queryResult);
                 break;
             case "Recipe":
                 queryResult = recipeRepository.findAll(pageRequest);
+                array = handleRecipe(queryResult);
                 break;
             case "ScheduleRecord":
                 queryResult = scheduleRecordRepository.findAll(pageRequest);
+                array = handle(queryResult);
                 break;
             case "Staff":
                 queryResult = staffRepository.findAll(pageRequest);
+                array = handle(queryResult);
                 break;
             case "Stall":
                 queryResult = stallRepository.findAll(pageRequest);
+                array = handleStall(queryResult);
                 break;
             case "Transaction":
                 queryResult = transactionRecordRepository.findAll(pageRequest);
+                array = handle(queryResult);
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + key);
         }
+        return array;
+    }
+
+    private JSONArray handle(Iterable queryResult) {
+        JSONArray array = new JSONArray();
         for (Object e: queryResult) {
             JSONObject json = ((JSONAble)e).getJson();
-            if ("Material".equals(key)) {
-                json.put("availableAmount", this.getMaterialAvailableAmount(json.getString("name")));
-                json.put("materialUsages", this.getMaterialUsageBetween(json.getString("name"), new Timestamp(0), new Timestamp(System.currentTimeMillis())));
-                Collection<Recipe> recipes = recipeRepository.findALLByMaterialsContains((Material) e);
-                StringBuilder stringBuilder = new StringBuilder("");
-                for (Recipe r : recipes) {
-                    stringBuilder.append(r.getRecipeName());
-                    stringBuilder.append(" ");
-                }
-                json.put("recipes", stringBuilder.toString());
-            } else if ("MaterialOrder".equals(key) && json.getInteger("operationStorageID") != null) {
-                json.put("usedAmount", materialOrderRepository.getUsedAmount(json.getInteger("operationStorageID")));
-            } else if ("Stall".equals(key)) {
-                json.put("totalSales", this.getTotalSalesDuring(json.getString("stallName"), new Timestamp(System.currentTimeMillis() - 30*86400000L), new Timestamp(System.currentTimeMillis())));
-            } else if ("Recipe".equals(key)) {
-                json.put("totalSales", this.findSalesDuring30Day(json.getString("recipeName")));
+            array.add(json);
+        }
+        return array;
+    }
+
+    private JSONArray handleMaterial(Iterable queryResult) {
+        JSONArray array = new JSONArray();
+        for (Object e: queryResult) {
+            JSONObject json = ((JSONAble)e).getJson();
+            json.put("availableAmount", this.getMaterialAvailableAmount(json.getString("name")));
+            json.put("materialUsages", this.getMaterialUsageBetween(json.getString("name"), new Timestamp(0), new Timestamp(System.currentTimeMillis())));
+            Collection<Recipe> recipes = recipeRepository.findALLByMaterialsContains((Material) e);
+            StringBuilder stringBuilder = new StringBuilder("");
+            for (Recipe r : recipes) {
+                stringBuilder.append(r.getRecipeName());
+                stringBuilder.append(" ");
             }
+            json.put("recipes", stringBuilder.toString());
+            array.add(json);
+        }
+        return array;
+    }
+
+    private JSONArray handleMaterialOrder(Iterable queryResult) {
+        JSONArray array = new JSONArray();
+        for (Object e: queryResult) {
+            JSONObject json = ((JSONAble)e).getJson();
+            json.put("usedAmount", materialOrderRepository.getUsedAmount(json.getInteger("operationStorageID")));
+            array.add(json);
+        }
+        return array;
+    }
+
+    private JSONArray handleStall(Iterable queryResult) {
+        JSONArray array = new JSONArray();
+        for (Object e: queryResult) {
+            JSONObject json = ((JSONAble)e).getJson();
+            json.put("totalSales", this.getTotalSalesDuring(json.getString("stallName"), new Timestamp(System.currentTimeMillis() - 30*86400000L), new Timestamp(System.currentTimeMillis())));
+            json.put("profit", this.getStallProfitDuring(json.getString("stallName"), new Timestamp(System.currentTimeMillis() - 30*86400000L), new Timestamp(System.currentTimeMillis())));
+            array.add(json);
+        }
+        return array;
+    }
+
+    private JSONArray handleRecipe(Iterable queryResult) {
+        JSONArray array = new JSONArray();
+        for (Object e: queryResult) {
+            JSONObject json = ((JSONAble)e).getJson();
+            json.put("totalSales", this.findSalesDuring30Day(json.getString("recipeName")));
+            Collection<Stall> stalls = stallRepository.findAllByRecipesContains((Recipe) e);
+            StringBuilder stringBuilder = new StringBuilder("");
+            for (Stall r : stalls) {
+                stringBuilder.append(r.getStallName());
+                stringBuilder.append(" ");
+            }
+            json.put("stalls", stringBuilder.toString());
             array.add(json);
         }
         return array;

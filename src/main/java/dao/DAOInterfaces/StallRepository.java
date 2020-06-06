@@ -1,5 +1,6 @@
 package dao.DAOInterfaces;
 
+import dao.tables.Recipe;
 import dao.tables.Stall;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Set;
 
 @Repository
 public interface StallRepository extends JpaRepository<Stall, Integer>, JpaSpecificationExecutor<Stall> {
@@ -26,6 +28,8 @@ public interface StallRepository extends JpaRepository<Stall, Integer>, JpaSpeci
     List<Stall> findALLByAveMonthlySalesAmountBetween(float min, float max);
 
     List<Stall> findALLByAveSalesIncomeBetween(float min, float max);
+
+    List<Stall> findAllByRecipesContains(Recipe recipes);
 
     @Query(value = "select s, sum(t.numbers) " +
             "from Stall s " +

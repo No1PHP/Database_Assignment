@@ -963,6 +963,10 @@ public class Service {
         return account.getStaffID();
     }
 
+    public String getOwnUsername() {
+        return account.getAccountName();
+    }
+
     public StaffCategoryTypes getOwnCategoryType() {
         return StaffCategoryTypes.getByIndex(account.getStaff().getStaffCategory());
     }

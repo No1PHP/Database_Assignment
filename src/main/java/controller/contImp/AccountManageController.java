@@ -101,4 +101,17 @@ public class AccountManageController {
         map.put("logout:",(!LOGIN_STATUS)?"succeed":"failed, try again");
         return map;
     }
+
+    @RequestMapping(value = "/info",method = RequestMethod.GET)
+    @ResponseBody
+    private Map<String, Object> getAccountInfo() {
+        Map<String, Object> map = new HashMap<String, Object>();
+        if (LOGIN_STATUS) {
+            map.put("login", true);
+            map.put("username", SERVICE.getOwnUsername());
+        } else {
+            map.put("login", false);
+        }
+        return map;
+    }
 }

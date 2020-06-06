@@ -20,7 +20,9 @@ public class Find_removeController {
         if (LOGIN_STATUS) {
             try {
                 map.put("result", SERVICE.getALL(name, pageNo, size));
-                map.put("totalPage", SERVICE.getTotalPage(name, size));
+                long count = SERVICE.getTotalCount(name);
+                map.put("totalCount", count);
+                map.put("totalPage", count/size + ((count%size == 0)? 0 : 1));
                 map.put("succeed", true);
             } catch (Exception e) {
                 map.put("succeed", false);

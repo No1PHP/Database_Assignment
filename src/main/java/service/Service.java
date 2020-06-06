@@ -116,6 +116,7 @@ public class Service {
             return stallRepository.saveAndFlush(stall);
         }
     }
+
     public Stall saveStall(String stallName, float stallRent, float costLastMonth) throws IllegalRequestException, RestrictedOperationException {
         if (!account.getAccessInfo().getPosition().equals("admin")) throw new IllegalRequestException();
 
@@ -787,7 +788,7 @@ public class Service {
         return array;
     }
 
-    public long getTotalPage(String key, int size) {
+    public long getTotalCount(String key) {
         long count = 0;
         switch (key) {
             case "Account":
@@ -823,7 +824,7 @@ public class Service {
             default:
                 throw new IllegalStateException("Unexpected value: " + key);
         }
-        return count/size + ((count%size == 0)? 0 : 1);
+        return count;
     }
 
     public void removeByID(String id, String key) {

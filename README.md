@@ -129,17 +129,3 @@
 Change properties in `src/main/resources/applicationContext.xml` to connect your local
 database source.
 
-## interfaces
-### dao interface（待定）
-json:<br>
-> {<br>
->> **"type"**: "insert/delete/update/select",<br>
-> **"tables"**: \["tableName"...], `only one for insert/delete/update`<br>
-> **"attributes"**: \[{<br>
->>> "attributeName": "name",<br>
-> "aggregate": "COUNT/SUM/MAX/MIN/AVE   ", `only for select`<br>
-> "value": "attValue"}, `only for insert/update` ...],<br>
->
->
->
->}

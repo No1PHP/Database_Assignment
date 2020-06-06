@@ -11,14 +11,10 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import service.DataInitializer;
-import service.EntityFactor;
 import service.Service;
-import service.exceptions.IllegalRequestException;
-import service.exceptions.RestrictedOperationException;
 
 import javax.transaction.Transactional;
 
-import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.*;
@@ -28,20 +24,20 @@ import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:applicationContext.xml")
 public class ServiceTest {
-    private static final ScheduleRecordRepository scheduleRecordRepository = (ScheduleRecordRepository) DAO_Type.SCHEDULE_RECORD.getTableRepository();
-    private static final MaterialOrderRepository materialOrderRepository = (MaterialOrderRepository) DAO_Type.MATERIAL_ORDER.getTableRepository();
-    private static final OperationRecordRepository operationRecordRepository = (OperationRecordRepository) DAO_Type.OPERATION_RECORD.getTableRepository();
-    private static final AccountRepository accountRepository = (AccountRepository) DAO_Type.ACCOUNT.getTableRepository();
-    private static final StaffRepository staffRepository = (StaffRepository) DAO_Type.STAFF.getTableRepository();
-    private static final AccessInfoRepository accessInfoRepository = (AccessInfoRepository) DAO_Type.ACCESS_INFO.getTableRepository();
-    private static final TransactionRecordRepository transactionRecordRepository = (TransactionRecordRepository) DAO_Type.TRANSACTION_RECORD.getTableRepository();
-    private static final MaterialUsageRepository materialUsageRepository = (MaterialUsageRepository) DAO_Type.MATERIAL_USAGE.getTableRepository();
-    private static final RecipeRepository recipeRepository = (RecipeRepository) DAO_Type.RECIPE.getTableRepository();
-    private static final MaterialRepository materialRepository = (MaterialRepository) DAO_Type.MATERIAL.getTableRepository();
-    private static final StallRepository stallRepository = (StallRepository) DAO_Type.STALL.getTableRepository();
-    public Service service;
-
-
+//    private static final ScheduleRecordRepository scheduleRecordRepository = (ScheduleRecordRepository) DAO_Type.SCHEDULE_RECORD.getTableRepository();
+//    private static final MaterialOrderRepository materialOrderRepository = (MaterialOrderRepository) DAO_Type.MATERIAL_ORDER.getTableRepository();
+//    private static final OperationRecordRepository operationRecordRepository = (OperationRecordRepository) DAO_Type.OPERATION_RECORD.getTableRepository();
+//    private static final AccountRepository accountRepository = (AccountRepository) DAO_Type.ACCOUNT.getTableRepository();
+//    private static final StaffRepository staffRepository = (StaffRepository) DAO_Type.STAFF.getTableRepository();
+//    private static final AccessInfoRepository accessInfoRepository = (AccessInfoRepository) DAO_Type.ACCESS_INFO.getTableRepository();
+//    private static final TransactionRecordRepository transactionRecordRepository = (TransactionRecordRepository) DAO_Type.TRANSACTION_RECORD.getTableRepository();
+//    private static final MaterialUsageRepository materialUsageRepository = (MaterialUsageRepository) DAO_Type.MATERIAL_USAGE.getTableRepository();
+//    private static final RecipeRepository recipeRepository = (RecipeRepository) DAO_Type.RECIPE.getTableRepository();
+//    private static final MaterialRepository materialRepository = (MaterialRepository) DAO_Type.MATERIAL.getTableRepository();
+//    private static final StallRepository stallRepository = (StallRepository) DAO_Type.STALL.getTableRepository();
+//    public Service service;
+//
+//
 //    @Before
 //    public void setUp() throws Exception {
 //        DataInitializer.clear();
@@ -121,23 +117,6 @@ public class ServiceTest {
 //    }
 //
 //    @Test
-//    public void saveAccessInfo() {
-//        service.saveAccessInfo("testPosition", true, true, false);
-//        AccessInfo accessInfo = accessInfoRepository.findByPosition("testPosition");
-//        assertNotNull(accessInfo);
-//        assertEquals(true, accessInfo.getAccessToMaterial());
-//        assertEquals(true, accessInfo.getAccessToStaff());
-//        assertEquals(false, accessInfo.getAccessToStall());
-//    }
-//
-//    @Test
-//    public void removeAccessInfo() {
-//        service.saveAccessInfo("testPosition", true, true, false);
-//        service.removeAccessInfo("testPosition");
-//        assertNull(accessInfoRepository.findByPosition("testPosition"));
-//    }
-//
-//    @Test
 //    public void getMaterialAvailableAmount() {
 //        assertTrue(service.getMaterialAvailableAmount("egg") >= 0);
 //    }
@@ -187,12 +166,6 @@ public class ServiceTest {
 //    }
 //
 //    @Test
-//    public void findMaterialOrderOutOfDate() {
-//        List<MaterialOrder> materialOrderList = service.findMaterialOrderOutOfDate(1);
-//        assertEquals(3, materialOrderList.size());
-//    }
-//
-//    @Test
 //    public void addRecipeForStall() {
 //        service.addRecipeForStall("川菜", "小笼包", "蛋炒饭");
 //        Stall stall = stallRepository.findByStallName("川菜");
@@ -221,7 +194,6 @@ public class ServiceTest {
 //
 //    @Test
 //    public void getTotalSalesDuring() {
-//        assertEquals(8, service.getTotalSalesDuring(Timestamp.valueOf("2000-01-01 00:00:00"), Timestamp.valueOf("2020-12-01 00:00:00")));
 //        assertEquals(2, service.getTotalSalesDuring("包子铺", Timestamp.valueOf("2000-01-01 00:00:00"), Timestamp.valueOf("2020-12-01 00:00:00")));
 //    }
 //
@@ -248,11 +220,6 @@ public class ServiceTest {
 //    @Test
 //    public void getStallProfitDuring() {
 //        assertEquals(10, service.getStallProfitDuring("包子铺", Timestamp.valueOf("2000-01-01 00:00:00"), Timestamp.valueOf("2020-12-01 00:00:00")),0);
-//    }
-//
-//    @Test
-//    public void getStallRent() {
-//        assertEquals(3000, service.getStallRent("兰州拉面"), 0);
 //    }
 //
 //    @Test
@@ -283,67 +250,7 @@ public class ServiceTest {
 //    }
 //
 //    @Test
-//    public void getStaffByID() {
-//        assertNotNull(service.getStaffByID(staffRepository.findALLByStaffName("none").get(0).getStaffID()));
-//    }
-//
-//    @Test
 //    public void getOperationRecord() {
 //        assertEquals(11, service.getOperationRecord(staffRepository.findALLByStaffName("manager1").get(0).getStaffID()).size());
-//    }
-//
-//    @Test
-//    public void getScheduleRecord() {
-//        assertEquals(1, service.getScheduleRecord(staffRepository.findALLByStaffName("cleaner4").get(0).getStaffID(), Timestamp.valueOf("2000-01-01 00:00:00")).size());
-//    }
-//
-//    @Test
-//    public void scheduleStaff() {
-//        Staff staff = staffRepository.findALLByStaffName("cleaner4").get(0);
-//        service.scheduleStaff(Timestamp.valueOf("2020-05-20 00:00:00"), Timestamp.valueOf("2020-05-21 00:00:00"), staff.getStaffID(), "clean the floor");
-//        List<ScheduleRecord> scheduleRecordList = service.getScheduleRecord(staffRepository.findALLByStaffName("cleaner4").get(0).getStaffID(), Timestamp.valueOf("2000-01-01 00:00:00"));
-//        assertEquals(2, scheduleRecordList.size());
-//        assertEquals(scheduleRecordList.get(0).getStaff().getStaffID(), staff.getStaffID());
-//        assertTrue(scheduleRecordList.get(0).getTimeScheduledToStartWorking().equals(Timestamp.valueOf("2020-05-20 00:00:00")));
-//    }
-
-//    @Test
-//    public void getOwnID() {
-//    }
-//
-//    @Test
-//    public void getOwnCategoryType() {
-//    }
-//
-//    @Test
-//    public void getOwnOperationRecord() {
-//    }
-//
-//    @Test
-//    public void getOwnScheduleRecord() {
-//    }
-//
-//    @Test
-//    public void getMaterialForStall() {
-//    }
-//
-//    @Test
-//    public void stallSell() {
-//    }
-//
-//    @Test
-//    public void addRecipe() {
-//    }
-//
-//    @Test
-//    public void saveRecipe() {
-//    }
-//
-//    @Test
-//    public void removeRecipe() {
-//    }
-//
-//    @Test
-//    public void changePassword() {
 //    }
 }

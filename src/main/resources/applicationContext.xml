@@ -52,7 +52,7 @@
     <!--数据库连接池-->
     <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
         <property name="user" value="root"/>
-        <property name="password" value="ShibangX5599"/>
+        <property name="password" value=""/>
         <property name="jdbcUrl" value="jdbc:mysql://127.0.0.1:3306/restaurant?
             characterEncoding=utf8&amp;
             useUnicode=true&amp;

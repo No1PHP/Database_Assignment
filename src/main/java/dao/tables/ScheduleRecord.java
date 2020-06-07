@@ -46,8 +46,8 @@ public class ScheduleRecord implements JSONAble {
         JSONObject json = new JSONObject();
         json.put("operationID", operationID);
         json.put("staffID", staffID);
-        json.put("timeScheduledToStartWorking", timeScheduledToStartWorking);
-        json.put("timeScheduledToEndWorking", timeScheduledToEndWorking);
+        json.put("timeScheduledToStartWorking", timeScheduledToStartWorking.toString());
+        json.put("timeScheduledToEndWorking", timeScheduledToEndWorking.toString());
         return json;
     }
 }

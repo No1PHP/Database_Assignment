@@ -65,7 +65,7 @@ public class OperationRecord implements JSONAble {
         json.put("staffID", staffID);
         json.put("operationType", OperationType.getByIndex(operationType));
         json.put("note", note);
-        json.put("operationTime", operationTime);
+        json.put("operationTime", operationTime.toString());
         json.put("willSendUpdateMessage", willSendUpdateMessage);
         return json;
     }

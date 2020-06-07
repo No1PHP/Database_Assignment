@@ -58,7 +58,7 @@ public class MaterialUsage implements JSONAble {
         json.put("stallName", stallName);
         json.put("materialName", materialName);
         json.put("storageID", storageID);
-        json.put("time", time);
+        json.put("time", time.toString());
         json.put("amount", amount);
         return json;
     }

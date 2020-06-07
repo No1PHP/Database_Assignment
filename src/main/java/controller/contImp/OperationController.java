@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -56,7 +57,7 @@ public class OperationController{
                     }
                     //body:'{staffID:'', startTime:'', endTime:''}'
                     case DAY_SHIFT: {
-                        SERVICE.scheduleStaff(body.getTimestamp("startTime"), body.getTimestamp("endTime"), body.getInteger("staffID"), oper.getNote());
+                        SERVICE.scheduleStaff(Timestamp.valueOf(body.getString("startTime")), Timestamp.valueOf(body.getString("endTime")), body.getInteger("staffID"), oper.getNote());
                         break;
                     }
                     //body:'{stallName:'', newLocation:''}'

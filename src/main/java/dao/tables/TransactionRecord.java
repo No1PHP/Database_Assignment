@@ -60,7 +60,7 @@ public class TransactionRecord implements JSONAble {
         json.put("transactionID", transactionID);
         json.put("stallName", stallName);
         json.put("recipeName", recipeName);
-        json.put("transactionTime", transactionTime);
+        json.put("transactionTime", transactionTime.toString());
         json.put("numbers", numbers);
         json.put("transactionPrice", transactionPrice);
         return json;

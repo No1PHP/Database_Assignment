@@ -45,7 +45,7 @@ public class Find_removeController {
                 map.put("succeed", true);
             } catch (Exception e) {
                 map.put("succeed", false);
-                map.put("message: ", e.getMessage());
+                map.put("message", e.getMessage());
             }
         } else {
             map.put("succeed", false);
